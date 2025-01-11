@@ -308,7 +308,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-
+        m_poseEstimator.update(this.getPigeon2().getRotation2d(), this.getState().ModulePositions);
         // Pose Estimation using AprilTags
         LimelightHelpers.SetRobotOrientation(
             Constants.LimelightConstants.limelightName,
