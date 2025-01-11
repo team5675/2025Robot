@@ -15,18 +15,24 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import edu.wpi.first.math.estimator.*;
+import frc.robot.*;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -130,6 +136,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
         this.configAutoBuilder();
+
+        // SwerveDriveKinematics
+        // Rotation2d
+        // SwerveModulePosition[]
+        // Pose2d
+        this.m_poseEstimator = new SwerveDrivePoseEstimator(
+            this.getKinematics(),
+            this.getPigeon2().getRotation2d(),
+            this.getState().ModulePositions,
+            this.getState().Pose
+        );
+        
+        this.m_field = new Field2d();
+        SmartDashboard.putData("Field", m_field);
     }
 
     /**
@@ -155,6 +175,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
         this.configAutoBuilder();
+        
+        // SwerveDriveKinematics
+        // Rotation2d
+        // SwerveModulePosition[]
+        // Pose2d
+        this.m_poseEstimator = new SwerveDrivePoseEstimator(
+            this.getKinematics(),
+            this.getPigeon2().getRotation2d(),
+            this.getState().ModulePositions,
+            this.getState().Pose
+        );
+
+        this.m_field = new Field2d();
+        SmartDashboard.putData("Field", m_field);
     }
 
     /**
@@ -188,6 +222,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
         this.configAutoBuilder();
+
+        // SwerveDriveKinematics
+        // Rotation2d
+        // SwerveModulePosition[]
+        // Pose2d
+        this.m_poseEstimator = new SwerveDrivePoseEstimator(
+            this.getKinematics(),
+            this.getPigeon2().getRotation2d(),
+            this.getState().ModulePositions,
+            this.getState().Pose
+        );
+
+        this.m_field = new Field2d();
+        SmartDashboard.putData("Field", m_field);
     }
 
     /**
@@ -222,6 +270,25 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
+    private void startSimThread() {
+        m_lastSimTime = Utils.getCurrentTimeSeconds();
+
+        /* Run simulation at a faster rate so PID gains behave more reasonably */
+        m_simNotifier = new Notifier(() -> {
+            final double currentTime = Utils.getCurrentTimeSeconds();
+            double deltaTime = currentTime - m_lastSimTime;
+            m_lastSimTime = currentTime;
+
+            /* use the measured time delta, get battery voltage from WPILib */
+            updateSimState(deltaTime, RobotController.getBatteryVoltage());
+        });
+        m_simNotifier.startPeriodic(kSimLoopPeriod);
+    }
+    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
+
+    public SwerveDrivePoseEstimator m_poseEstimator;
+    public Field2d m_field;
+
     @Override
     public void periodic() {
         /*
@@ -241,23 +308,32 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        // Pose Estimation using AprilTags
+        LimelightHelpers.SetRobotOrientation(
+            Constants.LimelightConstants.limelightName,
+            this.getPigeon2().getYaw().getValueAsDouble(),
+            0, -19, 0, 0, 0
+        );
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
+        
+        Boolean doRejectUpdateMt2 = false;
+        if (mt2.tagCount == 0) {
+            doRejectUpdateMt2 = true;
+        }
+        if (!doRejectUpdateMt2) { // If there is an april tag
+            System.out.println("April tag found");
+            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+            m_poseEstimator.addVisionMeasurement(
+                mt2.pose,
+                mt2.timestampSeconds
+            );
+            System.out.println(mt2.pose);
+        }
+        //Pose2d pose = new Pose2d(new Translation2d(1,1), new Rotation2d(90,0));
+        //System.out.println(m_poseEstimator.getEstimatedPosition());
+        m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
     }
-
-    private void startSimThread() {
-        m_lastSimTime = Utils.getCurrentTimeSeconds();
-
-        /* Run simulation at a faster rate so PID gains behave more reasonably */
-        m_simNotifier = new Notifier(() -> {
-            final double currentTime = Utils.getCurrentTimeSeconds();
-            double deltaTime = currentTime - m_lastSimTime;
-            m_lastSimTime = currentTime;
-
-            /* use the measured time delta, get battery voltage from WPILib */
-            updateSimState(deltaTime, RobotController.getBatteryVoltage());
-        });
-        m_simNotifier.startPeriodic(kSimLoopPeriod);
-    }
-    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
     public void configAutoBuilder() {
         try {
