@@ -313,22 +313,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         LimelightHelpers.SetRobotOrientation(
             Constants.LimelightConstants.limelightName,
             this.getPigeon2().getYaw().getValueAsDouble(),
-            0, -19, 0, 0, 0
+            0, 0, 0, 0, 0
         );
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
         
-        Boolean doRejectUpdateMt2 = false;
-        if (mt2.tagCount == 0) {
-            doRejectUpdateMt2 = true;
-        }
-        if (!doRejectUpdateMt2) { // If there is an april tag
-            System.out.println("April tag found");
+        if (!(mt2.tagCount == 0)) {
+        // If there is an april tag
             m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
             m_poseEstimator.addVisionMeasurement(
                 mt2.pose,
                 mt2.timestampSeconds
             );
-            System.out.println(mt2.pose);
+            
         }
         //Pose2d pose = new Pose2d(new Translation2d(1,1), new Rotation2d(90,0));
         //System.out.println(m_poseEstimator.getEstimatedPosition());
