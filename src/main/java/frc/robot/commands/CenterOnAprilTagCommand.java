@@ -21,10 +21,12 @@ public class CenterOnAprilTagCommand extends Command {
   private NetworkTableEntry limelightY = limelightTable.getEntry("ty");
   private double aprilTagID = limelightTable.getEntry("tid").getDouble(-1);
   private double kTolerance = 0.5;
-  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric();
+  public final CommandSwerveDrivetrain drivetrain;
+  private final SwerveRequest.FieldCentric drive;
 
-  public CenterOnAprilTagCommand() {
+  public CenterOnAprilTagCommand(CommandSwerveDrivetrain driveTrain, SwerveRequest.FieldCentric drive) {
+    this.drivetrain = driveTrain;
+    this.drive = drive;
     
   }
 

@@ -75,7 +75,7 @@ public class RobotContainer {
         driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        driverController.povUp().onTrue(new CenterOnAprilTagCommand());
+        driverController.povUp().onTrue(new CenterOnAprilTagCommand(drivetrain, drive));
 
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
