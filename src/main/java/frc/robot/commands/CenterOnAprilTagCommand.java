@@ -15,17 +15,28 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 //import frc.robot.subsystems.LimelightPolling;
 import frc.robot.subsystems.LimelightPolling;
 
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class CenterOnAprilTagCommand extends Command {
   private double kTolerance = Constants.LimelightConstants.kTolerance;
   public final CommandSwerveDrivetrain drivetrain;
-  private final SwerveRequest.FieldCentric drive;
+  private final SwerveRequest.FieldCentric driveRequest;
 
   public CenterOnAprilTagCommand(CommandSwerveDrivetrain driveTrain, SwerveRequest.FieldCentric drive) {
     this.drivetrain = driveTrain;
-    this.drive = drive;
+    this.driveRequest = new SwerveRequest.FieldCentric()
+      .withDeadband(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.1).withRotationalDeadband(RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.1)
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+      .withSteerRequestType(SwerveModule.SteerRequestType.Position);
   }
 
   // Called when the command is initially scheduled.
@@ -47,26 +58,41 @@ public class CenterOnAprilTagCommand extends Command {
       System.out.println("CenterOnAprilTag: No April Tag Detected.");
       return;
     }
-    
+
+    System.out.printf("CenterOnAprilTag: TX: %.5f", limelight.tx);
+    System.out.println();
+
     this.tx = limelight.tx; // Don't use this; it's for the isFinished function
 
     if (limelight.tx > this.kTolerance) {
-      System.out.println("CenterOnAprilTag: AprilTag right");
-            // Drivetrain will execute this command periodically
-      drivetrain.applyRequest(() ->
-        drive.withVelocityX(0) // Drive forward with negative Y (forward)
-        .withVelocityY((.1 - limelight.tx * 0.1) * 0) // Drive left with negative X (left)
-          .withRotationalRate(0) // Drive counterclockwise with negative X (left)
+      System.out.println("CenterOnAprilTag: AprilTag left");
+      double strafeVelocity = limelight.tx / 20;
+      if (strafeVelocity < Constants.LimelightConstants.minStrafe && strafeVelocity >= 0) {
+        strafeVelocity *= 2;
+      }
+      drivetrain.setControl(
+         driveRequest
+            .withVelocityX(0) 
+            .withVelocityY(strafeVelocity)//(.1 - limelight.tx * 0.1) * 0.5 
+            .withRotationalRate(0)
       );
+
+      System.out.println(driveRequest.VelocityY);
     }
     if (limelight.tx < -this.kTolerance) {
-      System.out.println("CenterOnAprilTag: AprilTag left");
-        // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() ->
-          drive.withVelocityX(0) // Drive forward with negative Y (forward)
-            .withVelocityY((0 - (-limelight.tx) * 0.1)) // Drive left with negative X (left)
-            .withRotationalRate(0) // Drive counterclockwise with negative X (left)
+      System.out.println("CenterOnAprilTag: AprilTag right");
+      double strafeVelocity = limelight.tx / 20;
+      if (strafeVelocity <= 0 && strafeVelocity > -Constants.LimelightConstants.minStrafe){
+        strafeVelocity *= 2;
+      }
+        drivetrain.setControl(
+          driveRequest
+            .withVelocityX(0) 
+            .withVelocityY(strafeVelocity)
+            .withRotationalRate(0)
         );
+        
+        System.out.println(driveRequest.VelocityY);
     }
   }
 
@@ -79,8 +105,10 @@ public class CenterOnAprilTagCommand extends Command {
   @Override
   public boolean isFinished() {
     if (Math.abs(this.tx) <= this.kTolerance) {
+      System.out.printf("CenterOnAprilTag: Lineup complete at TX %.5f", this.tx);
+      System.out.println();
       return true;
     }
-    return false;
+    return false; 
   }
 }
