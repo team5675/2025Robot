@@ -4,13 +4,14 @@
 
 package frc.robot.commands;
 
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.LimelightPolling;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -20,14 +21,13 @@ public class CenterOnAprilTagCommand extends Command {
   private NetworkTableEntry limelightX = limelightTable.getEntry("tx");
   private NetworkTableEntry limelightY = limelightTable.getEntry("ty");
   private double aprilTagID = limelightTable.getEntry("tid").getDouble(-1);
-  private double kTolerance = 0.5;
+  private double kTolerance = Constants.LimelightConstants.kTolerance;
   public final CommandSwerveDrivetrain drivetrain;
   private final SwerveRequest.FieldCentric drive;
 
   public CenterOnAprilTagCommand(CommandSwerveDrivetrain driveTrain, SwerveRequest.FieldCentric drive) {
     this.drivetrain = driveTrain;
     this.drive = drive;
-    
   }
 
   // Called when the command is initially scheduled.
@@ -39,8 +39,13 @@ public class CenterOnAprilTagCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    LimelightCommand limelight = LimelightPolling.getInstance().tables.get(0);
+
+    System.out.printf("April Tag ID: %f", limelight.tid);
+
+    // System.out.println(this.aprilTagID);
     if (this.aprilTagID == -1) {
-      System.out.println("No April Tag Detected.");
+      // System.out.println("No April Tag Detected.");
       return;
     }
     
