@@ -316,6 +316,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             0, 0, 0, 0, 0
         );
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
+
+        if (mt2 == null) {
+            return;
+        }
         
         if (!(mt2.tagCount == 0)) {
         // If there is an april tag

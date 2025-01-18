@@ -28,9 +28,7 @@ public class LimelightPolling extends SubsystemBase {
     // add new limelights here
     tables.add(new LimelightCommand(Constants.LimelightConstants.limelightName));
 
-    for (LimelightCommand ll : tables) {
-      CommandScheduler.getInstance().schedule(ll);
-    }
+    CommandScheduler.getInstance().schedule(tables.get(0));
   }
 
   private static LimelightPolling instance;

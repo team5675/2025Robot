@@ -9,18 +9,16 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+//import frc.robot.subsystems.LimelightPolling;
 import frc.robot.subsystems.LimelightPolling;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class CenterOnAprilTagCommand extends Command {
-  private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight"); 
-  private NetworkTableEntry limelightX = limelightTable.getEntry("tx");
-  private NetworkTableEntry limelightY = limelightTable.getEntry("ty");
-  private double aprilTagID = limelightTable.getEntry("tid").getDouble(-1);
   private double kTolerance = Constants.LimelightConstants.kTolerance;
   public final CommandSwerveDrivetrain drivetrain;
   private final SwerveRequest.FieldCentric drive;
@@ -41,36 +39,34 @@ public class CenterOnAprilTagCommand extends Command {
   public void execute() {
     LimelightCommand limelight = LimelightPolling.getInstance().tables.get(0);
 
-    System.out.printf("April Tag ID: %f", limelight.tid);
+    //System.out.printf("CenterOnAprilTag: April Tag ID: %.2f", limelight.tid);
+    //System.out.println();
 
     // System.out.println(this.aprilTagID);
-    if (this.aprilTagID == -1) {
-      // System.out.println("No April Tag Detected.");
+    if (limelight.tid == -1) {
+      System.out.println("CenterOnAprilTag: No April Tag Detected.");
       return;
     }
     
-    if (this.limelightX.getDouble(0) > this.kTolerance) {
-      drivetrain.setDefaultCommand(
+    this.tx = limelight.tx; // Don't use this; it's for the isFinished function
+
+    if (limelight.tx > this.kTolerance) {
+      System.out.println("CenterOnAprilTag: AprilTag right");
             // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(0) // Drive forward with negative Y (forward)
-                    .withVelocityY(this.limelightX.getDouble(0) * 0.1) // Drive left with negative X (left)
-                    .withRotationalRate(0) // Drive counterclockwise with negative X (left)
-            )
-        );
+      drivetrain.applyRequest(() ->
+        drive.withVelocityX(0) // Drive forward with negative Y (forward)
+        .withVelocityY((.1 - limelight.tx * 0.1) * 0) // Drive left with negative X (left)
+          .withRotationalRate(0) // Drive counterclockwise with negative X (left)
+      );
     }
-    if (this.limelightX.getDouble(0) < -this.kTolerance) {
-      drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(0) // Drive forward with negative Y (forward)
-                    .withVelocityY(-this.limelightX.getDouble(0) * 0.1) // Drive left with negative X (left)
-                    .withRotationalRate(0) // Drive counterclockwise with negative X (left)
-            )
+    if (limelight.tx < -this.kTolerance) {
+      System.out.println("CenterOnAprilTag: AprilTag left");
+        // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() ->
+          drive.withVelocityX(0) // Drive forward with negative Y (forward)
+            .withVelocityY((0 - (-limelight.tx) * 0.1)) // Drive left with negative X (left)
+            .withRotationalRate(0) // Drive counterclockwise with negative X (left)
         );
-    }
-    if (Math.abs(this.limelightX.getDouble(0)) <= this.kTolerance) {
-      return;
     }
   }
 
@@ -78,9 +74,13 @@ public class CenterOnAprilTagCommand extends Command {
   @Override
   public void end(boolean interrupted) {}
 
+  private double tx;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (Math.abs(this.tx) <= this.kTolerance) {
+      return true;
+    }
     return false;
   }
 }
