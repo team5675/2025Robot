@@ -4,9 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
@@ -59,7 +61,9 @@ public class CenterOnAprilTagCommand extends Command {
       return;
     }
 
-    System.out.printf("CenterOnAprilTag: TX: %.5f", limelight.tx);
+    SmartDashboard.putNumber("AprilTag TX", limelight.tx);
+    SmartDashboard.putNumber("AprilTag TY", limelight.ty);
+    SmartDashboard.putNumber("Attempted Velo:", driveRequest.VelocityY);
     System.out.println();
 
     this.tx = limelight.tx; // Don't use this; it's for the isFinished function
@@ -92,7 +96,7 @@ public class CenterOnAprilTagCommand extends Command {
             .withRotationalRate(0)
         );
         
-        System.out.println(driveRequest.VelocityY);
+        SmartDashboard.putNumber("Attempted Velo:", driveRequest.VelocityY);
     }
   }
 
