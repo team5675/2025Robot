@@ -13,12 +13,16 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
+import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -54,6 +58,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+
+    RobotConfig config = RobotConfig.fromGUISettings();
+
+    private final SwerveSetpointGenerator setpointGenerator = new SwerveSetpointGenerator(config, null)
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -247,6 +255,27 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
+
+    public void moveToPose(Pose2d targetPose) {
+    Pose2d currentPose = this.getState().Pose;
+
+    // Create a dummy trajectory state (needed for PPHolonomicDriveController)
+    PathPlannerTrajectoryState targetState = new PathPlannerTrajectoryState();
+    targetState.pose = new Pose2d(targetPose.getTranslation(), currentPose.getRotation());
+    targetState.linearVelocity = 0.0; // We want to stop at the pose
+
+    // Use PathPlanner's holonomic controller
+    PPHolonomicDriveController driveController = new PPHolonomicDriveController(
+        new PIDConstants(10, 0, 0),  // Translation PID
+        new PIDConstants(7, 0, 0)    // Rotation PID
+    );
+
+    // Compute the necessary chassis speeds
+    ChassisSpeeds targetSpeeds = driveController.calculateRobotRelativeSpeeds(currentPose, targetState);
+
+    // Apply the speeds using Kraken CTRE's SwerveRequest
+    setControl(m_pathApplyRobotSpeeds.withSpeeds(targetSpeeds));
+}
 
     /**
      * Runs the SysId Quasistatic test in the given direction for the routine

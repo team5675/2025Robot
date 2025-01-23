@@ -11,7 +11,9 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.CenterOnAprilTagCommand;
+import frc.robot.commands.MoveToPoseCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -80,6 +83,8 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+        driverController.povLeft().whileTrue(new MoveToPoseCommand(drivetrain, calculateTargetPose()));
+
         // PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
 
         drivetrain.registerTelemetry(logger::telemeterize);
@@ -87,5 +92,14 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+    }
+    private Pose2d calculateTargetPose() {
+        Pose2d currentPose = drivetrain.getState().Pose;
+        
+        // Move exactly 5 inches (0.127 meters) LEFT relative to the robot's current heading
+        Translation2d offset = new Translation2d(0, -0.127).rotateBy(currentPose.getRotation());
+        
+        // Keep the same rotation (prevents spinning)
+        return new Pose2d(currentPose.getTranslation().plus(offset), currentPose.getRotation());
     }
 }
