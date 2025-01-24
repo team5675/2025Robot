@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -22,13 +24,14 @@ import frc.robot.commands.LimelightCommand;
 
 public class LimelightPolling extends SubsystemBase {
   /** Creates a new Limelight. */
-  public ArrayList<LimelightCommand> tables;
+  // HashMap<LimelightName, LimelightCommand>
+  public Map<String, LimelightCommand> limelights;
   public LimelightPolling() {
-    tables = new ArrayList<LimelightCommand>();
+    limelights = new HashMap<>();
     // add new limelights here
-    tables.add(new LimelightCommand(Constants.LimelightConstants.limelightName));
+    limelights.put(Constants.LimelightConstants.limelightName, new LimelightCommand(Constants.LimelightConstants.limelightName));
 
-    CommandScheduler.getInstance().schedule(tables.get(0));
+    CommandScheduler.getInstance().schedule(limelights.get(Constants.LimelightConstants.limelightName));
   }
 
   private static LimelightPolling instance;
@@ -37,10 +40,5 @@ public class LimelightPolling extends SubsystemBase {
       instance = new LimelightPolling();
     } 
     return instance;
-  }
-  
-  @Override
-  public void periodic() {
-
   }
 }
