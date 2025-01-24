@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -19,6 +20,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -362,5 +364,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
+    }
+
+    public void driveApplySpeeds(double xVelocity, double yVelocity, double angularVelocity) {
+        this.setControl(
+            new SwerveRequest.FieldCentric()
+                //.withDeadband(DEADBAND)
+                .withVelocityX(xVelocity)
+                .withVelocityY(yVelocity)
+                .withRotationalRate(angularVelocity)
+                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+                .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
+        );
     }
 }
