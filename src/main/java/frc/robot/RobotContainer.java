@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.CenterOnAprilTagCommand;
-import frc.robot.commands.MoveToPoseCommand;
+import frc.robot.commands.AutoAlignCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -83,7 +83,7 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        driverController.povLeft().whileTrue(new MoveToPoseCommand(drivetrain, calculateTargetPose()));
+        driverController.povLeft().whileTrue(new AutoAlignCommand(drivetrain));
 
         // PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
 
