@@ -47,8 +47,6 @@ public class CenterOnAprilTagCommand extends Command {
       .withSteerRequestType(SwerveModule.SteerRequestType.Position);
   }
 
-
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -56,8 +54,8 @@ public class CenterOnAprilTagCommand extends Command {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-@Override
-public void execute() {
+  @Override
+  public void execute() {
     LimelightCommand limelight = LimelightPolling.getInstance().limelights.get(Constants.LimelightConstants.limelightName);
 
     if (limelight.tid == -1) {
@@ -93,58 +91,58 @@ public void execute() {
 // Function to get the pose for right branches
 private Pose2d getRightDesiredPose(double id) {
     switch ((int) id) {
-        case 1: return AlignmentConstants.coral1.getTargetPose();
-        case 2: return AlignmentConstants.coral3.getTargetPose();
-        case 3: return AlignmentConstants.processor.getTargetPose();
-        case 4: return AlignmentConstants.blueBarge.getTargetPose();
-        case 5: return AlignmentConstants.redBarge.getTargetPose();
-        case 6: return AlignmentConstants.L.getTargetPose();
-        case 7: return AlignmentConstants.B.getTargetPose();
-        case 8: return AlignmentConstants.D.getTargetPose();
-        case 9: return AlignmentConstants.F.getTargetPose();
-        case 10: return AlignmentConstants.H.getTargetPose();
-        case 11: return AlignmentConstants.J.getTargetPose();
-        case 12: return AlignmentConstants.coral1.getTargetPose();
-        case 13: return AlignmentConstants.coral3.getTargetPose();
-        case 14: return AlignmentConstants.redBarge.getTargetPose();
-        case 15: return AlignmentConstants.blueBarge.getTargetPose();
-        case 16: return AlignmentConstants.processor.getTargetPose();
-        case 17: return AlignmentConstants.D.getTargetPose();
-        case 18: return AlignmentConstants.B.getTargetPose();
-        case 19: return AlignmentConstants.L.getTargetPose();
-        case 20: return AlignmentConstants.J.getTargetPose();
-        case 21: return AlignmentConstants.H.getTargetPose();
-        case 22: return AlignmentConstants.F.getTargetPose();
-        default: return AlignmentConstants.OFF.getTargetPose();
+        case 1: return PositionMap.coral1.getTargetPose();
+        case 2: return PositionMap.coral3.getTargetPose();
+        case 3: return PositionMap.processor.getTargetPose();
+        case 4: return PositionMap.blueBarge.getTargetPose();
+        case 5: return PositionMap.redBarge.getTargetPose();
+        case 6: return PositionMap.L.getTargetPose();
+        case 7: return PositionMap.B.getTargetPose();
+        case 8: return PositionMap.D.getTargetPose();
+        case 9: return PositionMap.F.getTargetPose();
+        case 10: return PositionMap.H.getTargetPose();
+        case 11: return PositionMap.J.getTargetPose();
+        case 12: return PositionMap.coral1.getTargetPose();
+        case 13: return PositionMap.coral3.getTargetPose();
+        case 14: return PositionMap.redBarge.getTargetPose();
+        case 15: return PositionMap.blueBarge.getTargetPose();
+        case 16: return PositionMap.processor.getTargetPose();
+        case 17: return PositionMap.D.getTargetPose();
+        case 18: return PositionMap.B.getTargetPose();
+        case 19: return PositionMap.L.getTargetPose();
+        case 20: return PositionMap.J.getTargetPose();
+        case 21: return PositionMap.H.getTargetPose();
+        case 22: return PositionMap.F.getTargetPose();
+        default: return PositionMap.OFF.getTargetPose();
     }
 }
 
 // Function to get the pose for left branches
 private Pose2d leftRightDesiredPose(double id) {
     switch ((int) id) {
-        case 1: return AlignmentConstants.coral1.getTargetPose();
-        case 2: return AlignmentConstants.coral3.getTargetPose();
-        case 3: return AlignmentConstants.processor.getTargetPose();
-        case 4: return AlignmentConstants.blueBarge.getTargetPose();
-        case 5: return AlignmentConstants.redBarge.getTargetPose();
-        case 6: return AlignmentConstants.K.getTargetPose();
-        case 7: return AlignmentConstants.A.getTargetPose();
-        case 8: return AlignmentConstants.C.getTargetPose();
-        case 9: return AlignmentConstants.E.getTargetPose();
-        case 10: return AlignmentConstants.G.getTargetPose();
-        case 11: return AlignmentConstants.I.getTargetPose();
-        case 12: return AlignmentConstants.coral1.getTargetPose();
-        case 13: return AlignmentConstants.coral3.getTargetPose();
-        case 14: return AlignmentConstants.redBarge.getTargetPose();
-        case 15: return AlignmentConstants.blueBarge.getTargetPose();
-        case 16: return AlignmentConstants.processor.getTargetPose();
-        case 17: return AlignmentConstants.C.getTargetPose();
-        case 18: return AlignmentConstants.A.getTargetPose();
-        case 19: return AlignmentConstants.K.getTargetPose();
-        case 20: return AlignmentConstants.I.getTargetPose();
-        case 21: return AlignmentConstants.G.getTargetPose();
-        case 22: return AlignmentConstants.E.getTargetPose();
-        default: return AlignmentConstants.OFF.getTargetPose();
+        case 1: return PositionMap.coral1.getTargetPose();
+        case 2: return PositionMap.coral3.getTargetPose();
+        case 3: return PositionMap.processor.getTargetPose();
+        case 4: return PositionMap.blueBarge.getTargetPose();
+        case 5: return PositionMap.redBarge.getTargetPose();
+        case 6: return PositionMap.K.getTargetPose();
+        case 7: return PositionMap.A.getTargetPose();
+        case 8: return PositionMap.C.getTargetPose();
+        case 9: return PositionMap.E.getTargetPose();
+        case 10: return PositionMap.G.getTargetPose();
+        case 11: return PositionMap.I.getTargetPose();
+        case 12: return PositionMap.coral1.getTargetPose();
+        case 13: return PositionMap.coral3.getTargetPose();
+        case 14: return PositionMap.redBarge.getTargetPose();
+        case 15: return PositionMap.blueBarge.getTargetPose();
+        case 16: return PositionMap.processor.getTargetPose();
+        case 17: return PositionMap.C.getTargetPose();
+        case 18: return PositionMap.A.getTargetPose();
+        case 19: return PositionMap.K.getTargetPose();
+        case 20: return PositionMap.I.getTargetPose();
+        case 21: return PositionMap.G.getTargetPose();
+        case 22: return PositionMap.E.getTargetPose();
+        default: return PositionMap.OFF.getTargetPose();
     }
 }
 

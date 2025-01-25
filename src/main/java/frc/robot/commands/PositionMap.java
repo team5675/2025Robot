@@ -6,7 +6,7 @@ import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-public enum AlignmentConstants {
+public enum PositionMap {
     OFF("OFF, No Aligning!", new Pose2d()),
 	A("Driving to Reef A", new Pose2d(1.235,7.045, new Rotation2d(12))),
 	B("Driving to Reef B", new Pose2d(1.0,1.0, new Rotation2d(12))),
@@ -26,7 +26,7 @@ public enum AlignmentConstants {
     blueBarge("Driving to blueBarge", new Pose2d()),
     processor("Driving to processor", new Pose2d());
 
-    AlignmentConstants(String info, Pose2d pose) {
+    PositionMap(String info, Pose2d pose) {
         this.name = info;
         this.pose = pose;
     }
