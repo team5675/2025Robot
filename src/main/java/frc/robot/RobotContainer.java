@@ -47,6 +47,8 @@ public class RobotContainer {
  /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
+    public Command pathfindingCommand;
+
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("P");
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -84,7 +86,15 @@ public class RobotContainer {
         driverController.rightTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "right"));
         driverController.leftTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "left"));
 
-        driverController.povLeft().whileTrue(new PathPlannerLineup(drivetrain, "left"));
+
+        pathfindingCommand = AutoBuilder.pathfindToPose(
+       Constants.AlignmentConstants.A_BLUE,
+        Constants.PathplannerConstants.constraints,
+        0.0 // Goal end velocity in meters/sec
+        );
+
+        pathfindingCommand.schedule();
+
         driverController.povRight().whileTrue(new PathPlannerLineup(drivetrain, "right"));
 
         driverController.povUp().onTrue(new BlinkLimelightCommand(driverController));
