@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.CenterOnAprilTagCommand;
+import frc.robot.commands.Alignment.CenterOnAprilTagCommand;
+import frc.robot.commands.Alignment.PathPlannerLineup;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -75,7 +76,12 @@ public class RobotContainer {
         driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        driverController.povUp().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive));
+        //driverController.povUp().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive));
+        driverController.rightTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "right"));
+        driverController.leftTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "left"));
+
+        driverController.povLeft().whileTrue(new PathPlannerLineup(drivetrain, "left"));
+        driverController.povRight().whileTrue(new PathPlannerLineup(drivetrain, "right"));
 
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));

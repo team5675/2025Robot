@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.subsystems.limelight;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -24,11 +24,16 @@ public class LimelightCommand extends Command {
   public double tx;
   public double ty;
   public double tid;
+  public double lastValidTid;
 
   @Override
   public void execute() {
     this.tx = this.limelightTable.getEntry("tx").getDouble(-1);
     this.ty = this.limelightTable.getEntry("ty").getDouble(-1);
     this.tid = this.limelightTable.getEntry("tid").getDouble(-1);
+
+    if ((int)this.tid != -1) {
+      this.lastValidTid = this.tid;
+    }
   }
 }

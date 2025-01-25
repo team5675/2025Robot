@@ -9,11 +9,12 @@ import frc.robot.Constants;
 
 public class BlinkLimelightCommand extends Command {
   Timer time;
-  NetworkTableEntry led = NetworkTableInstance.getDefault().getTable(Constants.LimelightConstants.limelightName).getEntry("ledMode");
+  NetworkTableEntry led;
   CommandXboxController driverController;
 
   public BlinkLimelightCommand(CommandXboxController controller) {
     this.driverController = controller;
+    this.led = NetworkTableInstance.getDefault().getTable(Constants.LimelightConstants.limelightName).getEntry("ledMode");
   }
 
   @Override
