@@ -33,6 +33,7 @@ public class AutoAlignCommand extends Command {
         // Check if the Limelight sees a tag
         if (LimelightHelpers.getTV("limelight")) { 
             double[] botPose = LimelightHelpers.getBotPose_TargetSpace("limelight");
+            
 
             if (botPose.length >= 6) { // Ensure valid pose data
                 double currentX = botPose[0];  // Robot's X position in target space

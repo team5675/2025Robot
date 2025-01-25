@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -389,5 +390,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
+    }
+    public void driveApplySpeeds(double xVelocity, double yVelocity, double angularVelocity) {
+        this.setControl(
+            new SwerveRequest.FieldCentric()
+                //.withDeadband(DEADBAND)
+                .withVelocityX(xVelocity)
+                .withVelocityY(yVelocity)
+                .withRotationalRate(angularVelocity)
+                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+        );
+    }
+    public void stop() {
+        this.driveApplySpeeds(0, 0, 0);
     }
 }

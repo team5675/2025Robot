@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.CenterOnAprilTagCommand;
+import frc.robot.commands.ChatGPTCommand;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -84,6 +85,7 @@ public class RobotContainer {
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         driverController.povLeft().whileTrue(new AutoAlignCommand(drivetrain));
+        driverController.povRight().whileTrue(new ChatGPTCommand(drivetrain));
 
         // PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
 
