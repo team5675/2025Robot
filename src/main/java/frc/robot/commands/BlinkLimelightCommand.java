@@ -5,10 +5,11 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 
 public class BlinkLimelightCommand extends Command {
   Timer time;
-  NetworkTableEntry led = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode");
+  NetworkTableEntry led = NetworkTableInstance.getDefault().getTable(Constants.LimelightConstants.limelightName).getEntry("ledMode");
   CommandXboxController driverController;
 
   public BlinkLimelightCommand(CommandXboxController controller) {

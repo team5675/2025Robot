@@ -4,8 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -24,6 +27,8 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+
+import java.util.function.Function;
 
 import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -51,17 +56,13 @@ public class CenterOnAprilTagCommand extends Command {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+@Override
+public void execute() {
     LimelightCommand limelight = LimelightPolling.getInstance().limelights.get(Constants.LimelightConstants.limelightName);
 
-    //System.out.printf("CenterOnAprilTag: April Tag ID: %.2f", limelight.tid);
-    //System.out.println();
-
-    // System.out.println(this.aprilTagID);
     if (limelight.tid == -1) {
-      System.out.println("CenterOnAprilTag: No April Tag Detected.");
-      return;
+        System.out.println("CenterOnAprilTag: No April Tag Detected.");
+        return;
     }
 
     Pose2d limelightEstimatedPose = LimelightHelpers.getBotPose2d(Constants.LimelightConstants.limelightName);
@@ -75,13 +76,78 @@ public class CenterOnAprilTagCommand extends Command {
     SmartDashboard.putNumber("AprilTag TX", limelight.tx);
     SmartDashboard.putNumber("AprilTag TY", limelight.ty);
 
-    SmartDashboard.putNumber("Attempted Velo:", driveRequest.Speeds.vyMetersPerSecond);
-    System.out.println();
+    ProfiledPIDController xController = new ProfiledPIDController(2.0, 0.0, 0.0, new TrapezoidProfile.Constraints(15.0, 3.0), 0.02);
 
-    //this.tx = limelight.tx; // Don't use this; it's for the isFinished function
+    ProfiledPIDController yController = new ProfiledPIDController(2.0, 0.0, 0.0, new TrapezoidProfile.Constraints(15.0, 3.0), 0.02);
 
-    //getDesiredPose(limelight.tid);
-  }
+    ProfiledPIDController oController = new ProfiledPIDController(2.0, 0.0, 0.0, new TrapezoidProfile.Constraints(15.0, 3.0), 0.02);
+
+    Pose2d targetPose = getRightDesiredPose(limelight.tid);
+    double xSpeed = xController.calculate(poseEstimatedPose.getX(), targetPose.getX());
+    double ySpeed = yController.calculate(poseEstimatedPose.getY(), targetPose.getY());
+    double oSpeed = oController.calculate(poseEstimatedPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+
+    drivetrain.driveApplySpeeds(xSpeed, ySpeed, oSpeed);
+}
+
+// Function to get the pose for right branches
+private Pose2d getRightDesiredPose(double id) {
+    switch ((int) id) {
+        case 1: return AlignmentConstants.coral1.getTargetPose();
+        case 2: return AlignmentConstants.coral3.getTargetPose();
+        case 3: return AlignmentConstants.processor.getTargetPose();
+        case 4: return AlignmentConstants.blueBarge.getTargetPose();
+        case 5: return AlignmentConstants.redBarge.getTargetPose();
+        case 6: return AlignmentConstants.L.getTargetPose();
+        case 7: return AlignmentConstants.B.getTargetPose();
+        case 8: return AlignmentConstants.D.getTargetPose();
+        case 9: return AlignmentConstants.F.getTargetPose();
+        case 10: return AlignmentConstants.H.getTargetPose();
+        case 11: return AlignmentConstants.J.getTargetPose();
+        case 12: return AlignmentConstants.coral1.getTargetPose();
+        case 13: return AlignmentConstants.coral3.getTargetPose();
+        case 14: return AlignmentConstants.redBarge.getTargetPose();
+        case 15: return AlignmentConstants.blueBarge.getTargetPose();
+        case 16: return AlignmentConstants.processor.getTargetPose();
+        case 17: return AlignmentConstants.D.getTargetPose();
+        case 18: return AlignmentConstants.B.getTargetPose();
+        case 19: return AlignmentConstants.L.getTargetPose();
+        case 20: return AlignmentConstants.J.getTargetPose();
+        case 21: return AlignmentConstants.H.getTargetPose();
+        case 22: return AlignmentConstants.F.getTargetPose();
+        default: return AlignmentConstants.OFF.getTargetPose();
+    }
+}
+
+// Function to get the pose for left branches
+private Pose2d leftRightDesiredPose(double id) {
+    switch ((int) id) {
+        case 1: return AlignmentConstants.coral1.getTargetPose();
+        case 2: return AlignmentConstants.coral3.getTargetPose();
+        case 3: return AlignmentConstants.processor.getTargetPose();
+        case 4: return AlignmentConstants.blueBarge.getTargetPose();
+        case 5: return AlignmentConstants.redBarge.getTargetPose();
+        case 6: return AlignmentConstants.K.getTargetPose();
+        case 7: return AlignmentConstants.A.getTargetPose();
+        case 8: return AlignmentConstants.C.getTargetPose();
+        case 9: return AlignmentConstants.E.getTargetPose();
+        case 10: return AlignmentConstants.G.getTargetPose();
+        case 11: return AlignmentConstants.I.getTargetPose();
+        case 12: return AlignmentConstants.coral1.getTargetPose();
+        case 13: return AlignmentConstants.coral3.getTargetPose();
+        case 14: return AlignmentConstants.redBarge.getTargetPose();
+        case 15: return AlignmentConstants.blueBarge.getTargetPose();
+        case 16: return AlignmentConstants.processor.getTargetPose();
+        case 17: return AlignmentConstants.C.getTargetPose();
+        case 18: return AlignmentConstants.A.getTargetPose();
+        case 19: return AlignmentConstants.K.getTargetPose();
+        case 20: return AlignmentConstants.I.getTargetPose();
+        case 21: return AlignmentConstants.G.getTargetPose();
+        case 22: return AlignmentConstants.E.getTargetPose();
+        default: return AlignmentConstants.OFF.getTargetPose();
+    }
+}
+
 
   // Called once the command ends or is interrupted.
   @Override
@@ -99,7 +165,3 @@ public class CenterOnAprilTagCommand extends Command {
     return false; 
   }
 }
-
-// public enum AutoAlignmentPositions {
-//   reefA()
-// }
