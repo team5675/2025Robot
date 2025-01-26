@@ -18,12 +18,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.BlinkLimelightCommand;
 import frc.robot.commands.Alignment.CenterOnAprilTagCommand;
 import frc.robot.commands.Alignment.PathPlannerLineup;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.limelight.LimelightPolling;
 
 public class RobotContainer {
 
@@ -54,8 +52,6 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         configureBindings();
-
-        LimelightPolling.getInstance();
     }
 
     private void configureBindings() {
@@ -87,22 +83,13 @@ public class RobotContainer {
         driverController.leftTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "left"));
 
 
-        pathfindingCommand = AutoBuilder.pathfindToPose(
-       Constants.AlignmentConstants.A_BLUE,
-        Constants.PathplannerConstants.constraints,
-        0.0 // Goal end velocity in meters/sec
-        );
-
-        pathfindingCommand.schedule();
-
-        driverController.povRight().whileTrue(new PathPlannerLineup(drivetrain, "right"));
-
-        driverController.povUp().onTrue(new BlinkLimelightCommand(driverController));
-
+   
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        // PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+        driverController.a().whileTrue(drivetrain.driveToPose(drivetrain, "left")); 
+        driverController.b().whileTrue(drivetrain.driveToPose(drivetrain, "right"));
+
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
