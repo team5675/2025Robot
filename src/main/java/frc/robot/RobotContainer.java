@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Alignment.CenterOnAprilTagCommand;
-import frc.robot.commands.Alignment.DrivetoPoseCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -94,8 +93,13 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        driverController.leftBumper().whileTrue(drivetrain.driveToPose(drivetrain, "left"));  // ✅ Now consistent
-        driverController.rightBumper().whileTrue(drivetrain.driveToPose(drivetrain, "right"));
+        driverController.leftBumper().onTrue(Commands.run(() -> { 
+            drivetrain.driveToPose(drivetrain, "left").schedule();
+            System.out.println("Pathfinding Command Scheduled");}))
+            .onFalse(Commands.run(() ->{ drivetrain.driveToPose(drivetrain, "left").cancel();
+            System.out.println("Pathfinding Command Cancelled");})); 
+
+        driverController.rightBumper().onTrue(drivetrain.driveToPose(drivetrain, "right"));
 
         // driverController.a().whileTrue(new DrivetoPoseCommand(drivetrain, "left"));
         // driverController.b().whileTrue(new DrivetoPoseCommand(drivetrain, "right"));

@@ -19,8 +19,6 @@ import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.limelight.LimelightCommand;
-import frc.robot.subsystems.limelight.LimelightPolling;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -54,8 +52,6 @@ public class CenterOnAprilTagCommand extends Command {
     this.lineupDirection = direction;
   }
 
-  LimelightCommand limelight;
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -65,15 +61,13 @@ public class CenterOnAprilTagCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    limelight = LimelightPolling.getInstance().limelights.get(Constants.LimelightConstants.limelightName);
+    double tid =LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
 //double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
 
-    SmartDashboard.putNumber("AprilTag TID", limelight.tid);
-    SmartDashboard.putNumber("Last known TID", limelight.lastValidTid);
-    SmartDashboard.putNumber("AprilTag TX", limelight.tx);
-    SmartDashboard.putNumber("AprilTag TY", limelight.ty);
+    SmartDashboard.putNumber("AprilTag TID", tid);
+    //SmartDashboard.putNumber("Last known TID", lastValidTid);
 
-    if (limelight.tid == -1) {
+    if (tid == -1) {
         System.out.println("CenterOnAprilTag: No April Tag Detected.");
         return;
     }
@@ -87,7 +81,7 @@ public class CenterOnAprilTagCommand extends Command {
     yController = new PIDController(0.1, 0.00, 0.05);
     oController = new PIDController(0.1, 0.00, 0.05);
 
-    Pose2d targetPose = this.lineupDirection == "right" ? getRightDesiredPose((int)limelight.tid) : getLeftDesiredPose((int)limelight.tid);
+    Pose2d targetPose = this.lineupDirection == "right" ? getRightDesiredPose((int)tid) : getLeftDesiredPose((int)tid);
     
     SmartDashboard.putNumber("TargetPoseX", targetPose.getX());
     SmartDashboard.putNumber("TargetPoseY", targetPose.getY());

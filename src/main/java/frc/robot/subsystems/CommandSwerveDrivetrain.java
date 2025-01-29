@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
@@ -56,6 +57,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+
+    private boolean useAprilTagUpdates = true;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -311,7 +314,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
         m_poseEstimator.update(this.getPigeon2().getRotation2d(), this.getState().ModulePositions);
-        // Pose Estimation using AprilTags
+        //Pose Estimation using AprilTags
         LimelightHelpers.SetRobotOrientation(
             Constants.LimelightConstants.limelightName,
             this.getPigeon2().getYaw().getValueAsDouble(),
@@ -323,7 +326,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return;
         }
         
-        if (!(mt2.tagCount == 0)) {
+        if (!(mt2.tagCount == 0) && shouldUseAprilTagUpdates()) {
         // If there is an april tag
             m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
             m_poseEstimator.addVisionMeasurement(
@@ -332,8 +335,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             );
             
         }
-        Pose2d pose = new Pose2d(new Translation2d(1,1), new Rotation2d(90,0));
-        System.out.println(m_poseEstimator.getEstimatedPosition());
+        
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
     }
 
@@ -381,6 +383,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Pose2d pose = null;
         double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
 
+        if (aprilTagId == -1) {
+            System.out.println("Warning: No valid AprilTag detected. Defaulting to A_BLUE.");
+        }
+
         if (direction.equals("left")) {
             switch ((int) aprilTagId) {
                 // BLUE SIDE - LEFT POSITIONS (AprilTags 17-22)
@@ -400,7 +406,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 case 6: pose = Constants.AlignmentConstants.K_RED; break;
         
                 default:
-                    pose = new Pose2d();
+                    pose = Constants.AlignmentConstants.A_BLUE;
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
                     break;
             }
@@ -423,13 +429,33 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 case 6: pose = Constants.AlignmentConstants.L_RED; break;
         
                 default:
-                    pose = new Pose2d();
+                    pose = Constants.AlignmentConstants.B_BLUE;
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
                     break;
             }
         }
-        
+
+        if (pose == null) {
+            System.out.println("Error: No valid target pose. Aborting path.");
+            return Commands.none();  // Prevents execution of an invalid path
+        }
+
+        return Commands.sequence(
+        Commands.runOnce(() -> {
+            drivetrain.setUseAprilTagUpdates(false);  // Temporarily disable vision updates
+        }),
+        AutoBuilder.pathfindToPose(pose, Constants.PathplannerConstants.constraints, 0.0),
+        Commands.runOnce(() -> {
+            drivetrain.setUseAprilTagUpdates(true);   // Re-enable vision updates after path
+        })
+    );
+    }
+
+    public void setUseAprilTagUpdates(boolean use) {
+        useAprilTagUpdates = use;
+    }
     
-        return AutoBuilder.pathfindToPose(pose, Constants.PathplannerConstants.constraints, 0.0);
+    public boolean shouldUseAprilTagUpdates() {
+        return useAprilTagUpdates;
     }
 }
