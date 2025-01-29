@@ -317,21 +317,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             this.getPigeon2().getYaw().getValueAsDouble(),
             0, 0, 0, 0, 0
         );
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
+        // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
 
-        if (mt2 == null) {
-            return;
-        }
+        // if (mt2 == null) {
+        //     return;
+        // }
         
-        if (!(mt2.tagCount == 0)) {
-        // If there is an april tag
-            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-            m_poseEstimator.addVisionMeasurement(
-                mt2.pose,
-                mt2.timestampSeconds
-            );
+        // if (!(mt2.tagCount == 0)) {
+        // // If there is an april tag
+        //     m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        //     m_poseEstimator.addVisionMeasurement(
+        //         mt2.pose,
+        //         mt2.timestampSeconds
+        //     );
             
-        }
+        // }
         //Pose2d pose = new Pose2d(new Translation2d(1,1), new Rotation2d(90,0));
         //System.out.println(m_poseEstimator.getEstimatedPosition());
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
@@ -381,47 +381,52 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Pose2d pose = null;
         double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
 
-      if (direction.equals("left")) {
-       switch (((int)aprilTagId)) {
-        case 3: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 4: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 5: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 6: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 7: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 8: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 9: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 10: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 13: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 14: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 16: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 17: pose = Constants.AlignmentConstants.A_BLUE; break;
+        if (direction.equals("left")) {
+            switch ((int) aprilTagId) {
+                // BLUE SIDE - LEFT POSITIONS (AprilTags 17-22)
                 case 18: pose = Constants.AlignmentConstants.A_BLUE; break;
+                case 19: pose = Constants.AlignmentConstants.K_BLUE; break;
+                case 20: pose = Constants.AlignmentConstants.I_BLUE; break;
+                case 21: pose = Constants.AlignmentConstants.G_BLUE; break;
+                case 22: pose = Constants.AlignmentConstants.E_BLUE; break;
+                case 17: pose = Constants.AlignmentConstants.C_BLUE; break;
+        
+                // RED SIDE - LEFT POSITIONS (AprilTags 6-11)
+                case 7: pose = Constants.AlignmentConstants.A_RED; break;
+                case 8: pose = Constants.AlignmentConstants.C_RED; break;
+                case 9: pose = Constants.AlignmentConstants.E_RED; break;
+                case 10: pose = Constants.AlignmentConstants.G_RED; break;
+                case 11: pose = Constants.AlignmentConstants.I_RED; break;
+                case 6: pose = Constants.AlignmentConstants.K_RED; break;
+        
                 default:
-                    pose = Constants.AlignmentConstants.A_BLUE;
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
                     break;
             }
         } else { 
             switch ((int) aprilTagId) {
-                case 3: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 4: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 5: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 6: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 7: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 8: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 9: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 10: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 13: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 14: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 16: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 17: pose = Constants.AlignmentConstants.A_BLUE; break;
+                // BLUE SIDE - RIGHT POSITIONS (AprilTags 17-22)
                 case 18: pose = Constants.AlignmentConstants.B_BLUE; break;
+                case 19: pose = Constants.AlignmentConstants.L_BLUE; break;
+                case 20: pose = Constants.AlignmentConstants.J_BLUE; break;
+                case 21: pose = Constants.AlignmentConstants.H_BLUE; break;
+                case 22: pose = Constants.AlignmentConstants.F_BLUE; break;
+                case 17: pose = Constants.AlignmentConstants.D_BLUE; break;
+        
+                // RED SIDE - RIGHT POSITIONS (AprilTags 6-11)
+                case 7: pose = Constants.AlignmentConstants.B_RED; break;
+                case 8: pose = Constants.AlignmentConstants.D_RED; break;
+                case 9: pose = Constants.AlignmentConstants.F_RED; break;
+                case 10: pose = Constants.AlignmentConstants.H_RED; break;
+                case 11: pose = Constants.AlignmentConstants.J_RED; break;
+                case 6: pose = Constants.AlignmentConstants.L_RED; break;
+        
                 default:
-                    pose = Constants.AlignmentConstants.B_BLUE;
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
                     break;
-      }
-    } 
+            }
+        }
+        
     
         return AutoBuilder.pathfindToPose(pose, Constants.PathplannerConstants.constraints, 0.0);
     }

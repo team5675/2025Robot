@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Alignment.CenterOnAprilTagCommand;
-import frc.robot.commands.Alignment.PathPlannerLineup;
+import frc.robot.commands.Alignment.DrivetoPoseCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -66,10 +66,10 @@ public class RobotContainer {
             )
         );
 
-        driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        driverController.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
-        ));
+        // driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // driverController.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
+        // ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -83,12 +83,22 @@ public class RobotContainer {
         driverController.leftTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "left"));
 
 
-   
+    //     pathfindingCommand = AutoBuilder.pathfindToPose(
+    //    Constants.AlignmentConstants.A_BLUE,
+    //     Constants.PathplannerConstants.constraints,
+    //     0.0 // Goal end velocity in meters/sec
+    //     );
+
+    //     driverController.povRight().whileTrue(Commands.runOnce(()->pathfindingCommand.schedule()));
+
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        driverController.a().whileTrue(drivetrain.driveToPose(drivetrain, "left")); 
+        driverController.a().whileTrue(drivetrain.driveToPose(drivetrain, "left"));  // ✅ Now consistent
         driverController.b().whileTrue(drivetrain.driveToPose(drivetrain, "right"));
+
+        // driverController.a().whileTrue(new DrivetoPoseCommand(drivetrain, "left"));
+        // driverController.b().whileTrue(new DrivetoPoseCommand(drivetrain, "right"));
 
 
         drivetrain.registerTelemetry(logger::telemeterize);
