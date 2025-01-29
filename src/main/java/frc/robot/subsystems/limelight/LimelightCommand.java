@@ -28,7 +28,7 @@ public class LimelightCommand extends Command {
 
   @Override
   public void execute() {
-    System.out.printf("Fetching values: %s", this.limelightName);
+    //System.out.printf("Fetching values: %s", this.limelightName);
     this.tx = this.limelightTable.getEntry("tx").getDouble(-1);
     this.ty = this.limelightTable.getEntry("ty").getDouble(-1);
     this.tid = this.limelightTable.getEntry("tid").getDouble(-1);

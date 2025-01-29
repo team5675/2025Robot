@@ -92,10 +92,10 @@ public class RobotContainer {
     //     driverController.povRight().whileTrue(Commands.runOnce(()->pathfindingCommand.schedule()));
 
         // reset the field-centric heading on left bumper press
-        driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        driverController.a().whileTrue(drivetrain.driveToPose(drivetrain, "left"));  // ✅ Now consistent
-        driverController.b().whileTrue(drivetrain.driveToPose(drivetrain, "right"));
+        driverController.leftBumper().whileTrue(drivetrain.driveToPose(drivetrain, "left"));  // ✅ Now consistent
+        driverController.rightBumper().whileTrue(drivetrain.driveToPose(drivetrain, "right"));
 
         // driverController.a().whileTrue(new DrivetoPoseCommand(drivetrain, "left"));
         // driverController.b().whileTrue(new DrivetoPoseCommand(drivetrain, "right"));

@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Alignment;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,8 +40,9 @@ public class CenterOnAprilTagCommand extends Command {
   public final CommandSwerveDrivetrain drivetrain;
   private final SwerveRequest.ApplyRobotSpeeds driveRequest;
   private final String lineupDirection;
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-  private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+  PIDController xController;
+  PIDController yController;
+  PIDController oController;
 
   public CenterOnAprilTagCommand(CommandSwerveDrivetrain driveTrain, SwerveRequest.FieldCentric drive, String direction) {
     this.drivetrain = driveTrain;
@@ -64,25 +66,26 @@ public class CenterOnAprilTagCommand extends Command {
   @Override
   public void execute() {
     limelight = LimelightPolling.getInstance().limelights.get(Constants.LimelightConstants.limelightName);
-    double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
+//double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
+
+    SmartDashboard.putNumber("AprilTag TID", limelight.tid);
+    SmartDashboard.putNumber("Last known TID", limelight.lastValidTid);
+    SmartDashboard.putNumber("AprilTag TX", limelight.tx);
+    SmartDashboard.putNumber("AprilTag TY", limelight.ty);
 
     if (limelight.tid == -1) {
         System.out.println("CenterOnAprilTag: No April Tag Detected.");
         return;
     }
+    
     Pose2d poseEstimatedPose = drivetrain.m_poseEstimator.getEstimatedPosition();
 
     SmartDashboard.putNumber("Pose Estimator X", poseEstimatedPose.getX());
     SmartDashboard.putNumber("Pose Estimator Y", poseEstimatedPose.getY());
 
-    SmartDashboard.putNumber("AprilTag TX", limelight.tx);
-    SmartDashboard.putNumber("AprilTag TY", limelight.ty);
-    SmartDashboard.putNumber("AprilTag TID", limelight.tid);
-    SmartDashboard.putNumber("Last known TID", limelight.lastValidTid);
-
-    ProfiledPIDController xController = new ProfiledPIDController(0.1, 0.00, 0.05, new TrapezoidProfile.Constraints(MaxSpeed, MaxAngularRate), 0.02);
-    ProfiledPIDController yController = new ProfiledPIDController(0.1, 0.00, 0.05, new TrapezoidProfile.Constraints(MaxSpeed, MaxAngularRate), 0.02);
-    ProfiledPIDController oController = new ProfiledPIDController(0.1, 0.00, 0.05, new TrapezoidProfile.Constraints(MaxSpeed, MaxAngularRate), 0.02);
+    xController = new PIDController(0.1, 0.00, 0.05);
+    yController = new PIDController(0.1, 0.00, 0.05);
+    oController = new PIDController(0.1, 0.00, 0.05);
 
     Pose2d targetPose = this.lineupDirection == "right" ? getRightDesiredPose((int)limelight.tid) : getLeftDesiredPose((int)limelight.tid);
     
@@ -96,34 +99,36 @@ public class CenterOnAprilTagCommand extends Command {
     drivetrain.driveApplySpeeds(xSpeed, ySpeed, oSpeed);
 }
 
+  private Pose2d defaultPose = Constants.AlignmentConstants.B_RED;
+
   // Function to get the pose for right branches
   private Pose2d getRightDesiredPose(int aprilTagId) {
-    return Constants.AlignmentConstants.B_BLUE;
-  //   switch (aprilTagId) {
-  //     case 1:  return Constants.AlignmentConstants.CORAL1_RED;
-  //     case 2:  return Constants.AlignmentConstants.CORAL3_RED;
-  //     case 3:  return Constants.AlignmentConstants.PROCESSOR_RED;
-  //     case 4:  return Constants.AlignmentConstants.BLUE_BARGE_RED;
-  //     case 5:  return Constants.AlignmentConstants.RED_BARGE_RED;
-  //     case 6:  return Constants.AlignmentConstants.L_RED;
-  //     case 7:  return Constants.AlignmentConstants.B_RED;
-  //     case 8:  return Constants.AlignmentConstants.D_RED;
-  //     case 9:  return Constants.AlignmentConstants.F_RED;
-  //     case 10: return Constants.AlignmentConstants.H_RED;
-  //     case 11: return Constants.AlignmentConstants.J_RED;
-  //     case 12: return Constants.AlignmentConstants.CORAL1_BLUE;
-  //     case 13: return Constants.AlignmentConstants.CORAL3_BLUE;
-  //     case 14: return Constants.AlignmentConstants.RED_BARGE_BLUE;
-  //     case 15: return Constants.AlignmentConstants.BLUE_BARGE_BLUE;
-  //     case 16: return Constants.AlignmentConstants.PROCESSOR_BLUE;
-  //     case 17: return Constants.AlignmentConstants.D_BLUE;
-  //     case 18: return Constants.AlignmentConstants.B_BLUE;
-  //     case 19: return Constants.AlignmentConstants.L_BLUE;
-  //     case 20: return Constants.AlignmentConstants.J_BLUE;
-  //     case 21: return Constants.AlignmentConstants.H_BLUE;
-  //     case 22: return Constants.AlignmentConstants.F_BLUE;
-  //     default: return Constants.AlignmentConstants.OFF_BLUE;
-  // }
+   // return Constants.AlignmentConstants.B_BLUE;
+    switch (aprilTagId) {
+      case 1:  return Constants.AlignmentConstants.CORAL1_RED;
+      case 2:  return Constants.AlignmentConstants.CORAL3_RED;
+      case 3:  return Constants.AlignmentConstants.PROCESSOR_RED;
+      case 4:  return Constants.AlignmentConstants.BLUE_BARGE_RED;
+      case 5:  return Constants.AlignmentConstants.RED_BARGE_RED;
+      case 6:  return Constants.AlignmentConstants.L_RED;
+      case 7:  return Constants.AlignmentConstants.B_RED;
+      case 8:  return Constants.AlignmentConstants.D_RED;
+      case 9:  return Constants.AlignmentConstants.F_RED;
+      case 10: return Constants.AlignmentConstants.H_RED;
+      case 11: return Constants.AlignmentConstants.J_RED;
+      case 12: return Constants.AlignmentConstants.CORAL1_BLUE;
+      case 13: return Constants.AlignmentConstants.CORAL3_BLUE;
+      case 14: return Constants.AlignmentConstants.RED_BARGE_BLUE;
+      case 15: return Constants.AlignmentConstants.BLUE_BARGE_BLUE;
+      case 16: return Constants.AlignmentConstants.PROCESSOR_BLUE;
+      case 17: return Constants.AlignmentConstants.D_BLUE;
+      case 18: return Constants.AlignmentConstants.B_BLUE;
+      case 19: return Constants.AlignmentConstants.L_BLUE;
+      case 20: return Constants.AlignmentConstants.J_BLUE;
+      case 21: return Constants.AlignmentConstants.H_BLUE;
+      case 22: return Constants.AlignmentConstants.F_BLUE;
+      default: return defaultPose;
+  }
 }
 
   // Function to get the pose for left branches
@@ -151,7 +156,7 @@ public class CenterOnAprilTagCommand extends Command {
       case 20: return Constants.AlignmentConstants.I_BLUE;
       case 21: return Constants.AlignmentConstants.G_BLUE;
       case 22: return Constants.AlignmentConstants.E_BLUE;
-      default: return Constants.AlignmentConstants.OFF_BLUE;
+      default: return defaultPose;
   }
 }
 

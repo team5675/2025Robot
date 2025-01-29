@@ -317,23 +317,23 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             this.getPigeon2().getYaw().getValueAsDouble(),
             0, 0, 0, 0, 0
         );
-        // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
 
-        // if (mt2 == null) {
-        //     return;
-        // }
+        if (mt2 == null) {
+            return;
+        }
         
-        // if (!(mt2.tagCount == 0)) {
-        // // If there is an april tag
-        //     m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        //     m_poseEstimator.addVisionMeasurement(
-        //         mt2.pose,
-        //         mt2.timestampSeconds
-        //     );
+        if (!(mt2.tagCount == 0)) {
+        // If there is an april tag
+            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+            m_poseEstimator.addVisionMeasurement(
+                mt2.pose,
+                mt2.timestampSeconds
+            );
             
-        // }
-        //Pose2d pose = new Pose2d(new Translation2d(1,1), new Rotation2d(90,0));
-        //System.out.println(m_poseEstimator.getEstimatedPosition());
+        }
+        Pose2d pose = new Pose2d(new Translation2d(1,1), new Rotation2d(90,0));
+        System.out.println(m_poseEstimator.getEstimatedPosition());
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
     }
 
@@ -400,6 +400,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 case 6: pose = Constants.AlignmentConstants.K_RED; break;
         
                 default:
+                    pose = new Pose2d();
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
                     break;
             }
@@ -422,6 +423,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 case 6: pose = Constants.AlignmentConstants.L_RED; break;
         
                 default:
+                    pose = new Pose2d();
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
                     break;
             }
