@@ -16,7 +16,7 @@ public class Constants {
     public class PathplannerConstants {
         // Create the constraints to use while pathfinding
         public static final PathConstraints constraints = new PathConstraints(
-        5.0, 4.0,
+        3.0, 4.0,
             Units.degreesToRadians(540), Units.degreesToRadians(720));
     }
     public class AlignmentConstants {

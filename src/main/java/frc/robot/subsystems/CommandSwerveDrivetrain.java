@@ -440,15 +440,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return Commands.none();  // Prevents execution of an invalid path
         }
 
-        return Commands.sequence(
-        Commands.runOnce(() -> {
-            drivetrain.setUseAprilTagUpdates(false);  // Temporarily disable vision updates
-        }),
-        AutoBuilder.pathfindToPose(pose, Constants.PathplannerConstants.constraints, 0.0),
-        Commands.runOnce(() -> {
-            drivetrain.setUseAprilTagUpdates(true);   // Re-enable vision updates after path
-        })
-    );
+        return AutoBuilder.pathfindToPose(pose, Constants.PathplannerConstants.constraints, 0.0);
+        
     }
 
     public void setUseAprilTagUpdates(boolean use) {
