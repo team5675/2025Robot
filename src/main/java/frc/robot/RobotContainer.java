@@ -65,10 +65,10 @@ public class RobotContainer {
             )
         );
 
-        // driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // driverController.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
-        // ));
+        driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        driverController.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
+        ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -78,31 +78,23 @@ public class RobotContainer {
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         //driverController.povUp().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive));
-        driverController.rightTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "right"));
-        driverController.leftTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "left"));
-
-
-    //     pathfindingCommand = AutoBuilder.pathfindToPose(
-    //    Constants.AlignmentConstants.A_BLUE,
-    //     Constants.PathplannerConstants.constraints,
-    //     0.0 // Goal end velocity in meters/sec
-    //     );
-
-    //     driverController.povRight().whileTrue(Commands.runOnce(()->pathfindingCommand.schedule()));
+        // driverController.rightTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "right"));
+        // driverController.leftTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "left"));
 
         // reset the field-centric heading on left bumper press
-        driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        driverController.leftBumper().onTrue(Commands.run(() -> { 
-            drivetrain.driveToPose(drivetrain, "left").schedule();
-            System.out.println("Pathfinding Command Scheduled");}))
-            .onFalse(Commands.run(() ->{ drivetrain.driveToPose(drivetrain, "left").cancel();
-            System.out.println("Pathfinding Command Cancelled");})); 
+        Command pathfindToRedA = AutoBuilder.pathfindToPose(
+        Constants.AlignmentConstants.A_RED,
+        Constants.PathplannerConstants.constraints,
+        0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+);
 
-        driverController.rightBumper().onTrue(drivetrain.driveToPose(drivetrain, "right"));
+    driverController.leftTrigger().whileTrue(Commands.run(() -> {pathfindToRedA.schedule();
+    System.out.println("Pathfinding Command Scheduled");
+  } )).whileFalse(Commands.run(() -> pathfindToRedA.cancel()));
 
-        // driverController.a().whileTrue(new DrivetoPoseCommand(drivetrain, "left"));
-        // driverController.b().whileTrue(new DrivetoPoseCommand(drivetrain, "right"));
+        driverController.rightTrigger().onTrue(drivetrain.driveToPose(drivetrain, "right"));
 
 
         drivetrain.registerTelemetry(logger::telemeterize);

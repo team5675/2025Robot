@@ -318,7 +318,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         LimelightHelpers.SetRobotOrientation(
             Constants.LimelightConstants.limelightName,
             this.getPigeon2().getYaw().getValueAsDouble(),
-            0, 0, 0, 0, 0
+            0, 0, -19, 0, 0
         );
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
 
@@ -326,9 +326,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return;
         }
         
-        if (!(mt2.tagCount == 0) && shouldUseAprilTagUpdates()) {
+        if (!(mt2.tagCount == 0)) {
         // If there is an april tag
-            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,0.7));
             m_poseEstimator.addVisionMeasurement(
                 mt2.pose,
                 mt2.timestampSeconds
@@ -343,7 +343,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         try {
             RobotConfig config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
-                () -> getState().Pose,   // Supplier of current robot pose
+                () -> this.m_poseEstimator.getEstimatedPosition(),   // Supplier of current robot pose
                 this::resetPose,         // Consumer for seeding pose against auto
                 () -> getState().Speeds, // Supplier of current robot speeds
                 // Consumer of ChassisSpeeds and feedforwards to drive the robot
