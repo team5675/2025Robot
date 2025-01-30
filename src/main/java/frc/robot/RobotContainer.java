@@ -11,6 +11,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,6 +48,7 @@ public class RobotContainer {
     public Command pathfindingCommand;
 
     public RobotContainer() {
+        
         autoChooser = AutoBuilder.buildAutoChooser("P");
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -84,17 +86,17 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        Command pathfindToRedA = AutoBuilder.pathfindToPose(
-        Constants.AlignmentConstants.A_RED,
+        Command pathfindToBlueA = AutoBuilder.pathfindToPose(
+        new Pose2d(3.1, 4.19, new Rotation2d(Math.toRadians(0))),
         Constants.PathplannerConstants.constraints,
-        0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-);
+        0 
+        );
 
-    driverController.leftTrigger().whileTrue(Commands.run(() -> {pathfindToRedA.schedule();
-    System.out.println("Pathfinding Command Scheduled");
-  } )).whileFalse(Commands.run(() -> pathfindToRedA.cancel()));
+        driverController.a().whileTrue(Commands.run(() -> {pathfindToBlueA.schedule();
+        System.out.println("Pathfinding Command Scheduled");    
+    } )).whileFalse(Commands.run(() -> pathfindToBlueA.cancel()));
 
-        driverController.rightTrigger().onTrue(drivetrain.driveToPose(drivetrain, "right"));
+        //driverController.b().onTrue(drivetrain.driveToPose(drivetrain, "right"));
 
 
         drivetrain.registerTelemetry(logger::telemeterize);
