@@ -85,10 +85,10 @@ public class RobotContainer {
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         Command pathfindToBlueA = AutoBuilder.pathfindToPoseFlipped(
-        Constants.AlignmentConstants.A_BLUE,
-        Constants.PathplannerConstants.constraints,
-        0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-);
+            Constants.AlignmentConstants.A_BLUE,
+            Constants.PathplannerConstants.constraints,
+            0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+        );
 
         // driverController.leftTrigger().whileTrue(Commands.run(() -> {pathfindToBlueA.schedule();
         // System.out.println("Pathfinding Command Scheduled"); }))
