@@ -337,6 +337,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
+
+        //Debug Values
+        SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+        SmartDashboard.putNumber("Limelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.limelightName, "tid"));
+        SmartDashboard.putString("Limelight Pose", mt2.pose.toString());
     }
 
     public void configAutoBuilder() {
@@ -354,9 +359,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 ),
                 new PPHolonomicDriveController(
                     // PID constants for translation
-                    new PIDConstants(10, 0, 0),
+                    new PIDConstants(5, 0, 0),
                     // PID constants for rotation
-                    new PIDConstants(7, 0, 0)
+                    new PIDConstants(3, 0, 0)
                 ),
                 config,
                 // Assume the path needs to be flipped for Red vs Blue, this is normally the case
@@ -390,20 +395,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (direction.equals("left")) {
             switch ((int) aprilTagId) {
                 // BLUE SIDE - LEFT POSITIONS (AprilTags 17-22)
-                case 18: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 19: pose = Constants.AlignmentConstants.K_BLUE; break;
-                case 20: pose = Constants.AlignmentConstants.I_BLUE; break;
-                case 21: pose = Constants.AlignmentConstants.G_BLUE; break;
-                case 22: pose = Constants.AlignmentConstants.E_BLUE; break;
-                case 17: pose = Constants.AlignmentConstants.C_BLUE; break;
+                case 18, 7: pose = Constants.AlignmentConstants.A_BLUE; break;
+                case 19, 6: pose = Constants.AlignmentConstants.K_BLUE; break;
+                case 20, 11: pose = Constants.AlignmentConstants.I_BLUE; break;
+                case 21, 10: pose = Constants.AlignmentConstants.G_BLUE; break;
+                case 22, 9: pose = Constants.AlignmentConstants.E_BLUE; break;
+                case 17, 8: pose = Constants.AlignmentConstants.C_BLUE; break;
         
                 // RED SIDE - LEFT POSITIONS (AprilTags 6-11)
-                case 7: pose = Constants.AlignmentConstants.A_RED; break;
-                case 8: pose = Constants.AlignmentConstants.C_RED; break;
-                case 9: pose = Constants.AlignmentConstants.E_RED; break;
-                case 10: pose = Constants.AlignmentConstants.G_RED; break;
-                case 11: pose = Constants.AlignmentConstants.I_RED; break;
-                case 6: pose = Constants.AlignmentConstants.K_RED; break;
+                // case 7: pose = Constants.AlignmentConstants.A_RED; break;
+                // case 8: pose = Constants.AlignmentConstants.C_RED; break;
+                // case 9: pose = Constants.AlignmentConstants.E_RED; break;
+                // case 10: pose = Constants.AlignmentConstants.G_RED; break;
+                // case 11: pose = Constants.AlignmentConstants.I_RED; break;
+                // case 6: pose = Constants.AlignmentConstants.K_RED; break;
         
                 default:
                     pose = Constants.AlignmentConstants.A_BLUE;
@@ -413,20 +418,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } else { 
             switch ((int) aprilTagId) {
                 // BLUE SIDE - RIGHT POSITIONS (AprilTags 17-22)
-                case 18: pose = Constants.AlignmentConstants.B_BLUE; break;
-                case 19: pose = Constants.AlignmentConstants.L_BLUE; break;
-                case 20: pose = Constants.AlignmentConstants.J_BLUE; break;
-                case 21: pose = Constants.AlignmentConstants.H_BLUE; break;
-                case 22: pose = Constants.AlignmentConstants.F_BLUE; break;
-                case 17: pose = Constants.AlignmentConstants.D_BLUE; break;
+                case 18, 7: pose = Constants.AlignmentConstants.B_BLUE; break;
+                case 19, 6: pose = Constants.AlignmentConstants.L_BLUE; break;
+                case 20, 11: pose = Constants.AlignmentConstants.J_BLUE; break;
+                case 21, 10: pose = Constants.AlignmentConstants.H_BLUE; break;
+                case 22, 9: pose = Constants.AlignmentConstants.F_BLUE; break;
+                case 17, 8: pose = Constants.AlignmentConstants.D_BLUE; break;
         
                 // RED SIDE - RIGHT POSITIONS (AprilTags 6-11)
-                case 7: pose = Constants.AlignmentConstants.B_RED; break;
-                case 8: pose = Constants.AlignmentConstants.D_RED; break;
-                case 9: pose = Constants.AlignmentConstants.F_RED; break;
-                case 10: pose = Constants.AlignmentConstants.H_RED; break;
-                case 11: pose = Constants.AlignmentConstants.J_RED; break;
-                case 6: pose = Constants.AlignmentConstants.L_RED; break;
+                // case 7: pose = Constants.AlignmentConstants.B_RED; break;
+                // case 8: pose = Constants.AlignmentConstants.D_RED; break;
+                // case 9: pose = Constants.AlignmentConstants.F_RED; break;
+                // case 10: pose = Constants.AlignmentConstants.H_RED; break;
+                // case 11: pose = Constants.AlignmentConstants.J_RED; break;
+                // case 6: pose = Constants.AlignmentConstants.L_RED; break;
         
                 default:
                     pose = Constants.AlignmentConstants.B_BLUE;
