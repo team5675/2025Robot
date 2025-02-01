@@ -7,7 +7,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -18,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.Alignment.CenterOnAprilTagCommand;
+import frc.robot.commands.DriveToPoseCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -77,24 +76,14 @@ public class RobotContainer {
         driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        //driverController.povUp().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive));
-        // driverController.rightTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "right"));
-        // driverController.leftTrigger().whileTrue(new CenterOnAprilTagCommand(drivetrain, drive, "left"));
-
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        Command pathfindToBlueA = AutoBuilder.pathfindToPoseFlipped(
-        Constants.AlignmentConstants.A_BLUE,
-        Constants.PathplannerConstants.constraints,
-        0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-);
+        driverController.leftTrigger()
+            .whileTrue(new DriveToPoseCommand(drivetrain, "left"));
 
-        // driverController.leftTrigger().whileTrue(Commands.run(() -> {pathfindToBlueA.schedule();
-        // System.out.println("Pathfinding Command Scheduled"); }))
-        // .whileFalse(Commands.run(() -> pathfindToBlueA.cancel()));
-        driverController.leftTrigger().whileTrue(drivetrain.driveToPose(drivetrain, "left"));
-        driverController.rightTrigger().whileTrue(drivetrain.driveToPose(drivetrain, "right"));
+        driverController.rightTrigger()
+            .whileTrue(new DriveToPoseCommand(drivetrain, "right"));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

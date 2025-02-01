@@ -15,12 +15,10 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -30,7 +28,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
@@ -58,7 +55,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
-    private boolean useAprilTagUpdates = true;
+    public SwerveDrivePoseEstimator m_poseEstimator;
+    public Field2d m_field;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -146,15 +144,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // Rotation2d
         // SwerveModulePosition[]
         // Pose2d
-        this.m_poseEstimator = new SwerveDrivePoseEstimator(
+        m_poseEstimator = new SwerveDrivePoseEstimator(
             this.getKinematics(),
             this.getPigeon2().getRotation2d(),
             this.getState().ModulePositions,
             this.getState().Pose
         );
-        
+
+        // this.getPigeon2().setYaw(0);
+
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
+
+        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, 0.307,0.0,0.333, 0.0, -18, 
+        0.0  // Since your Limelight faces forward, CAMERA_YAW should be 0°
+);
     }
 
     /**
@@ -185,7 +189,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // Rotation2d
         // SwerveModulePosition[]
         // Pose2d
-        this.m_poseEstimator = new SwerveDrivePoseEstimator(
+        m_poseEstimator = new SwerveDrivePoseEstimator(
             this.getKinematics(),
             this.getPigeon2().getRotation2d(),
             this.getState().ModulePositions,
@@ -194,6 +198,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
+
+        // this.getPigeon2().setYaw(0);
+
+        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, 0.307,0.0,0.333, 0.0, -18, 
+        0.0  // Since your Limelight faces forward, CAMERA_YAW should be 0°
+);
     }
 
     /**
@@ -232,7 +242,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // Rotation2d
         // SwerveModulePosition[]
         // Pose2d
-        this.m_poseEstimator = new SwerveDrivePoseEstimator(
+        m_poseEstimator = new SwerveDrivePoseEstimator(
             this.getKinematics(),
             this.getPigeon2().getRotation2d(),
             this.getState().ModulePositions,
@@ -241,6 +251,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
+
+        // this.getPigeon2().setYaw(0);
+
+        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, 0.307,0.0,0.333, 0.0, -18, 
+        0.0  // Since your Limelight faces forward, CAMERA_YAW should be 0°
+);
     }
 
     /**
@@ -291,9 +307,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
-    public SwerveDrivePoseEstimator m_poseEstimator;
-    public Field2d m_field;
-
     @Override
     public void periodic() {
         /*
@@ -315,9 +328,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         m_poseEstimator.update(this.getPigeon2().getRotation2d(), this.getState().ModulePositions);
         //Pose Estimation using AprilTags
+        double redAllianceYaw = this.getPigeon2().getYaw().getValueAsDouble();
+
+        // If on Red Alliance add 180° to the yaw
+        if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            redAllianceYaw += 180;
+        }
+        redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
+
         LimelightHelpers.SetRobotOrientation(
             Constants.LimelightConstants.limelightName,
-            this.getPigeon2().getYaw().getValueAsDouble(),
+            redAllianceYaw,
             0, 0, 0, 0, 0
         );
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
@@ -342,13 +363,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
         SmartDashboard.putNumber("Limelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.limelightName, "tid"));
         SmartDashboard.putString("Limelight Pose", mt2.pose.toString());
+        SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
+        SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName).pose.getRotation().getDegrees());
     }
 
     public void configAutoBuilder() {
         try {
             RobotConfig config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
-                () -> this.m_poseEstimator.getEstimatedPosition(),   // Supplier of current robot pose
+                () -> m_poseEstimator.getEstimatedPosition(),   // Supplier of current robot pose
                 this::resetPose,         // Consumer for seeding pose against auto
                 () -> getState().Speeds, // Supplier of current robot speeds
                 // Consumer of ChassisSpeeds and feedforwards to drive the robot
@@ -383,80 +406,5 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
         );
-    }
-    public Command driveToPose(CommandSwerveDrivetrain drivetrain, String direction) {
-        Pose2d pose = null;
-        double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
-
-        if (aprilTagId == -1) {
-            System.out.println("\n\nWarning: No valid AprilTag detected. Defaulting to A_BLUE.");
-        }
-
-        if (direction.equals("left")) {
-            switch ((int) aprilTagId) {
-                // BLUE SIDE - LEFT POSITIONS (AprilTags 17-22)
-                case 18, 7: pose = Constants.AlignmentConstants.A_BLUE; break;
-                case 19, 6: pose = Constants.AlignmentConstants.K_BLUE; break;
-                case 20, 11: pose = Constants.AlignmentConstants.I_BLUE; break;
-                case 21, 10: pose = Constants.AlignmentConstants.G_BLUE; break;
-                case 22, 9: pose = Constants.AlignmentConstants.E_BLUE; break;
-                case 17, 8: pose = Constants.AlignmentConstants.C_BLUE; break;
-        
-                // RED SIDE - LEFT POSITIONS (AprilTags 6-11)
-                // case 7: pose = Constants.AlignmentConstants.A_RED; break;
-                // case 8: pose = Constants.AlignmentConstants.C_RED; break;
-                // case 9: pose = Constants.AlignmentConstants.E_RED; break;
-                // case 10: pose = Constants.AlignmentConstants.G_RED; break;
-                // case 11: pose = Constants.AlignmentConstants.I_RED; break;
-                // case 6: pose = Constants.AlignmentConstants.K_RED; break;
-        
-                default:
-                    pose = Constants.AlignmentConstants.A_BLUE;
-                    System.out.println( "\n\nDefaulting to A_BLUE.");
-                    System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
-                    break;
-            }
-        } else { 
-            switch ((int) aprilTagId) {
-                // BLUE SIDE - RIGHT POSITIONS (AprilTags 17-22)
-                case 18, 7: pose = Constants.AlignmentConstants.B_BLUE; break;
-                case 19, 6: pose = Constants.AlignmentConstants.L_BLUE; break;
-                case 20, 11: pose = Constants.AlignmentConstants.J_BLUE; break;
-                case 21, 10: pose = Constants.AlignmentConstants.H_BLUE; break;
-                case 22, 9: pose = Constants.AlignmentConstants.F_BLUE; break;
-                case 17, 8: pose = Constants.AlignmentConstants.D_BLUE; break;
-        
-                // RED SIDE - RIGHT POSITIONS (AprilTags 6-11)
-                // case 7: pose = Constants.AlignmentConstants.B_RED; break;
-                // case 8: pose = Constants.AlignmentConstants.D_RED; break;
-                // case 9: pose = Constants.AlignmentConstants.F_RED; break;
-                // case 10: pose = Constants.AlignmentConstants.H_RED; break;
-                // case 11: pose = Constants.AlignmentConstants.J_RED; break;
-                // case 6: pose = Constants.AlignmentConstants.L_RED; break;
-        
-                default:
-                    pose = Constants.AlignmentConstants.B_BLUE;
-                    System.out.println( "\n\nDefaulting to B_BLUE.");
-                    System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
-                    break;
-            }
-        }
-
-        if (pose == null) {
-            System.out.println("\n\nError: No valid target pose. Aborting path.");
-            return Commands.none();  // Prevents execution of an invalid path
-        }
-        System.out.println("\n\n\nPose"+ pose.toString());
-
-        return AutoBuilder.pathfindToPoseFlipped(pose, Constants.PathplannerConstants.constraints, 0.0);
-        
-    }
-
-    public void setUseAprilTagUpdates(boolean use) {
-        useAprilTagUpdates = use;
-    }
-    
-    public boolean shouldUseAprilTagUpdates() {
-        return useAprilTagUpdates;
     }
 }
