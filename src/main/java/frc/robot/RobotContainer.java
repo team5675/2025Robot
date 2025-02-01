@@ -90,11 +90,11 @@ public class RobotContainer {
         0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
 );
 
-        driverController.leftTrigger().whileTrue(Commands.run(() -> {pathfindToBlueA.schedule();
-        System.out.println("Pathfinding Command Scheduled"); }))
-        .whileFalse(Commands.run(() -> pathfindToBlueA.cancel()));
-
-        driverController.rightTrigger().onTrue(drivetrain.driveToPose(drivetrain, "right"));
+        // driverController.leftTrigger().whileTrue(Commands.run(() -> {pathfindToBlueA.schedule();
+        // System.out.println("Pathfinding Command Scheduled"); }))
+        // .whileFalse(Commands.run(() -> pathfindToBlueA.cancel()));
+        driverController.leftTrigger().whileTrue(drivetrain.driveToPose(drivetrain, "left"));
+        driverController.rightTrigger().whileTrue(drivetrain.driveToPose(drivetrain, "right"));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

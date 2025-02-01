@@ -389,7 +389,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
 
         if (aprilTagId == -1) {
-            System.out.println("Warning: No valid AprilTag detected. Defaulting to A_BLUE.");
+            System.out.println("\n\nWarning: No valid AprilTag detected. Defaulting to A_BLUE.");
         }
 
         if (direction.equals("left")) {
@@ -412,6 +412,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
                 default:
                     pose = Constants.AlignmentConstants.A_BLUE;
+                    System.out.println( "\n\nDefaulting to A_BLUE.");
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
                     break;
             }
@@ -435,17 +436,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
                 default:
                     pose = Constants.AlignmentConstants.B_BLUE;
+                    System.out.println( "\n\nDefaulting to B_BLUE.");
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
                     break;
             }
         }
 
         if (pose == null) {
-            System.out.println("Error: No valid target pose. Aborting path.");
+            System.out.println("\n\nError: No valid target pose. Aborting path.");
             return Commands.none();  // Prevents execution of an invalid path
         }
+        System.out.println("\n\n\nPose"+ pose.toString());
 
-        return AutoBuilder.pathfindToPose(pose, Constants.PathplannerConstants.constraints, 0.0);
+        return AutoBuilder.pathfindToPoseFlipped(pose, Constants.PathplannerConstants.constraints, 0.0);
         
     }
 
