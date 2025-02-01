@@ -12,11 +12,13 @@ public class DriveToPoseCommand extends Command {
     private final String direction;
     private Pose2d targetPose;
     private Command pathCommand;
+    private int lastValidAprilTagId;
 
     public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction) {
         this.drivetrain = drivetrain;
         this.direction = direction;
         addRequirements(drivetrain);
+        lastValidAprilTagId = -1;
     }
 
     @Override
@@ -43,15 +45,20 @@ public class DriveToPoseCommand extends Command {
 
     /** Dynamically updates the target pose based on AprilTag ID */
     private void updateTargetPose() {
-        double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
+        int currentTagId = (int) LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
 
-        if (aprilTagId == -1) {
-            System.out.println("No valid AprilTag detected. Defaulting to A_BLUE.");
-            targetPose = Constants.AlignmentConstants.A_BLUE;
-        } else {
-            targetPose = getTargetPose((int) aprilTagId);
+        if (currentTagId == -1) {
+            System.out.println("No valid AprilTag detected. Keeping last known tag: " + lastValidAprilTagId);
+            return;  // Do NOT update if no valid tag is detected
         }
-    }
+
+        // If we see a NEW valid AprilTag, update the cache and get the new pose
+        if (currentTagId != lastValidAprilTagId) {
+            lastValidAprilTagId = currentTagId;  // Store the new tag ID
+            targetPose = getTargetPose(currentTagId);
+            System.out.println("Updated Target Pose: " + targetPose);
+        }
+        }
 
     /** Starts a new path following command to the current target pose */
     private void startPath() {
