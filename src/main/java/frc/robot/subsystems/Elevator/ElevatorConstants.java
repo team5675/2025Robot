@@ -20,7 +20,11 @@ public final class ElevatorConstants {
 	public static final Distance ALGAE_HIGH_HEIGHT = Meters.of(1);
 	public static final Distance ALGAE_PROCESSOR_HEIGHT = Meters.of(1);
 
-    public static final Distance METERS_PER_ROTATION = Meters.of(1);
+	public static final Distance MAX_HEIGHT = Meters.of(3.0);
+
+	public static final LinearVelocity MAX_VELOCITY = MetersPerSecond.of(0.5);
+	
+	public static final double PID_TICKS_PER_METER = 5.0;
 
     public static final LinearVelocity ZEROING_VELOCITY = MetersPerSecond.of(0.25);
 }

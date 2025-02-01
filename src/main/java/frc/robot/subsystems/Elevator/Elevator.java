@@ -6,6 +6,7 @@ package frc.robot.subsystems.Elevator;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -63,9 +64,9 @@ public class Elevator extends SubsystemBase {
     motorConfig.voltageCompensation(12);
     motorConfig.idleMode(IdleMode.kBrake);
 
-    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-    limitSwitch = new DigitalInput(1);
+    limitSwitch = new DigitalInput(0);
   }
 
 	public void runElevator() {
@@ -73,12 +74,12 @@ public class Elevator extends SubsystemBase {
 	}
 
 	public void setTarget(double height) {
-    sparkPidController.setReference(height, ControlType.kPosition);
+    // height: Height in meters.
+    // Use the PID controller to set the target height.
+    double pidTicks = height * ElevatorConstants.PID_TICKS_PER_METER;
+    sparkPidController.setReference(pidTicks, ControlType.kPosition);
+    SmartDashboard.putNumber("Process Variable", ticksEncoder.getPosition());
 	}
-
-  public boolean nearTarget() {
-    return pidController.atGoal();
-  }
 
 	public void zero() {
 		double zeroingSpeed = -ElevatorConstants.ZEROING_VELOCITY.in(MetersPerSecond);
@@ -86,9 +87,9 @@ public class Elevator extends SubsystemBase {
 		if (!limitSwitch.get()) {
       zeroingSpeed = 0;
     }
-    // add detection based on voltage spike
 
-		motor.set(zeroingSpeed);
+    // add detection based on voltage spike
+		sparkPidController.setReference(zeroingSpeed, ControlType.kVelocity);
 	}
 
   @Override
