@@ -28,8 +28,6 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-
-
 public class Elevator extends SubsystemBase {
   private static Elevator instance;
 
@@ -44,7 +42,6 @@ public class Elevator extends SubsystemBase {
   public SparkMax motor;
   public SparkMaxConfig motorConfig;
   private SparkClosedLoopController sparkPidController;
-  private ProfiledPIDController pidController;
   private DigitalInput limitSwitch;
 
   SparkAbsoluteEncoder angleEncoder;
@@ -55,9 +52,9 @@ public class Elevator extends SubsystemBase {
     motorConfig = new SparkMaxConfig();
 
     sparkPidController = motor.getClosedLoopController();
-    pidController = new ProfiledPIDController(ElevatorConstants.motorP, ElevatorConstants.motorI, ElevatorConstants.motorD, null);
+    //pidController = new ProfiledPIDController(ElevatorConstants.motorP, ElevatorConstants.motorI, ElevatorConstants.motorD, null);
     
-    angleEncoder =  motor.getAbsoluteEncoder();
+    angleEncoder = motor.getAbsoluteEncoder();
     ticksEncoder = motor.getEncoder();
 
     motorConfig.smartCurrentLimit(0);
@@ -70,14 +67,12 @@ public class Elevator extends SubsystemBase {
   }
 
 	public void runElevator() {
-		this.setTarget(ElevatorConstants.L4_HEIGHT.in(Meters));
+		this.setTarget(ElevatorConstants.L4_HEIGHT);
 	}
 
-	public void setTarget(double height) {
-    // height: Height in meters.
-    // Use the PID controller to set the target height.
-    double pidTicks = height * ElevatorConstants.PID_TICKS_PER_METER;
-    sparkPidController.setReference(pidTicks, ControlType.kPosition);
+	public void setTarget(double ticks) {
+    sparkPidController.setReference(ticks, ControlType.kPosition);
+    SmartDashboard.putNumber("Ticks", ticks);
     SmartDashboard.putNumber("Process Variable", ticksEncoder.getPosition());
 	}
 

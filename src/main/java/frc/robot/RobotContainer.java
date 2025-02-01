@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Alignment.CenterOnAprilTagCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Elevator.Elevator;
 
 public class RobotContainer {
 
@@ -95,6 +96,9 @@ public class RobotContainer {
         // .whileFalse(Commands.run(() -> pathfindToBlueA.cancel()));
         driverController.leftTrigger().whileTrue(drivetrain.driveToPose(drivetrain, "left"));
         driverController.rightTrigger().whileTrue(drivetrain.driveToPose(drivetrain, "right"));
+
+        driverController.povUp().onTrue(Elevator.getInstance().runOnce(() -> Elevator.getInstance().runElevator()));
+        driverController.povDown().whileTrue(Elevator.getInstance().run(() -> Elevator.getInstance().zero()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
