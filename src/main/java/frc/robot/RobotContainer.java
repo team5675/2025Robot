@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveToPoseCommand;
@@ -80,17 +79,11 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        Command pathfindToBlueA = AutoBuilder.pathfindToPoseFlipped(
-        Constants.AlignmentConstants.A_BLUE,
-        Constants.PathplannerConstants.constraints,
-        0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-);
+        driverController.leftTrigger()
+            .whileTrue(new DriveToPoseCommand(drivetrain, "left"));
 
-        // driverController.leftTrigger().whileTrue(Commands.run(() -> {pathfindToBlueA.schedule();
-        // System.out.println("Pathfinding Command Scheduled"); }))
-        // .whileFalse(Commands.run(() -> pathfindToBlueA.cancel()));
-        driverController.leftTrigger().whileTrue(drivetrain.driveToPose(drivetrain, "left"));
-        driverController.rightTrigger().whileTrue(drivetrain.driveToPose(drivetrain, "right"));
+        driverController.rightTrigger()
+            .whileTrue(new DriveToPoseCommand(drivetrain, "right"));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
