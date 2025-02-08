@@ -331,9 +331,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double redAllianceYaw = this.getPigeon2().getYaw().getValueAsDouble();
 
         // If on Red Alliance add 180° to the yaw
-        if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-            redAllianceYaw += 180;
-        }
+        // if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+        //     redAllianceYaw += 180;
+        // }
         redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
 
         LimelightHelpers.SetRobotOrientation(
@@ -355,16 +355,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 mt2.timestampSeconds
             );
             
-        }
+         }
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
         //Debug Values
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
         SmartDashboard.putNumber("Limelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.limelightName, "tid"));
-        SmartDashboard.putString("Limelight Pose", mt2.pose.toString());
+        //SmartDashboard.putString("Limelight Pose", mt2.pose.toString());
         SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
         SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName).pose.getRotation().getDegrees());
+        
     }
 
     public void configAutoBuilder() {
@@ -382,9 +383,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 ),
                 new PPHolonomicDriveController(
                     // PID constants for translation
-                    new PIDConstants(5, 0, 0),
+                    new PIDConstants(5,0,0),
                     // PID constants for rotation
-                    new PIDConstants(3, 0, 0)
+                    //R = rotation
+                    new PIDConstants(3,0,0)
                 ),
                 config,
                 // Assume the path needs to be flipped for Red vs Blue, this is normally the case
