@@ -5,67 +5,90 @@ import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.LimelightHelpers;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.util.FlippingUtil;
+
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriveToPoseCommand extends Command {
     private final CommandSwerveDrivetrain drivetrain;
     private final String direction;
     private Pose2d targetPose;
     private Command pathCommand;
-    private int lastValidAprilTagId;
 
     public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction) {
         this.drivetrain = drivetrain;
         this.direction = direction;
         addRequirements(drivetrain);
-        lastValidAprilTagId = -1;
     }
 
     @Override
     public void initialize() {
         System.out.println("Starting DriveToPoseCommand...");
-        updateTargetPose();  // Get the initial target pose
+        updateTargetPose();
         startPath();
     }
 
     @Override
     public void execute() {
-        updateTargetPose();
+        if (pathCommand != null) {
+            pathCommand.execute(); 
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return pathCommand == null || pathCommand.isFinished(); // Stop when PathPlanner finishes
+        return pathCommand == null || pathCommand.isFinished();
     }
 
     @Override
     public void end(boolean interrupted) {
+        pathCommand.cancel();
         System.out.println("DriveToPoseCommand finished.");
     }
 
-    /** Dynamically updates the target pose based on AprilTag ID */
+    /** Updates the target pose dynamically based on AprilTag ID */
     private void updateTargetPose() {
-        int currentTagId = (int) LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
+        double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
 
-        if (currentTagId == -1) {
-            System.out.println("No valid AprilTag detected. Keeping last known tag: " + lastValidAprilTagId);
-            return;  // Do NOT update if no valid tag is detected
+        if (aprilTagId == -1) {
+            System.out.println("No valid AprilTag detected. Defaulting to A_BLUE.");
+            targetPose = Constants.AlignmentConstants.A_BLUE;
+        } else {
+            targetPose = getTargetPose((int) aprilTagId);
         }
 
-        // If we see a NEW valid AprilTag, update the cache and get the new pose
-        if (currentTagId != lastValidAprilTagId) {
-            lastValidAprilTagId = currentTagId;  // Store the new tag ID
-            targetPose = getTargetPose(currentTagId);
-            System.out.println("Updated Target Pose: " + targetPose);
-        }
-        }
+        // Flip pose if we're on the red alliance
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) targetPose = FlippingUtil.flipFieldPose(targetPose);
+        
+    }
 
-    /** Starts a new path following command to the current target pose */
+    /** Creates and follows a smooth path to the target pose */
     private void startPath() {
+
         if (targetPose != null) {
             System.out.println("Driving to: " + targetPose);
-            pathCommand = AutoBuilder.pathfindToPoseFlipped(targetPose, Constants.PathplannerConstants.constraints, 0.0);
-            pathCommand.schedule();
+
+            List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(drivetrain.m_poseEstimator.getEstimatedPosition(), targetPose);
+
+            // Generate a smooth path from the robot's current pose to targetPose
+            PathPlannerPath generatedPath = new PathPlannerPath(waypoints, 
+                Constants.PathplannerConstants.constraints, null, 
+                new GoalEndState(0, targetPose.getRotation())); 
+            
+            //Prevents flipping of the current pose
+            generatedPath.preventFlipping = true;
+
+            // Follow the dynamically created path
+            pathCommand = AutoBuilder.followPath(generatedPath);
+
+            // Instead of scheduling it, call `execute()` manually
+            pathCommand.initialize();
         }
     }
 
