@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveToPoseCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -35,6 +36,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController driverController = new CommandXboxController(0);
+    private final CommandXboxController auxController = new CommandXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
@@ -77,12 +79,35 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
+        // Driver
         driverController.leftTrigger()
             .whileTrue(new DriveToPoseCommand(drivetrain, "left"));
 
         driverController.rightTrigger()
             .whileTrue(new DriveToPoseCommand(drivetrain, "right"));
+
+        //Aux Button Board
+        //Climber
+        //auxController.a()
+        //auxController.b()
+
+        //Coral
+        // auxController.x().whileTrue(new IntakeCommand());
+        // auxController.y();
+        // auxController.rightTrigger();
+
+        //Algae
+        // auxController.leftBumper().whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(-0.2)));
+        // auxController.leftBumper().whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
+        // auxController.rightBumper().whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0.2)));
+        // auxController.rightBumper().whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
+        
+        //Elevator
+        //auxController.leftTrigger().onTrue(Commands.runOnce(() -> Elevator.getInstance().reset()));
+        //auxController.povUp().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L1_HEIGHT)));
+        //auxController.povDown().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L2_HEIGHT)));
+        //auxController.povRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L3_HEIGHT)));
+        //auxController.povLeft().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L4_HEIGHT)));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
