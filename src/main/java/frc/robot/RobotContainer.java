@@ -14,12 +14,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveToPoseCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Algae.Algae;
+import frc.robot.subsystems.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorConstants;
 
 public class RobotContainer {
 
@@ -86,28 +91,32 @@ public class RobotContainer {
         driverController.rightTrigger()
             .whileTrue(new DriveToPoseCommand(drivetrain, "right"));
 
-        //Aux Button Board
-        //Climber
-        //auxController.a()
-        //auxController.b()
+        // Aux Button Board
 
-        //Coral
-        // auxController.x().whileTrue(new IntakeCommand());
-        // auxController.y();
-        // auxController.rightTrigger();
+        // Climber
+        // auxController.y().onTrue(Climber.getInstance().runOnce(() -> Climber.getInstance().runClaw()));
+        // auxController.x();
 
-        //Algae
+        // Coral
+        // auxController.rightTrigger().whileTrue(new IntakeCommand());
+        // auxController.a().whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(1)));
+        // auxController.a().whileFalse(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(0)));
+        // auxController.b().whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(-1)));
+        // auxController.b().whileFalse(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(0)));
+
+        // Algae
         // auxController.leftBumper().whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(-0.2)));
         // auxController.leftBumper().whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
         // auxController.rightBumper().whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0.2)));
         // auxController.rightBumper().whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
         
-        //Elevator
-        //auxController.leftTrigger().onTrue(Commands.runOnce(() -> Elevator.getInstance().reset()));
+        // Elevator
         //auxController.povUp().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L1_HEIGHT)));
         //auxController.povDown().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L2_HEIGHT)));
         //auxController.povRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L3_HEIGHT)));
         //auxController.povLeft().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L4_HEIGHT)));
+        //auxController.povUpRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_HIGH)));
+        //auxController.povUpLeft().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_LOW)));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
