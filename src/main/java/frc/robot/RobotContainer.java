@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -54,6 +55,15 @@ public class RobotContainer {
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("P");
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
+        //NamedCommands.registerCommand("Missed Intake", );
+        NamedCommands.registerCommand("PlaceCommand", Coral.PlaceCommand());
+        NamedCommands.registerCommand("ElevatorL1", Elevator.setTargetCommand(ElevatorConstants.L1_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL2", Elevator.setTargetCommand(ElevatorConstants.L2_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL3", Elevator.setTargetCommand(ElevatorConstants.L3_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL4", Elevator.setTargetCommand(ElevatorConstants.L4_HEIGHT));
+
 
         configureBindings();
     }
@@ -110,13 +120,20 @@ public class RobotContainer {
         // auxController.rightBumper().whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0.2)));
         // auxController.rightBumper().whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
         
-        // Elevator
-        //auxController.povUp().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L1_HEIGHT)));
-        //auxController.povDown().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L2_HEIGHT)));
+        // Elevator      
         //auxController.povRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L3_HEIGHT)));
         //auxController.povLeft().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L4_HEIGHT)));
         //auxController.povUpRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_HIGH)));
         //auxController.povUpLeft().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_LOW)));
+        driverController.leftBumper().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L1_HEIGHT)));
+        driverController.rightBumper().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L2_HEIGHT)));
+
+        driverController.povLeft().onTrue(Commands.runOnce(() -> Elevator.getInstance().motor.set(-0.1)));
+        driverController.povLeft().onFalse(Commands.runOnce(() -> Elevator.getInstance().motor.set(0)));
+
+        driverController.povRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().motor.set(0.1)));
+        driverController.povRight().onFalse(Commands.runOnce(() -> Elevator.getInstance().motor.set(0)));
+
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

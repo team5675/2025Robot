@@ -114,4 +114,10 @@ public class Elevator extends SubsystemBase {
     
     SmartDashboard.putNumber("Process Variable", ticksEncoder.getPosition());
   }
+
+  public static Command setTargetCommand(double height) {
+    return Commands.runOnce(() -> {
+      Elevator.getInstance().setTarget(height);
+    });
+  }
 }

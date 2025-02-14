@@ -12,11 +12,14 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Elevator.Elevator;
 
 public class Coral extends SubsystemBase {
-  public static Coral Coral;
+  public static Coral coral;
   public SparkMax motor;
   public DigitalInput beamBreak1;
   public DigitalInput beamBreak2;
@@ -43,10 +46,16 @@ public class Coral extends SubsystemBase {
   }
 
   public static Coral getInstance(){
-    if (Coral == null){
-      Coral = new Coral();
+    if (coral == null){
+      coral = new Coral();
     }
-    return Coral;
+    return coral;
+  }
+
+  public static Command PlaceCommand() {
+    return Commands.runOnce(() -> {
+      Coral.getInstance().motor.set(1);
+    });
   }
 
 }
