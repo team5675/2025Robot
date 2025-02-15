@@ -54,7 +54,7 @@ public class Elevator extends SubsystemBase {
   private Trigger topTrigger;
 
   SparkAbsoluteEncoder angleEncoder;
-  RelativeEncoder ticksEncoder;
+  public RelativeEncoder ticksEncoder;
 
   double setpoint;
 

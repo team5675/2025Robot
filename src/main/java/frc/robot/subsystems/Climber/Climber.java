@@ -32,7 +32,7 @@ public class Climber extends SubsystemBase {
          ClawMotorConfig.smartCurrentLimit(15);
         ClawMotorConfig.idleMode(IdleMode.kBrake);
         ClawMotorConfig.closedLoop
-                .pid(ClimberConstants.ClawMotorP, ClimberConstants.ClawMotorI, ClimberConstants.ClawMotorD);
+                .pid(0, 0, 0.02);
         ClawMotor.configure(ClawMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
     }
