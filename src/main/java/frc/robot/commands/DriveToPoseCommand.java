@@ -19,6 +19,7 @@ public class DriveToPoseCommand extends Command {
     private final CommandSwerveDrivetrain drivetrain;
     private final String direction;
     private Pose2d targetPose;
+    private Pose2d cache;
     private Command pathCommand;
 
     public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction) {
@@ -55,10 +56,11 @@ public class DriveToPoseCommand extends Command {
     /** Updates the target pose dynamically based on AprilTag ID */
     private void updateTargetPose() {
         double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
-
+        cache = getTargetPose((int) drivetrain.aprilTagCache);
+        
         if (aprilTagId == -1) {
-            System.out.println("No valid AprilTag detected. Defaulting to A_BLUE.");
-            targetPose = Constants.AlignmentConstants.A_BLUE;
+            System.out.println("No valid AprilTag detected. Defaulting to last tag seen");
+            targetPose = cache;
         } else {
             targetPose = getTargetPose((int) aprilTagId);
         }
@@ -95,29 +97,40 @@ public class DriveToPoseCommand extends Command {
     /** Returns the correct target pose based on AprilTag ID and direction */
     private Pose2d getTargetPose(int aprilTagId) {
         return switch (direction) {
-            case "left" -> switch (aprilTagId) {
+            case "Left" -> switch (aprilTagId) {
                 case 18, 7 -> Constants.AlignmentConstants.A_BLUE;
                 case 19, 6 -> Constants.AlignmentConstants.K_BLUE;
                 case 20, 11 -> Constants.AlignmentConstants.I_BLUE;
                 case 21, 10 -> Constants.AlignmentConstants.G_BLUE;
                 case 22, 9 -> Constants.AlignmentConstants.E_BLUE;
                 case 17, 8 -> Constants.AlignmentConstants.C_BLUE;
+                case 12 -> Constants.AlignmentConstants.CORAL1LEFT;
+                case 13 -> Constants.AlignmentConstants.CORAL3LEFT;
+                case 14, 5 -> Constants.AlignmentConstants.BARGELEFT;
+                case 3, 16 -> Constants.AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
                     yield Constants.AlignmentConstants.A_BLUE;
                 }
             };
-            case "right" -> switch (aprilTagId) {
+            case "Right" -> switch (aprilTagId) {
                 case 18, 7 -> Constants.AlignmentConstants.B_BLUE;
                 case 19, 6 -> Constants.AlignmentConstants.L_BLUE;
                 case 20, 11 -> Constants.AlignmentConstants.J_BLUE;
                 case 21, 10 -> Constants.AlignmentConstants.H_BLUE;
                 case 22, 9 -> Constants.AlignmentConstants.F_BLUE;
                 case 17, 8 -> Constants.AlignmentConstants.D_BLUE;
+                case 12 -> Constants.AlignmentConstants.CORAL1RIGHT;
+                case 13 -> Constants.AlignmentConstants.CORAL3RIGHT;
+                case 14, 5 -> Constants.AlignmentConstants.BARGERIGHT;
+                case 3, 16 -> Constants.AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
                     yield Constants.AlignmentConstants.B_BLUE;
                 }
+            };
+            case "MidBarge" -> switch (aprilTagId) {
+                default -> Constants.AlignmentConstants.BARGECENTER;
             };
             default -> Constants.AlignmentConstants.A_BLUE;
         };

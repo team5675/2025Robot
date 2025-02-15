@@ -80,10 +80,12 @@ public class RobotContainer {
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         driverController.leftTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "left"));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Left"));
 
         driverController.rightTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "right"));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Right"));
+
+        driverController.povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge"));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

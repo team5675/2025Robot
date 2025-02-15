@@ -35,11 +35,10 @@ public class Constants {
         private static final Rotation2d GH = new Rotation2d(Math.toRadians(180));
         private static final Rotation2d IJ = new Rotation2d(Math.toRadians(240));
         private static final Rotation2d KL = new Rotation2d(Math.toRadians(300));
-
-
-        // Pose constants
-        public static final Pose2d OFF_BLUE = new Pose2d(1.0, 1.0, AB);
-        public static final Pose2d OFF_RED = new Pose2d();
+        private static final Rotation2d RIGHTCORALSTATION = new Rotation2d(Math.toRadians(53));
+        private static final Rotation2d LEFTCORALSTATION = new Rotation2d(Math.toRadians(-53));
+        private static final Rotation2d BARGE = new Rotation2d(Math.toRadians(180));
+        private static final Rotation2d PROCESSORANGLE = new Rotation2d(Math.toRadians(-90));
 
         // Corrected Pose2d values (same X and Y, updated rotation)
         public static final Pose2d A_BLUE = new Pose2d(3.1, 4.19, AB);
@@ -78,19 +77,16 @@ public class Constants {
         public static final Pose2d L_BLUE = new Pose2d(3.074, 5.056, KL);
         public static final Pose2d L_RED = new Pose2d(13.564, 2.804, KL);
 
-        public static final Pose2d CORAL1_BLUE = new Pose2d(1.217, 7.045, AB);
-        public static final Pose2d CORAL1_RED = new Pose2d();
+        public static final Pose2d CORAL1RIGHT = new Pose2d(1.536, 0.726, RIGHTCORALSTATION);
+        public static final Pose2d CORAL1LEFT = new Pose2d(0.800, 1.258, RIGHTCORALSTATION);
 
-        public static final Pose2d CORAL3_BLUE = new Pose2d();
-        public static final Pose2d CORAL3_RED = new Pose2d();
+        public static final Pose2d CORAL3RIGHT = new Pose2d(1.536, 7.277, LEFTCORALSTATION);
+        public static final Pose2d CORAL3LEFT = new Pose2d(0.81, 6.802, LEFTCORALSTATION);
 
-        public static final Pose2d RED_BARGE_BLUE = new Pose2d();
-        public static final Pose2d RED_BARGE_RED = new Pose2d();
+        public static final Pose2d BARGERIGHT = new Pose2d(8.510, 5.074, BARGE);
+        public static final Pose2d BARGECENTER = new Pose2d(8.510, 6.168, BARGE);
+        public static final Pose2d BARGELEFT = new Pose2d(8.510, 7.228, BARGE);
 
-        public static final Pose2d BLUE_BARGE_BLUE = new Pose2d();
-        public static final Pose2d BLUE_BARGE_RED = new Pose2d();
-
-        public static final Pose2d PROCESSOR_BLUE = new Pose2d();
-        public static final Pose2d PROCESSOR_RED = new Pose2d();
+        public static final Pose2d PROCESSOR = new Pose2d(5.979, 0.541, PROCESSORANGLE);
     }
 }
