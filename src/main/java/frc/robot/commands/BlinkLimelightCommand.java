@@ -6,14 +6,15 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class BlinkLimelightCommand extends Command {
   Timer time;
   NetworkTableEntry led;
   CommandXboxController driverController;
 
-  public BlinkLimelightCommand(CommandXboxController controller) {
-    this.driverController = controller;
+  public BlinkLimelightCommand() {
+    driverController = RobotContainer.getDriverController();
     this.led = NetworkTableInstance.getDefault().getTable(Constants.LimelightConstants.limelightName).getEntry("ledMode");
   }
 
@@ -21,7 +22,7 @@ public class BlinkLimelightCommand extends Command {
   public void initialize() {
     time.reset();
     led.setNumber(2);
-    this.driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
+    driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
   }
 
   @Override
@@ -37,6 +38,6 @@ public class BlinkLimelightCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     led.setNumber(0);
-    this.driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
+    driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
   }
 }
