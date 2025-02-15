@@ -9,12 +9,17 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.fasterxml.jackson.databind.ser.std.ToEmptyObjectSerializer;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
@@ -42,13 +47,19 @@ public class Elevator extends SubsystemBase {
   public SparkMax motor;
   public SparkMaxConfig motorConfig;
   private SparkClosedLoopController sparkPidController;
-  private DigitalInput limitSwitch;
+
+  private DigitalInput topLimitSwitch;
+  private DigitalInput bottomLimitSwitch;
+  private Trigger bottomTrigger;
+  private Trigger topTrigger;
 
   SparkAbsoluteEncoder angleEncoder;
   RelativeEncoder ticksEncoder;
 
+  double setpoint;
+
   public Elevator() {
-    motor = new SparkMax(10, MotorType.kBrushless);
+    motor = new SparkMax(11, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
 
     sparkPidController = motor.getClosedLoopController();
@@ -57,38 +68,56 @@ public class Elevator extends SubsystemBase {
     angleEncoder = motor.getAbsoluteEncoder();
     ticksEncoder = motor.getEncoder();
 
-    motorConfig.smartCurrentLimit(0);
+    motorConfig.smartCurrentLimit(20, 30);
     motorConfig.voltageCompensation(12);
     motorConfig.idleMode(IdleMode.kBrake);
 
-    motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    // replacement for trapezoidprofile
+    motorConfig.closedLoopRampRate(0.5);
 
-    limitSwitch = new DigitalInput(0);
+    motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+
+    bottomLimitSwitch = new DigitalInput(0);
+    topLimitSwitch = new DigitalInput(4);
+    
+    bottomTrigger = new Trigger(bottomLimitSwitch::get);
+    topTrigger = new Trigger(topLimitSwitch::get);
   }
 
-	public void runElevator() {
-		this.setTarget(ElevatorConstants.L4_HEIGHT);
-	}
-
 	public void setTarget(double ticks) {
+    setpoint = ticks;
     sparkPidController.setReference(ticks, ControlType.kPosition);
-    SmartDashboard.putNumber("Ticks", ticks);
-    SmartDashboard.putNumber("Process Variable", ticksEncoder.getPosition());
 	}
 
-	public void zero() {
-		double zeroingSpeed = -ElevatorConstants.ZEROING_VELOCITY.in(MetersPerSecond);
-
-		if (!limitSwitch.get()) {
-      zeroingSpeed = 0;
-    }
-
-    // add detection based on voltage spike
-		sparkPidController.setReference(zeroingSpeed, ControlType.kVelocity);
+	public void reset() {
+    sparkPidController.setReference(0, ControlType.kPosition);
 	}
 
   @Override
   public void periodic() {
-    //SmartDashboard.putNumber(, voltage)
+    // flip for some reason
+    var bottomBool = !bottomTrigger.getAsBoolean();
+    var topBool = topTrigger.getAsBoolean();
+
+    SmartDashboard.putBoolean("Top Tripped", topBool);
+    SmartDashboard.putBoolean("Bottom Tripped", bottomBool);
+
+    if (!bottomBool) {
+      ticksEncoder.setPosition(0);
+    }
+    
+    if (!topBool) {
+      motor.set(0);
+    }
+
+    //SmartDashboard.putNumber("Ticks", ticks);
+    
+    SmartDashboard.putNumber("Process Variable", ticksEncoder.getPosition());
+  }
+
+  public static Command setTargetCommand(double height) {
+    return Commands.runOnce(() -> {
+      Elevator.getInstance().setTarget(height);
+    });
   }
 }
