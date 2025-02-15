@@ -151,14 +151,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             this.getState().Pose
         );
 
-        // this.getPigeon2().setYaw(0);
+        this.getPigeon2().setYaw(0);
+        this.getPigeon2().reset();
 
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, 0.307,0.0,0.333, 0.0, -18, 
-        0.0  // Since your Limelight faces forward, CAMERA_YAW should be 0°
-);
+        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, Constants.LimelightConstants.limelightForward,
+        Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
+        Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
     }
 
     /**
@@ -199,11 +200,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-        // this.getPigeon2().setYaw(0);
+        this.getPigeon2().setYaw(0);
+        this.getPigeon2().reset();
 
-        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, 0.307,0.0,0.333, 0.0, -18, 
-        0.0  // Since your Limelight faces forward, CAMERA_YAW should be 0°
-);
+        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, Constants.LimelightConstants.limelightForward,
+        Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
+        Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
     }
 
     /**
@@ -252,11 +254,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-        // this.getPigeon2().setYaw(0);
+       this.getPigeon2().setYaw(0);
+       this.getPigeon2().reset();
 
-        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, 0.307,0.0,0.333, 0.0, -18, 
-        0.0  // Since your Limelight faces forward, CAMERA_YAW should be 0°
-);
+        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, Constants.LimelightConstants.limelightForward,
+        Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
+        Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
     }
 
     /**
@@ -327,6 +330,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
         m_poseEstimator.update(this.getPigeon2().getRotation2d(), this.getState().ModulePositions);
+
         //Pose Estimation using AprilTags
         double redAllianceYaw = this.getPigeon2().getYaw().getValueAsDouble();
 
@@ -334,7 +338,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
         //     redAllianceYaw += 180;
         // }
-        redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
+        //redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
 
         LimelightHelpers.SetRobotOrientation(
             Constants.LimelightConstants.limelightName,

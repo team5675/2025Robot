@@ -11,6 +11,12 @@ public class Constants {
         public static String limelightName = "limelight";
         public static double kTolerance = 0.2;
         public static double minStrafe = 0.3;
+        public static double limelightForward = 0.3175;
+        public static double limelightSide = 0.0;
+        public static double limelightUp = 0.349;
+        public static double limelightRoll= 0.0;
+        public static double limelightPitch = -16.0;
+        public static double limelightYaw = 0.0;
     }
     
     public class PathplannerConstants {
