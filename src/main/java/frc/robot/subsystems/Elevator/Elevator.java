@@ -35,12 +35,10 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class Elevator extends SubsystemBase {
   private static Elevator instance;
-
   public static Elevator getInstance() {
     if (instance == null) {
       instance = new Elevator();
     }
-
     return instance;
   }
 

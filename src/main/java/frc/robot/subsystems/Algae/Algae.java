@@ -19,21 +19,26 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Algae extends SubsystemBase {
-  private static Algae AlgaeManipulator;
-  
+  private static Algae instance;
+  public static Algae getInstance() {
+    if (instance == null) {
+      instance = new Algae();
+    }
+    return instance;
+  }
+
   private SparkMax wheelsMotor;
   private SparkMax axisMotor;
   private SparkClosedLoopController axisPID;
   private RelativeEncoder ticksEncoder;
   private DigitalInput axisHardStop;
   Trigger axisHardStopTripped;
- 
 
-    public Algae() {
+  public Algae() {
     wheelsMotor = new SparkMax(AlgaeConstants.wheelsID, MotorType.kBrushless);
     SparkMaxConfig wheelsConfig = new SparkMaxConfig();
     wheelsConfig.smartCurrentLimit(15);
-    
+
     axisMotor = new SparkMax(AlgaeConstants.axisID, MotorType.kBrushless);
     ticksEncoder = axisMotor.getEncoder();
 
@@ -42,15 +47,13 @@ public class Algae extends SubsystemBase {
 
     axisPID = axisMotor.getClosedLoopController();
     axisConfig.closedLoop
-    .pid(AlgaeConstants.axisP,AlgaeConstants.axisI,AlgaeConstants.axisD)
-    .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-  
+        .pid(AlgaeConstants.axisP, AlgaeConstants.axisI, AlgaeConstants.axisD)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+
     axisMotor.configure(axisConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
     axisHardStop = new DigitalInput(1);
     axisHardStopTripped = new Trigger(axisHardStop::get);
-    
-
   }
 
   @Override
@@ -58,33 +61,24 @@ public class Algae extends SubsystemBase {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("Axis Ticks", ticksEncoder.getPosition());
 
-    if(axisHardStopTripped.getAsBoolean()){
+    if (axisHardStopTripped.getAsBoolean()) {
       ticksEncoder.setPosition(0);
     }
   }
 
-  public void AxisOut(){
+  public void AxisOut() {
     System.out.println("Out");
     axisPID.setReference(200, ControlType.kPosition);
   }
 
-  public void AxisIn(){
+  public void AxisIn() {
     System.out.println("in");
     axisPID.setReference(0, ControlType.kPosition);
-  
+
   }
 
-  public void flywheelSpin(double speed){
+  public void flywheelSpin(double speed) {
     System.out.println("Spinning Wheel!");
     wheelsMotor.set(speed);
   }
-
-  public static Algae getInstance(){
-    if (AlgaeManipulator == null){
-      AlgaeManipulator = new Algae();
-    }
-    return AlgaeManipulator;
-  }
-
 }
-

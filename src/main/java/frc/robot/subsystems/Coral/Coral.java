@@ -19,7 +19,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Elevator.Elevator;
 
 public class Coral extends SubsystemBase {
-  public static Coral coral;
+  public static Coral instance;
+  public static Coral getInstance() {
+    if (instance == null) {
+      instance = new Coral();
+    }
+    return instance;
+  }
+
   public SparkMax motor;
   public DigitalInput beamBreak1;
   public DigitalInput beamBreak2;
@@ -45,17 +52,9 @@ public class Coral extends SubsystemBase {
     SmartDashboard.getBoolean("2", beamBreak2.get());
   }
 
-  public static Coral getInstance(){
-    if (coral == null){
-      coral = new Coral();
-    }
-    return coral;
-  }
-
   public static Command PlaceCommand() {
     return Commands.runOnce(() -> {
       Coral.getInstance().motor.set(1);
     });
   }
-
 }
