@@ -27,9 +27,8 @@ public class Climber extends SubsystemBase {
     SparkAbsoluteEncoder angleEncoder = ClawMotor.getAbsoluteEncoder();
 
     Climber() {
-        
         ClawMotorConfig = new SparkMaxConfig();
-         ClawMotorConfig.smartCurrentLimit(15);
+        ClawMotorConfig.smartCurrentLimit(15);
         ClawMotorConfig.idleMode(IdleMode.kBrake);
         ClawMotorConfig.closedLoop
                 .pid(0, 0, 0.02);
