@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Climber;
 
+
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -9,34 +10,46 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
-public class Climber extends SubsystemBase {
+public class Climber extends SubsystemBase{
     private static Climber instance;
 
-    public static Climber getInstance() {
-        if (instance == null) {
+    public static Climber getInstance(){
+        if (instance == null){
             instance = new Climber();
         }
         return instance;
-    }
+    } 
+    SparkMax clawmotor = new SparkMax(32, MotorType.kBrushed);
+    SparkMax climberMotor = new SparkMax(22, MotorType.kBrushless);
+    public SparkMaxConfig climberMotorConfig;
+        SparkAbsoluteEncoder angleEncoder;
+    public Climber(){
+        angleEncoder = climberMotor.getAbsoluteEncoder();
+        climberMotorConfig = new SparkMaxConfig();
+      climberMotorConfig.idleMode(IdleMode.kBrake);
+      climberMotorConfig.smartCurrentLimit(15);
+      climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+     //
+}
+public void runclimber(){
+    clawmotor.set(0.5);
+}
+public void stopclimber(){
+    clawmotor.set(0.0);
+}
+public  void closeclaw(){
+climberMotor.setVoltage(5);
+        }
+public void openclaw(){
+    climberMotor.setVoltage(-5);
+}
+public static Subsystem commands() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'commands'");
+}
 
-    public SparkMaxConfig ClawMotorConfig;
-    private SparkClosedLoopController ClawMotorPID;
-    SparkMax ClawMotor = new SparkMax(10, MotorType.kBrushed);
-    SparkAbsoluteEncoder angleEncoder = ClawMotor.getAbsoluteEncoder();
-
-    Climber() {
-        ClawMotorConfig = new SparkMaxConfig();
-        ClawMotorConfig.smartCurrentLimit(15);
-        ClawMotorConfig.idleMode(IdleMode.kBrake);
-        ClawMotorConfig.closedLoop
-                .pid(0, 0, 0.02);
-        ClawMotor.configure(ClawMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-
-    }
-
-    public void runClaw() {
-        ClawMotor.set(0.1);
-    }
 }
