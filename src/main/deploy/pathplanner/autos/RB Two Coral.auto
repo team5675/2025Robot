@@ -19,13 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RC to 6"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "6 to RC"
+            "pathName": "RC to 6R"
           }
         }
       ]

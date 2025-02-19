@@ -353,7 +353,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
         if (!(mt2.tagCount == 0)) {
         // If there is an april tag
-            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,0.7));
+            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,999999));
             m_poseEstimator.addVisionMeasurement(
                 mt2.pose,
                 mt2.timestampSeconds
