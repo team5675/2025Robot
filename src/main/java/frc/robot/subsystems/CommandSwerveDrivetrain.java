@@ -58,6 +58,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public SwerveDrivePoseEstimator m_poseEstimator;
     public Field2d m_field;
 
+    public double aprilTagCache = -1;
+
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -329,6 +331,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+        if(LimelightHelpers.getTV(Constants.LimelightConstants.limelightName)) {
+            aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName); 
+        }
+        
         m_poseEstimator.update(this.getPigeon2().getRotation2d(), this.getState().ModulePositions);
 
         //Pose Estimation using AprilTags
@@ -369,6 +375,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //SmartDashboard.putString("Limelight Pose", mt2.pose.toString());
         SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
         SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName).pose.getRotation().getDegrees());
+        SmartDashboard.putNumber("CacheID", aprilTagCache);
         
     }
 
