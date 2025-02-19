@@ -12,9 +12,11 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -30,19 +32,23 @@ public class Algae extends SubsystemBase {
   private SparkMax wheelsMotor;
   private SparkMax axisMotor;
   private SparkClosedLoopController axisPID;
-  private RelativeEncoder ticksEncoder;
-  private DigitalInput axisHardStop;
-  Trigger axisHardStopTripped;
+  private RelativeEncoder axisTicks;
+  //private DigitalInput axisHardStop;
+  //Trigger axisHardStopTripped;
 
   public Algae() {
     wheelsMotor = new SparkMax(AlgaeConstants.wheelsID, MotorType.kBrushless);
+
     SparkMaxConfig wheelsConfig = new SparkMaxConfig();
     wheelsConfig.smartCurrentLimit(15);
 
+    wheelsMotor.configure(wheelsConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+
     axisMotor = new SparkMax(AlgaeConstants.axisID, MotorType.kBrushless);
-    ticksEncoder = axisMotor.getEncoder();
+    axisTicks = axisMotor.getEncoder();
 
     SparkMaxConfig axisConfig = new SparkMaxConfig();
+    axisConfig.idleMode(IdleMode.kBrake);
     axisConfig.smartCurrentLimit(15);
 
     axisPID = axisMotor.getClosedLoopController();
@@ -52,18 +58,8 @@ public class Algae extends SubsystemBase {
 
     axisMotor.configure(axisConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-    axisHardStop = new DigitalInput(1);
-    axisHardStopTripped = new Trigger(axisHardStop::get);
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("Axis Ticks", ticksEncoder.getPosition());
-
-    if (axisHardStopTripped.getAsBoolean()) {
-      ticksEncoder.setPosition(0);
-    }
+    // axisHardStop = new DigitalInput(1);
+    // axisHardStopTripped = new Trigger(axisHardStop::get);
   }
 
   public void AxisOut() {
@@ -74,11 +70,33 @@ public class Algae extends SubsystemBase {
   public void AxisIn() {
     System.out.println("in");
     axisPID.setReference(0, ControlType.kPosition);
-
   }
 
   public void flywheelSpin(double speed) {
     System.out.println("Spinning Wheel!");
     wheelsMotor.set(speed);
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    
+
+    // if (axisHardStopTripped.getAsBoolean()) {
+    //   ticksEncoder.setPosition(0);
+    // }
+
+    if (axisMotor.getOutputCurrent() > 15) {
+      axisMotor.set(0);
+
+      if (Math.abs(axisTicks.getPosition()) < 5) { // within 5 ticks of zero
+        axisTicks.setPosition(0);
+      }
+    }
+
+    SmartDashboard.putNumber("Axis Ticks", axisTicks.getPosition());
+    SmartDashboard.putNumber("Axis Current", axisMotor.getOutputCurrent());
+
+    SmartDashboard.putNumber("Flywheel Current", wheelsMotor.getOutputCurrent());
   }
 }

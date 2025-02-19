@@ -70,7 +70,7 @@ public class Elevator extends SubsystemBase {
     motorConfig.voltageCompensation(12);
     motorConfig.idleMode(IdleMode.kBrake);
 
-    // replacement for trapezoidprofile
+    // temp replacement for trapezoidprofile
     motorConfig.closedLoopRampRate(0.5);
 
     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
