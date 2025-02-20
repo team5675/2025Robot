@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveToPoseCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.generated.TunerConstants;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.Algae.Algae;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
+import frc.robot.commands.ClimbCommand;
 
 public class RobotContainer {
 
@@ -140,7 +142,7 @@ public class RobotContainer {
 
         getDriverController().povRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().motor.set(0.1)));
         getDriverController().povRight().onFalse(Commands.runOnce(() -> Elevator.getInstance().motor.set(0)));
-
+      //  getDriverController().x().whileTrue(Commands.runOnce(() -> ClimbCommand.getInstance().));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

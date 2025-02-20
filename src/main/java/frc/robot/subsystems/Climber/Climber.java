@@ -27,33 +27,21 @@ public class Climber extends SubsystemBase {
         return instance;
     }
 
-    SparkMax clawmotor = new SparkMax(32, MotorType.kBrushed);
-    SparkMax climberMotor = new SparkMax(22, MotorType.kBrushless);
+    public SparkMaxConfig clawmotorConfig;
     public SparkMaxConfig climberMotorConfig;
-
+    public SparkMax clawmotor = new SparkMax(32, MotorType.kBrushed);
+    public SparkMax ClimberMotor = new SparkMax(22, MotorType.kBrushless);
     public Climber() {
+        
+        clawmotorConfig = new SparkMaxConfig();
+        clawmotorConfig.idleMode(IdleMode.kBrake);
+        clawmotorConfig.smartCurrentLimit(15);
         climberMotorConfig = new SparkMaxConfig();
         climberMotorConfig.idleMode(IdleMode.kBrake);
         climberMotorConfig.smartCurrentLimit(15);
-        climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        ClimberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         //
         LimitSwitch = new DigitalInput(2);
         lsTripped = new Trigger(LimitSwitch::get);
-    }
-
-    public void runclimber() {
-        clawmotor.set(0.5);
-    }
-
-    public void stopclimber() {
-        clawmotor.set(0.0);
-    }
-
-    public void closeclaw() {
-        climberMotor.setVoltage(5);
-    }
-
-    public void openclaw() {
-        climberMotor.setVoltage(-5);
     }
 }
