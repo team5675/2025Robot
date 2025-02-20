@@ -49,8 +49,10 @@ public class DriveToPoseCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        pathCommand.cancel();
-        System.out.println("DriveToPoseCommand finished.");
+        if (pathCommand != null) {
+            pathCommand.cancel();
+            System.out.println("DriveToPoseCommand finished.");
+            }
     }
 
     /** Updates the target pose dynamically based on AprilTag ID */

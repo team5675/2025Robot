@@ -64,10 +64,10 @@ public class RobotContainer {
             )
         );
 
-        driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        driverController.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
-        ));
+        // driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // driverController.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
+        // ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -78,6 +78,8 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
 
         driverController.leftTrigger()
             .whileTrue(new DriveToPoseCommand(drivetrain, "Left"));

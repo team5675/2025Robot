@@ -110,12 +110,6 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "K to LC"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "ElevatorL1"
