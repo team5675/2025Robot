@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Leaving from RB"
+            "pathName": "CB 1 Coral"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "CB",
   "choreoAuto": false
 }

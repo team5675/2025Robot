@@ -7,31 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RB to 5"
+            "pathName": "LB to J"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "5 to RC"
+            "pathName": "J to LC"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RC to 6R"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "6R To RC"
+            "pathName": "LC to K"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
-  "folder": null,
+  "resetOdom": false,
+  "folder": "LB",
   "choreoAuto": false
 }
