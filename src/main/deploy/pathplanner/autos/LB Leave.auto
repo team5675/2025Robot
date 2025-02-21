@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Leaving from RB"
+            "pathName": "LB Leave"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "LB",
   "choreoAuto": false
 }
