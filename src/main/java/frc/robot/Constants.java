@@ -8,7 +8,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class Constants {
 
     public class LimelightConstants {
-        public static String limelightName = "limelight";
+        public static String lowerLimelightName = "limelight";
+        public static String upperLimelightName = "limelight-three";
         public static double kTolerance = 0.2;
         public static double minStrafe = 0.3;
         public static double limelightForward = 0.3175;

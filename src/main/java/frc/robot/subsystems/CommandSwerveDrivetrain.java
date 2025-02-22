@@ -159,7 +159,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, Constants.LimelightConstants.limelightForward,
+        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
         Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
         Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
     }
@@ -205,7 +205,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.getPigeon2().setYaw(0);
         this.getPigeon2().reset();
 
-        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, Constants.LimelightConstants.limelightForward,
+        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
         Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
         Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
     }
@@ -259,7 +259,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
        this.getPigeon2().setYaw(0);
        this.getPigeon2().reset();
 
-        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.limelightName, Constants.LimelightConstants.limelightForward,
+        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
         Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
         Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
     }
@@ -331,8 +331,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        if(LimelightHelpers.getTV(Constants.LimelightConstants.limelightName)) {
-            aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName); 
+        if(LimelightHelpers.getTV(Constants.LimelightConstants.lowerLimelightName)) {
+            aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName); 
         }
         
         m_poseEstimator.update(this.getPigeon2().getRotation2d(), this.getState().ModulePositions);
@@ -347,35 +347,38 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
 
         LimelightHelpers.SetRobotOrientation(
-            Constants.LimelightConstants.limelightName,
+            Constants.LimelightConstants.lowerLimelightName,
             redAllianceYaw,
             0, 0, 0, 0, 0
         );
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName);
+        LimelightHelpers.SetIMUMode(Constants.LimelightConstants.lowerLimelightName, 2);
+        LimelightHelpers.PoseEstimate upperLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.upperLimelightName);
+        LimelightHelpers.PoseEstimate lowerLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName);
 
-        if (mt2 == null) {
+        if (lowerLimelightEstimate == null && upperLimelightEstimate == null) {
             return;
         }
         
-        if (!(mt2.tagCount == 0)) {
-        // If there is an april tag
-            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,999999));
-            m_poseEstimator.addVisionMeasurement(
-                mt2.pose,
-                mt2.timestampSeconds
-            );
-            
-         }
+        // Choose the best estimate based on visibility and distance
+        LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
+        
+        // Apply the selected vision measurement
+        if (bestEstimate != null) {
+            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 999999));
+            m_poseEstimator.addVisionMeasurement(bestEstimate.pose, bestEstimate.timestampSeconds);
+        }
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
         //Debug Values
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-        SmartDashboard.putNumber("Limelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.limelightName, "tid"));
+        SmartDashboard.putNumber("Limelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.lowerLimelightName, "tid"));
         //SmartDashboard.putString("Limelight Pose", mt2.pose.toString());
         SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
-        SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.limelightName).pose.getRotation().getDegrees());
+        SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
         SmartDashboard.putNumber("CacheID", aprilTagCache);
+        SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
         
     }
 
@@ -419,5 +422,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
         );
+    }
+    private LimelightHelpers.PoseEstimate selectBestEstimate(LimelightHelpers.PoseEstimate upper, LimelightHelpers.PoseEstimate lower) {
+        if (upper == null || upper.tagCount == 0) return lower;
+        if (lower == null || lower.tagCount == 0) return upper;
+        return (upper.avgTagDist < lower.avgTagDist) ? upper : lower;
     }
 }

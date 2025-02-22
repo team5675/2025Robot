@@ -57,7 +57,7 @@ public class DriveToPoseCommand extends Command {
 
     /** Updates the target pose dynamically based on AprilTag ID */
     private void updateTargetPose() {
-        double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.limelightName);
+        double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
         cache = getTargetPose((int) drivetrain.aprilTagCache);
         
         if (aprilTagId == -1) {

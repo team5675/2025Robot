@@ -14,7 +14,7 @@ public class BlinkLimelightCommand extends Command {
 
   public BlinkLimelightCommand(CommandXboxController controller) {
     this.driverController = controller;
-    this.led = NetworkTableInstance.getDefault().getTable(Constants.LimelightConstants.limelightName).getEntry("ledMode");
+    this.led = NetworkTableInstance.getDefault().getTable(Constants.LimelightConstants.lowerLimelightName).getEntry("ledMode");
   }
 
   @Override
