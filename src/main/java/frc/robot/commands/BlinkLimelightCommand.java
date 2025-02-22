@@ -15,7 +15,7 @@ public class BlinkLimelightCommand extends Command {
 
   public BlinkLimelightCommand() {
     driverController = RobotContainer.getDriverController();
-    this.led = NetworkTableInstance.getDefault().getTable(Constants.LimelightConstants.limelightName).getEntry("ledMode");
+    this.led = NetworkTableInstance.getDefault().getTable(Constants.LimelightConstants.lowerLimelightName).getEntry("ledMode");
   }
 
   @Override

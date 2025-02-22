@@ -120,14 +120,17 @@ public class RobotContainer {
         getDriverController().start().and(getDriverController().y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         getDriverController().start().and(getDriverController().x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // reset the field-centric heading on left bumper press
+        // reset the field-centric heading on left bumper press and resets gyro on b button press
         getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
         // Driver
         getDriverController().leftTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "left"));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Left"));
 
         getDriverController().rightTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "right"));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Right"));
+
+        getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge"));
 
         // Aux Button Board
 
