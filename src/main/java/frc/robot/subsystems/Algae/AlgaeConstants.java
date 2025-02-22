@@ -10,11 +10,13 @@ public final class AlgaeConstants {
     public static final int wheelsID = 21;
     public static final int axisID = 22;
 
-    public static final double wheelsP = 0.02;
-    public static final double wheelsI = 0;
-    public static final double wheelsD = 0;
-
     public static final double axisP = 0.02;
     public static final double axisI = 0;
     public static final double axisD = 0;
+
+    public static final int AxisOutTicks = 200;
+    public static final int AxisInTicks = 0;
+
+    public static final int voltsStallLimit = 15;
+    public static final int axisTicksTolerance = 5;
 }

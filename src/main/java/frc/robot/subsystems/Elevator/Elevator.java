@@ -4,44 +4,27 @@
 
 package frc.robot.subsystems.Elevator;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants;
-
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
-import com.fasterxml.jackson.databind.ser.std.ToEmptyObjectSerializer;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkAbsoluteEncoder;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.LimitSwitchConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class Elevator extends SubsystemBase {
   private static Elevator instance;
-  public static Elevator getInstance() {
-    if (instance == null) {
-      instance = new Elevator();
-    }
-    return instance;
-  }
-
+  
   public SparkMax motor;
   public SparkMaxConfig motorConfig;
   private SparkClosedLoopController sparkPidController;
@@ -55,9 +38,9 @@ public class Elevator extends SubsystemBase {
   public RelativeEncoder ticksEncoder;
 
   double setpoint;
-
+  
   public Elevator() {
-    motor = new SparkMax(11, MotorType.kBrushless);
+    motor = new SparkMax(ElevatorConstants.motorID, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
 
     sparkPidController = motor.getClosedLoopController();
@@ -65,38 +48,38 @@ public class Elevator extends SubsystemBase {
     
     angleEncoder = motor.getAbsoluteEncoder();
     ticksEncoder = motor.getEncoder();
-
+    
     motorConfig.smartCurrentLimit(20, 30);
     motorConfig.voltageCompensation(12);
     motorConfig.idleMode(IdleMode.kBrake);
-
+    
     // temp replacement for trapezoidprofile
     motorConfig.closedLoopRampRate(0.5);
-
+    
     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-
-    bottomLimitSwitch = new DigitalInput(0);
-    topLimitSwitch = new DigitalInput(4);
+    
+    bottomLimitSwitch = new DigitalInput(ElevatorConstants.bottomLimitSwitchChannel);
+    topLimitSwitch = new DigitalInput(ElevatorConstants.topLimitSwitchChannel);
     
     bottomTrigger = new Trigger(bottomLimitSwitch::get);
     topTrigger = new Trigger(topLimitSwitch::get);
   }
-
+  
 	public void setTarget(double ticks) {
     setpoint = ticks;
     sparkPidController.setReference(ticks, ControlType.kPosition);
 	}
-
+  
 	public void reset() {
     sparkPidController.setReference(0, ControlType.kPosition);
 	}
-
+  
   @Override
   public void periodic() {
     // flip for some reason
     var bottomBool = !bottomTrigger.getAsBoolean();
     var topBool = topTrigger.getAsBoolean();
-
+    
     SmartDashboard.putBoolean("Top Tripped", topBool);
     SmartDashboard.putBoolean("Bottom Tripped", bottomBool);
 
@@ -107,15 +90,21 @@ public class Elevator extends SubsystemBase {
     if (!topBool) {
       motor.set(0);
     }
-
+    
     //SmartDashboard.putNumber("Ticks", ticks);
     
     SmartDashboard.putNumber("Process Variable", ticksEncoder.getPosition());
   }
-
+  
   public static Command setTargetCommand(double height) {
     return Commands.runOnce(() -> {
       Elevator.getInstance().setTarget(height);
     });
+  }
+  public static Elevator getInstance() {
+    if (instance == null) {
+      instance = new Elevator();
+    }
+    return instance;
   }
 }

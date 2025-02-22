@@ -1,14 +1,11 @@
 package frc.robot.subsystems.Elevator;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.LinearVelocity;
-
 public final class ElevatorConstants {
+
+	public static final int motorID = 15;
+	public static final int bottomLimitSwitchChannel = 1;
+	public static final int topLimitSwitchChannel = 2;
+
     public static final double motorP = 0.02;
     public static final double motorI = 0.00;
     public static final double motorD = 0.00;
@@ -24,8 +21,4 @@ public final class ElevatorConstants {
 	public static final double ALGAE_PROCESSOR_HEIGHT = 1;
 
 	public static final double MAX_HEIGHT = 3.0;
-
-	public static final TrapezoidProfile.Constraints MAX_VELOCITY = new TrapezoidProfile.Constraints(2.0, 2.0);
-
-    public static final double ZEROING_VELOCITY = 0.35;
 }
