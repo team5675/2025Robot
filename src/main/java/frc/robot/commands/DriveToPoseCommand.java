@@ -57,6 +57,13 @@ public class DriveToPoseCommand extends Command {
 
     /** Updates the target pose dynamically based on AprilTag ID */
     private void updateTargetPose() {
+
+        if (targetPose != null && drivetrain.m_poseEstimator.getEstimatedPosition().equals(targetPose)) {
+            System.out.println("Already at target pose. No path needed.");
+            pathCommand = null;  // Ensure we don't try to execute a null command
+            return;
+        }
+        
         double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
         cache = getTargetPose((int) drivetrain.aprilTagCache);
         
@@ -72,27 +79,49 @@ public class DriveToPoseCommand extends Command {
         
     }
 
-    /** Creates and follows a smooth path to the target pose */
     private void startPath() {
-
         if (targetPose != null) {
+            Pose2d currentPose = drivetrain.m_poseEstimator.getEstimatedPosition();
+            
+            // Check if the robot is already at the target position within a small tolerance
+            double distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
+            double angleDifference = Math.abs(currentPose.getRotation().getDegrees() - targetPose.getRotation().getDegrees());
+    
+            if (distance < 0.05 && angleDifference < 2) { // 5 cm and 2 degrees tolerance
+                System.out.println("Already at target pose. No path needed.");
+                pathCommand = null;
+                return;
+            }
+    
             System.out.println("Driving to: " + targetPose);
-
-            List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(drivetrain.m_poseEstimator.getEstimatedPosition(), targetPose);
-
-            // Generate a smooth path from the robot's current pose to targetPose
+            
+            List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
+    
+            if (waypoints.isEmpty()) {
+                System.out.println("No waypoints generated. Skipping path.");
+                pathCommand = null;
+                return;
+            }
+    
             PathPlannerPath generatedPath = new PathPlannerPath(waypoints, 
                 Constants.PathplannerConstants.constraints, null, 
-                new GoalEndState(0, targetPose.getRotation())); 
-            
-            //Prevents flipping of the current pose
+                new GoalEndState(0, targetPose.getRotation()));
+    
             generatedPath.preventFlipping = true;
-
-            // Follow the dynamically created path
+    
             pathCommand = AutoBuilder.followPath(generatedPath);
-
-            // Instead of scheduling it, call `execute()` manually
-            pathCommand.initialize();
+    
+            if (pathCommand == null) {
+                System.out.println("PathPlanner failed to generate a command. Skipping execution.");
+                return;
+            }
+    
+            try {
+                pathCommand.initialize();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
         }
     }
 

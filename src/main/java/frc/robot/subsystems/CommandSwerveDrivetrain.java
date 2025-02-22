@@ -346,12 +346,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // }
         //redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
 
+        
         LimelightHelpers.SetRobotOrientation(
             Constants.LimelightConstants.lowerLimelightName,
             redAllianceYaw,
             0, 0, 0, 0, 0
         );
-        LimelightHelpers.SetIMUMode(Constants.LimelightConstants.lowerLimelightName, 2);
+        // LimelightHelpers.SetIMUMode(Constants.LimelightConstants.lowerLimelightName, 0);
         LimelightHelpers.PoseEstimate upperLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.upperLimelightName);
         LimelightHelpers.PoseEstimate lowerLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName);
 
@@ -363,8 +364,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
         
         // Apply the selected vision measurement
-        if (bestEstimate != null) {
-            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 999999));
+        if (bestEstimate.tagCount != 0) {
+            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
             m_poseEstimator.addVisionMeasurement(bestEstimate.pose, bestEstimate.timestampSeconds);
         }
         
@@ -413,6 +414,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void driveApplySpeeds(double xVelocity, double yVelocity, double angularVelocity) {
+
+        xVelocity = MathUtil.applyDeadband(xVelocity, 0.05);
+        yVelocity = MathUtil.applyDeadband(yVelocity, 0.05);
+        angularVelocity = MathUtil.applyDeadband(angularVelocity, 0.05);
         this.setControl(
             new SwerveRequest.FieldCentric()
                 //.withDeadband(DEADBAND)
