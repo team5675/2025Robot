@@ -12,14 +12,16 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveToPoseCommand;
-import frc.robot.commands.IntakeCommand;
+//import frc.robot.commands.IntakeCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Coral.Coral;
@@ -50,7 +52,25 @@ public class RobotContainer {
         return driverController;
     }
 
-    private final CommandXboxController auxController = new CommandXboxController(1);
+    private final Joystick m_Ipac_2 =
+    new Joystick(1);
+
+    JoystickButton ElevatorReset = new JoystickButton(m_Ipac_2, 0);
+    JoystickButton level1 = new JoystickButton(m_Ipac_2, 1);
+    JoystickButton level2 = new JoystickButton(m_Ipac_2, 2);
+    JoystickButton level3 = new JoystickButton(m_Ipac_2, 3);
+    JoystickButton level4 = new JoystickButton(m_Ipac_2, 4);
+    JoystickButton AlgaeHigh = new JoystickButton(m_Ipac_2, 5);
+    JoystickButton AlgaeLow = new JoystickButton(m_Ipac_2, 6);
+    JoystickButton AlgaeIn = new JoystickButton(m_Ipac_2, 7);
+    JoystickButton AlgaeHold = new JoystickButton(m_Ipac_2, 8);
+    JoystickButton AlgaeOut = new JoystickButton(m_Ipac_2, 9);
+    JoystickButton CoralIn = new JoystickButton(m_Ipac_2, 10);
+    JoystickButton CoralReset = new JoystickButton(m_Ipac_2, 11);
+    JoystickButton Score = new JoystickButton(m_Ipac_2, 12);
+    JoystickButton SetClimb = new JoystickButton(m_Ipac_2, 13);
+    JoystickButton ManualClimb = new JoystickButton(m_Ipac_2, 13 & 14);
+    JoystickButton ActivateClimb = new JoystickButton(m_Ipac_2, 14);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
@@ -64,7 +84,7 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser("P");
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
+        //NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
         //NamedCommands.registerCommand("Missed Intake", );
         NamedCommands.registerCommand("PlaceCommand", Coral.PlaceCommand());
         NamedCommands.registerCommand("ElevatorL1", Elevator.setTargetCommand(ElevatorConstants.L1_HEIGHT));
