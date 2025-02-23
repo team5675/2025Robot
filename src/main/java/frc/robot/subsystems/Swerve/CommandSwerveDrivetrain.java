@@ -356,17 +356,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         LimelightHelpers.PoseEstimate upperLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.upperLimelightName);
         LimelightHelpers.PoseEstimate lowerLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName);
 
-        if (lowerLimelightEstimate == null && upperLimelightEstimate == null) {
-            return;
-        }
-        
-        // Choose the best estimate based on visibility and distance
-        LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
-        
-        // Apply the selected vision measurement
-        if (bestEstimate.tagCount != 0) {
-            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
-            m_poseEstimator.addVisionMeasurement(bestEstimate.pose, bestEstimate.timestampSeconds);
+        LimelightHelpers.PoseEstimate lastValidPose = null;
+
+       // Only run vision updates if we see a tag
+        if (lowerLimelightEstimate != null || upperLimelightEstimate != null) {
+            LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
+
+            if (bestEstimate != null && bestEstimate.tagCount > 0) {
+                lastValidPose = bestEstimate;
+            }
+
+            if (lastValidPose != null) {
+                m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
+                m_poseEstimator.addVisionMeasurement(lastValidPose.pose, lastValidPose.timestampSeconds);
+            }
         }
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
@@ -374,7 +377,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //Debug Values
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
         SmartDashboard.putNumber("Limelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.lowerLimelightName, "tid"));
-        //SmartDashboard.putString("Limelight Pose", mt2.pose.toString());
         SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
         SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
         SmartDashboard.putNumber("CacheID", aprilTagCache);
