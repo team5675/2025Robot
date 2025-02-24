@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Constants.PathplannerConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.LimelightHelpers;
@@ -13,6 +14,7 @@ import com.pathplanner.lib.util.FlippingUtil;
 import java.util.List;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindThenFollowPath;
 import com.pathplanner.lib.path.GoalEndState;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -22,6 +24,7 @@ public class DriveToPoseCommand extends Command {
     private Pose2d targetPose;
     private Pose2d cache;
     private Command pathCommand;
+    private boolean isBarge;
 
     public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction) {
         this.drivetrain = drivetrain;
@@ -31,6 +34,7 @@ public class DriveToPoseCommand extends Command {
 
     @Override
     public void initialize() {
+        isBarge = direction.equals("MidBarge") || direction.equals("LeftBarge") || direction.equals("RightBarge");
         System.out.println("Starting DriveToPoseCommand...");
         updateTargetPose();
         startPath();
@@ -93,8 +97,6 @@ public class DriveToPoseCommand extends Command {
                 pathCommand = null;
                 return;
             }
-    
-            System.out.println("Driving to: " + targetPose);
             
             List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
     
@@ -103,15 +105,23 @@ public class DriveToPoseCommand extends Command {
                 pathCommand = null;
                 return;
             }
-    
-            PathPlannerPath generatedPath = new PathPlannerPath(waypoints, 
+
+            if (isBarge) {
+                PathPlannerPath bargePath = getBargePath();
+                    if (bargePath == null) {
+                        System.out.println("Error: Barge path is null. Skipping execution.");
+                        pathCommand = null;
+                        return; 
+                    }
+                pathCommand = AutoBuilder.pathfindThenFollowPath(bargePath, Constants.PathplannerConstants.constraints);
+            } else {
+                PathPlannerPath generatedPath = new PathPlannerPath(waypoints, 
                 Constants.PathplannerConstants.constraints, null, 
                 new GoalEndState(0, targetPose.getRotation()));
-    
-            generatedPath.preventFlipping = true;
-    
-            pathCommand = AutoBuilder.followPath(generatedPath);
-    
+                generatedPath.preventFlipping = true;
+                pathCommand = AutoBuilder.followPath(generatedPath);
+            }
+
             if (pathCommand == null) {
                 System.out.println("PathPlanner failed to generate a command. Skipping execution.");
                 return;
@@ -128,6 +138,7 @@ public class DriveToPoseCommand extends Command {
 
     /** Returns the correct target pose based on AprilTag ID and direction */
     private Pose2d getTargetPose(int aprilTagId) {
+
         return switch (direction) {
             case "Left" -> switch (aprilTagId) {
                 case 18, 7 -> Constants.AlignmentConstants.A_BLUE;
@@ -138,7 +149,7 @@ public class DriveToPoseCommand extends Command {
                 case 17, 8 -> Constants.AlignmentConstants.C_BLUE;
                 case 12 -> Constants.AlignmentConstants.CORAL1LEFT;
                 case 13 -> Constants.AlignmentConstants.CORAL3LEFT;
-                case 14, 5 -> Constants.AlignmentConstants.BARGELEFT;
+                // case 14, 5 -> Constants.AlignmentConstants.BARGELEFT;
                 case 3, 16 -> Constants.AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
@@ -154,17 +165,28 @@ public class DriveToPoseCommand extends Command {
                 case 17, 8 -> Constants.AlignmentConstants.D_BLUE;
                 case 12 -> Constants.AlignmentConstants.CORAL1RIGHT;
                 case 13 -> Constants.AlignmentConstants.CORAL3RIGHT;
-                case 14, 5 -> Constants.AlignmentConstants.BARGERIGHT;
+                // case 14, 5 -> Constants.AlignmentConstants.BARGERIGHT;
                 case 3, 16 -> Constants.AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
                     yield Constants.AlignmentConstants.B_BLUE;
                 }
             };
-            case "MidBarge" -> switch (aprilTagId) {
-                default -> Constants.AlignmentConstants.BARGECENTER;
-            };
             default -> Constants.AlignmentConstants.A_BLUE;
         };
     }
+   private PathPlannerPath getBargePath(){
+    try {
+        return switch (direction) {
+            case "MidBarge" -> PathPlannerPath.fromPathFile("MidBarge");
+            case "LeftBarge" -> PathPlannerPath.fromPathFile("LeftBarge");
+            case "RightBarge" -> PathPlannerPath.fromPathFile("RightBarge");
+            default -> throw new IllegalStateException("Invalid barge direction: " + direction);
+        };
+    } catch (Exception e) {
+        System.err.println("Error loading PathPlanner path for direction: " + direction);
+        e.printStackTrace();
+        return null;
+    }
+}
 }

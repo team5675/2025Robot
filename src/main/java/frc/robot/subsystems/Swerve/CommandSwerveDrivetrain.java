@@ -60,6 +60,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public double aprilTagCache = -1;
 
+    public Boolean isReefLimelight = true;
+
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -382,6 +384,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("CacheID", aprilTagCache);
         SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putBoolean("IsReefLimelight", isReefLimelight);
         
     }
 
@@ -431,8 +434,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         );
     }
     private LimelightHelpers.PoseEstimate selectBestEstimate(LimelightHelpers.PoseEstimate upper, LimelightHelpers.PoseEstimate lower) {
-        if (upper == null || upper.tagCount == 0) return lower;
-        if (lower == null || lower.tagCount == 0) return upper;
-        return (upper.avgTagDist < lower.avgTagDist) ? upper : lower;
+        if (upper == null || upper.tagCount == 0) {
+            return lower; 
+        }
+        if (lower == null || lower.tagCount == 0) {
+            return upper;
+        }
+        if (upper.avgTagDist < lower.avgTagDist){
+            isReefLimelight = true;
+            return upper;
+        } else {
+            isReefLimelight = false;
+            return lower;
+        }
     }
 }

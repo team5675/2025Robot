@@ -131,6 +131,8 @@ public class RobotContainer {
             .whileTrue(new DriveToPoseCommand(drivetrain, "Right"));
 
         getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge"));
+        getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge"));
+        getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge"));
 
         // Aux Button Board
 

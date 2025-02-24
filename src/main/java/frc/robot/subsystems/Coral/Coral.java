@@ -45,8 +45,8 @@ public class Coral extends SubsystemBase {
   
   @Override
   public void periodic() {
-    SmartDashboard.getBoolean("1", beamBreak1.get());
-    SmartDashboard.getBoolean("2", beamBreak2.get());
+    SmartDashboard.getBoolean("Beam Break 1", beamBreak1.get());
+    SmartDashboard.getBoolean("Beam Break 2", beamBreak2.get());
   }
   
   public static Command PlaceCommand() {
