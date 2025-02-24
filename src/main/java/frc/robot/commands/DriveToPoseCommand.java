@@ -108,11 +108,13 @@ public class DriveToPoseCommand extends Command {
 
             if (isBarge) {
                 PathPlannerPath bargePath = getBargePath();
+                
                     if (bargePath == null) {
                         System.out.println("Error: Barge path is null. Skipping execution.");
                         pathCommand = null;
                         return; 
                     }
+                //if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) bargePath = bargePath.flipPath();
                 pathCommand = AutoBuilder.pathfindThenFollowPath(bargePath, Constants.PathplannerConstants.constraints);
             } else {
                 PathPlannerPath generatedPath = new PathPlannerPath(waypoints, 
