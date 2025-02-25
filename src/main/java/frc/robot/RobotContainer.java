@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveToPoseCommand;
+import frc.robot.commands.RunElevatorCommand;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
@@ -87,10 +88,10 @@ public class RobotContainer {
         //NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
         //NamedCommands.registerCommand("Missed Intake", );
         NamedCommands.registerCommand("PlaceCommand", Coral.PlaceCommand());
-        NamedCommands.registerCommand("ElevatorL1", Elevator.setTargetCommand(ElevatorConstants.L1_HEIGHT));
-        NamedCommands.registerCommand("ElevatorL2", Elevator.setTargetCommand(ElevatorConstants.L2_HEIGHT));
-        NamedCommands.registerCommand("ElevatorL3", Elevator.setTargetCommand(ElevatorConstants.L3_HEIGHT));
-        NamedCommands.registerCommand("ElevatorL4", Elevator.setTargetCommand(ElevatorConstants.L4_HEIGHT));
+        // NamedCommands.registerCommand("ElevatorL1", Elevator.setTargetCommand(ElevatorConstants.L1_HEIGHT));
+        // NamedCommands.registerCommand("ElevatorL2", Elevator.setTargetCommand(ElevatorConstants.L2_HEIGHT));
+        // NamedCommands.registerCommand("ElevatorL3", Elevator.setTargetCommand(ElevatorConstants.L3_HEIGHT));
+        // NamedCommands.registerCommand("ElevatorL4", Elevator.setTargetCommand(ElevatorConstants.L4_HEIGHT));
 
 
         configureBindings();
@@ -121,18 +122,18 @@ public class RobotContainer {
         getDriverController().start().and(getDriverController().x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press and resets gyro on b button press
-        getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+       // getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
         getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
         // Driver
-        getDriverController().leftTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Left"));
+        // getDriverController().leftTrigger()
+        //     .whileTrue(new DriveToPoseCommand(drivetrain, "Left"));
 
-        getDriverController().rightTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Right"));
+        // getDriverController().rightTrigger()
+        //     .whileTrue(new DriveToPoseCommand(drivetrain, "Right"));
 
-        getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge"));
-        getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge"));
-        getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge"));
+        // getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge"));
+        // getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge"));
+        // getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge"));
 
         // Aux Button Board
 
@@ -157,20 +158,20 @@ public class RobotContainer {
         // AlgaeHold.whileFalse();
         
         // Elevator      
-        // level4.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L4_HEIGHT)));
-        // level3.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L3_HEIGHT)));
-        // level2.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L2_HEIGHT)));
-        // level1.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L1_HEIGHT)));
-        // ElevatorReset.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.IDLE_HEIGHT)));
+        getDriverController().rightTrigger().onTrue(new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
+        getDriverController().leftTrigger().onTrue(new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));
+        getDriverController().rightBumper().onTrue(new RunElevatorCommand(ElevatorConstants.L3_HEIGHT));
+        getDriverController().leftBumper().onTrue(new RunElevatorCommand(ElevatorConstants.L4_HEIGHT));
+        //ElevatorReset.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.IDLE_HEIGHT)));
         // AlgaeHigh.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_HIGH_HEIGHT)));
         // AlgaeLow.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_LOW_HEIGHT)));
-        getDriverController().leftBumper().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L1_HEIGHT)));
-        getDriverController().rightBumper().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L2_HEIGHT)));
+        // getDriverController().leftBumper().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L1_HEIGHT)));
+        // getDriverController().rightBumper().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L2_HEIGHT)));
 
-        getDriverController().povLeft().onTrue(Commands.runOnce(() -> Elevator.getInstance().motor.set(-0.1)));
+        getDriverController().povLeft().onTrue(Commands.runOnce(() -> Elevator.getInstance().motor.set(-0.3)));
         getDriverController().povLeft().onFalse(Commands.runOnce(() -> Elevator.getInstance().motor.set(0)));
 
-        getDriverController().povRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().motor.set(0.1)));
+        getDriverController().povRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().motor.set(0.3)));
         getDriverController().povRight().onFalse(Commands.runOnce(() -> Elevator.getInstance().motor.set(0)));
       //  getDriverController().x().whileTrue(Commands.runOnce(() -> ClimbCommand.getInstance().));
 

@@ -11,10 +11,10 @@ public final class ElevatorConstants {
     public static final double motorD = 0.00;
 
     // Unit is pid ticks
-    public static final double L4_HEIGHT = 200;
-	public static final double L3_HEIGHT = 150;
-	public static final double L2_HEIGHT = 100;
-	public static final double L1_HEIGHT = 50;
+    public static final double L4_HEIGHT = 100;
+	public static final double L3_HEIGHT = 75;
+	public static final double L2_HEIGHT = 50;
+	public static final double L1_HEIGHT = 25;
 	public static final double IDLE_HEIGHT = 0.1;
 	public static final double ALGAE_LOW_HEIGHT = 1;
 	public static final double ALGAE_HIGH_HEIGHT = 1;

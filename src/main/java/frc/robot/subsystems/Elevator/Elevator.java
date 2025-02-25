@@ -77,13 +77,14 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // flip for some reason
-    var bottomBool = !bottomTrigger.getAsBoolean();
+    var bottomBool = bottomTrigger.getAsBoolean();
     var topBool = topTrigger.getAsBoolean();
     
     SmartDashboard.putBoolean("Top Tripped", topBool);
     SmartDashboard.putBoolean("Bottom Tripped", bottomBool);
 
     if (!bottomBool) {
+     // motor.set(0);
       ticksEncoder.setPosition(0);
     }
     
@@ -96,11 +97,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Process Variable", ticksEncoder.getPosition());
   }
   
-  public static Command setTargetCommand(double height) {
-    return Commands.runOnce(() -> {
-      Elevator.getInstance().setTarget(height);
-    });
-  }
+  
   public static Elevator getInstance() {
     if (instance == null) {
       instance = new Elevator();
