@@ -23,8 +23,7 @@ public class Coral extends SubsystemBase {
   
   public SparkMax motor;
   SparkMaxConfig motorConfig;
-  public CANdi beamBreak1;
-  public CANdi beamBreak2;
+  public CANdi bbCANdi;
   public boolean bb1Tripped;
   public boolean bb2Tripped;
   
@@ -37,11 +36,10 @@ public class Coral extends SubsystemBase {
     
     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-    beamBreak1 = new CANdi(CoralConstants.bb1ID);
-    beamBreak2 = new CANdi(CoralConstants.bb2ID);
+    bbCANdi = new CANdi(CoralConstants.bbCANdi_ID);
 
-    bb1Tripped = beamBreak1.getS1Closed().getValue();
-    bb2Tripped = beamBreak2.getS1Closed().getValue();
+    bb1Tripped = bbCANdi.getS1Closed().getValue();
+    bb2Tripped = bbCANdi.getS2Closed().getValue();
   }
   
   @Override
