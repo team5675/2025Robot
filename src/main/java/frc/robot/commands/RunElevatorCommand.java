@@ -19,27 +19,19 @@ public class RunElevatorCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (elevator.ticksEncoder.getPosition() > height) {
-      elevator.motor.set(-0.3);
-    } else {
-      elevator.motor.set(0.3);
-    }
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevator.ticksEncoder.getPosition() > height) {
-      elevator.motor.set(-0.3);
-    } else {
-      elevator.motor.set(0.3);
-    } 
+    elevator.setTarget(height);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevator.setTarget(height);
+    
   }
 
   // Returns true when the command should end.
