@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Swerve;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -59,6 +59,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Field2d m_field;
 
     public double aprilTagCache = -1;
+
+    public Boolean isReefLimelight = true;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -346,41 +348,66 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // }
         //redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
 
-        
+        if(isReefLimelight){
         LimelightHelpers.SetRobotOrientation(
             Constants.LimelightConstants.lowerLimelightName,
             redAllianceYaw,
             0, 0, 0, 0, 0
+        ); }
+        else{
+            LimelightHelpers.SetRobotOrientation(
+
+            Constants.LimelightConstants.upperLimelightName,
+            redAllianceYaw,
+            0, 0, 0, 0, 0
         );
+        }
         // LimelightHelpers.SetIMUMode(Constants.LimelightConstants.lowerLimelightName, 0);
         LimelightHelpers.PoseEstimate upperLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.upperLimelightName);
         LimelightHelpers.PoseEstimate lowerLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName);
 
-        if (lowerLimelightEstimate == null && upperLimelightEstimate == null) {
-            return;
-        }
-        
-        // Choose the best estimate based on visibility and distance
-        LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
-        
-        // Apply the selected vision measurement
-        if (bestEstimate.tagCount != 0) {
-            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
-            m_poseEstimator.addVisionMeasurement(bestEstimate.pose, bestEstimate.timestampSeconds);
+        LimelightHelpers.PoseEstimate lastValidPose = null;
+
+       // Only run vision updates if we see a tag
+        if (lowerLimelightEstimate != null || upperLimelightEstimate != null) {
+            LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
+
+            if (bestEstimate != null && bestEstimate.tagCount > 0) {
+                lastValidPose = bestEstimate;
+            }
+
+            if (lastValidPose != null) {
+                m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
+                m_poseEstimator.addVisionMeasurement(lastValidPose.pose, lastValidPose.timestampSeconds);
+            }
         }
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
         //Debug Values
-        SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+        //SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
         SmartDashboard.putNumber("Limelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.lowerLimelightName, "tid"));
-        //SmartDashboard.putString("Limelight Pose", mt2.pose.toString());
-        SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
-        SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
-        SmartDashboard.putNumber("CacheID", aprilTagCache);
-        SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
-        SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
+        //SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
+        //SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
+        //SmartDashboard.putNumber("CacheID", aprilTagCache);
+        //SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
+        //SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putBoolean("IsReefLimelight", isReefLimelight);
+
+        if (lowerLimelightEstimate != null) {
+            //SmartDashboard.putNumber("Limelight Yaw", lowerLimelightEstimate.pose.getRotation().getDegrees());
+            SmartDashboard.putNumber("BottomLL Tag Distance", lowerLimelightEstimate.avgTagDist);
+        } else {
+            //SmartDashboard.putString("Limelight Yaw", "No tags detected");
+        }
         
+        // Check if upperLimelightEstimate is null before accessing its pose
+        if (upperLimelightEstimate != null) {
+            SmartDashboard.putNumber("UpperLL Tag Distance", upperLimelightEstimate.avgTagDist);
+        } else {
+            SmartDashboard.putString("UpperLL Tag Distance", "No tags detected");
+        }
+
     }
 
     public void configAutoBuilder() {
@@ -429,8 +456,32 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         );
     }
     private LimelightHelpers.PoseEstimate selectBestEstimate(LimelightHelpers.PoseEstimate upper, LimelightHelpers.PoseEstimate lower) {
-        if (upper == null || upper.tagCount == 0) return lower;
-        if (lower == null || lower.tagCount == 0) return upper;
-        return (upper.avgTagDist < lower.avgTagDist) ? upper : lower;
+        // If both Limelights have distances greater than 3, return null to use odometry
+        double upperTagDist = (upper != null) ? upper.avgTagDist : Double.MAX_VALUE;
+        double lowerTagDist = (lower != null) ? lower.avgTagDist : Double.MAX_VALUE;
+    
+        if (upperTagDist > 3 && lowerTagDist > 3) {
+            return null; // Use odometry-only if no Limelight sees a tag within 3m
+        }
+    
+        // If one of them is null or has no detected tags, use the other
+        if (upper == null || upper.tagCount == 0) {
+            isReefLimelight = true;
+            return lower;
+        }
+        if (lower == null || lower.tagCount == 0) {
+            isReefLimelight = false;
+            return upper;
+        }
+    
+        // Select the Limelight with the smaller tag distance
+        if (upper.avgTagDist < lower.avgTagDist) {
+            isReefLimelight = false;
+            return upper;
+        } else {
+            isReefLimelight = true;
+            return lower;
+        }
     }
+    
 }
