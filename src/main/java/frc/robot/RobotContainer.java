@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveToPoseCommand;
+import frc.robot.commands.PlaceCommand;
 import frc.robot.commands.RunElevatorCommand;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
@@ -87,7 +88,7 @@ public class RobotContainer {
 
         //NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
         //NamedCommands.registerCommand("Missed Intake", );
-        NamedCommands.registerCommand("PlaceCommand", Coral.PlaceCommand());
+        //NamedCommands.registerCommand("PlaceCommand",new PlaceCommand());
         // NamedCommands.registerCommand("ElevatorL1", Elevator.setTargetCommand(ElevatorConstants.L1_HEIGHT));
         // NamedCommands.registerCommand("ElevatorL2", Elevator.setTargetCommand(ElevatorConstants.L2_HEIGHT));
         // NamedCommands.registerCommand("ElevatorL3", Elevator.setTargetCommand(ElevatorConstants.L3_HEIGHT));
