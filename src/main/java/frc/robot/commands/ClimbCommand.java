@@ -10,7 +10,7 @@ public class ClimbCommand extends Command{
 private Climber climber;
 
 public ClimbCommand() {
-    climber = Climber.getInstance;
+    climber = Climber.getInstance();
 }
 
 @Override
@@ -20,19 +20,19 @@ public void initialize(){
     
 @Override
 public void execute(){
-    if (climber.lsTripped.getAsBoolean()){
-        climber.ClimberMotor.set(1);
-        climber.clawmotor.setVoltage(0);
+    if (climber.isTripped.getAsBoolean()){
+        climber.climberMotor.set(1);
+        climber.clawMotor.setVoltage(0);
     }
-else if (!climber.lsTripped.getAsBoolean()){
-    climber.clawmotor.setVoltage(5);
+else if (!climber.isTripped.getAsBoolean()){
+    climber.clawMotor.setVoltage(5);
 }
 }
 
 @Override
 public void end(boolean interrupted){
-    climber.clawmotor.setVoltage(0);
-    climber.ClimberMotor.set(0);
+    climber.clawMotor.setVoltage(0);
+    climber.climberMotor.set(0);
 }
 
 @Override
