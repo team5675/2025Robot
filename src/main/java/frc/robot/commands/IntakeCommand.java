@@ -22,16 +22,16 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        if (coral.bb1Tripped.getAsBoolean() && coral.bb2Tripped.getAsBoolean()) {
+        if (coral.bb1Tripped && coral.bb2Tripped) {
         // Both beam breaks are tripped: full speed
             coral.motor.set(1);
-        } else if (!coral.bb1Tripped.getAsBoolean() && coral.bb2Tripped.getAsBoolean()) {
+        } else if (!coral.bb1Tripped && coral.bb2Tripped) {
             // bb1 is not tripped, bb2 is tripped: 0.75 speed
             coral.motor.set(0.75);
-        } else if (!coral.bb1Tripped.getAsBoolean() && !coral.bb2Tripped.getAsBoolean()) {
+        } else if (!coral.bb1Tripped && !coral.bb2Tripped) {
             // Both beam breaks are not tripped: 0.5 speed
             coral.motor.set(0.5);
-        } else if (coral.bb1Tripped.getAsBoolean() && !coral.bb2Tripped.getAsBoolean()) {
+        } else if (coral.bb1Tripped && !coral.bb2Tripped) {
             // bb1 is tripped, bb2 is not tripped: stop the motor
             coral.motor.set(0);
         }
