@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.Coral;
 
+import com.ctre.phoenix6.hardware.CANdi;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -22,10 +23,10 @@ public class Coral extends SubsystemBase {
   
   public SparkMax motor;
   SparkMaxConfig motorConfig;
-  public DigitalInput beamBreak1;
-  public DigitalInput beamBreak2;
-  public Trigger bb1Tripped;
-  public Trigger bb2Tripped;
+  public CANdi beamBreak1;
+  public CANdi beamBreak2;
+  public boolean bb1Tripped;
+  public boolean bb2Tripped;
   
   public Coral() {
     motor = new SparkMax(CoralConstants.motorID, MotorType.kBrushless);
@@ -36,17 +37,17 @@ public class Coral extends SubsystemBase {
     
     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-    beamBreak1 = new DigitalInput(CoralConstants.bb1Channel);
-    beamBreak2 = new DigitalInput(CoralConstants.bb2Channel);
-    
-    bb1Tripped = new Trigger(beamBreak1::get);
-    bb2Tripped = new Trigger(beamBreak2::get);
+    beamBreak1 = new CANdi(CoralConstants.bb1ID);
+    beamBreak2 = new CANdi(CoralConstants.bb2ID);
+
+    bb1Tripped = beamBreak1.getS1Closed().getValue();
+    bb2Tripped = beamBreak2.getS1Closed().getValue();
   }
   
   @Override
   public void periodic() {
-    SmartDashboard.getBoolean("Beam Break 1", beamBreak1.get());
-    SmartDashboard.getBoolean("Beam Break 2", beamBreak2.get());
+    SmartDashboard.getBoolean("Beam Break 1", bb1Tripped);
+    SmartDashboard.getBoolean("Beam Break 2", bb2Tripped);
   }
   
   public static Command PlaceCommand() {

@@ -7,5 +7,7 @@ public class CoralConstants {
     public static final int bb2Channel = 4;
 
     public static final int voltsStallLimit = 15;
+    public static final int bb1ID = 24;
+    public static final int bb2ID = 25;
 
 }
