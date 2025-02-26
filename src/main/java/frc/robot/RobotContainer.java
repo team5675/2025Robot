@@ -19,10 +19,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Algae.AlgaeInCommand;
-import frc.robot.commands.ClimbCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
-import frc.robot.commands.setClimbCommand;
+import frc.robot.subsystems.Climber.SetClimbCommand;
 import frc.robot.subsystems.Algae.Algae;
+import frc.robot.subsystems.Climber.ClimbCommand;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
@@ -138,7 +138,7 @@ public class RobotContainer {
 
         // Climber
             ActivateClimb.onTrue(( Climber.getInstance()).runOnce(() -> ClimbCommand.getInstance()));
-            SetClimb.onTrue((Climber.getInstance()).runOnce(() -> setClimbCommand.getInstance()));
+            SetClimb.onTrue((Climber.getInstance()).runOnce(() -> SetClimbCommand.getInstance()));
         // ManualClimb.onTrue((Climber.getInstance()).runOnce(() -> UnClimbCommand.getInstance()));
 
         // Coral
@@ -160,6 +160,11 @@ public class RobotContainer {
         level2.onTrue(new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));
         level3.onTrue(new RunElevatorCommand(ElevatorConstants.L3_HEIGHT));
         level4.onTrue(new RunElevatorCommand(ElevatorConstants.L4_HEIGHT));
+        ElevatorReset.onTrue(new RunElevatorCommand(ElevatorConstants.IDLE_HEIGHT));
+        
+        AlgaeHigh.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_HIGH_HEIGHT));
+        AlgaeLow.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_LOW_HEIGHT));
+        
         //ElevatorReset.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.IDLE_HEIGHT)));
         // AlgaeHigh.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_HIGH_HEIGHT)));
         // AlgaeLow.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_LOW_HEIGHT)));
