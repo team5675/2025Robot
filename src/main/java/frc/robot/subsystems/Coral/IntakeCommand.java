@@ -1,10 +1,9 @@
-package frc.robot.commands;
+package frc.robot.subsystems.Coral;
 
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.Coral.Coral;
 
 public class IntakeCommand extends Command {
 
