@@ -139,9 +139,9 @@ public class RobotContainer {
         // Aux Button Board
 
         // Climber
-        // ActivateClimb.onTrue(Climber.getInstance().runOnce(() -> Climber.getInstance().runClaw()));
-        // SetClimb.onTrue();
-        // ActivateClimb.and(SetClimb).onTrue();
+            ActivateClimb.onTrue(( Climber.getInstance()).runOnce(() -> ClimbCommand.getInstance()));
+            SetClimb.onTrue((Climber.getInstance()).runOnce(() -> setClimbCommand.getInstance()));
+        // ManualClimb.onTrue((Climber.getInstance()).runOnce(() -> UnClimbCommand.getInstance()));
 
         // Coral
         // CoralIn.whileTrue(new IntakeCommand());
