@@ -20,5 +20,5 @@ public final class ElevatorConstants {
 	public static final double ALGAE_HIGH_HEIGHT = 1;
 	public static final double ALGAE_PROCESSOR_HEIGHT = 1;
 
-	public static final double MAX_HEIGHT = 3.0;
+	///public static final double MAX_HEIGHT = 3.0;
 }
