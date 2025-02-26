@@ -20,9 +20,14 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AlgaeInCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveToPoseCommand;
 import frc.robot.commands.PlaceCommand;
 import frc.robot.commands.RunElevatorCommand;
+import frc.robot.commands.setClimbCommand;
+import frc.robot.subsystems.Algae.Algae;
+import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
@@ -151,12 +156,11 @@ public class RobotContainer {
         // CoralReset.whileFalse(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(0)));
 
         // Algae
-        // AlgaeIn.whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(-0.2)));
-        // AlgaeIn.whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
-        // AlgaeOut.whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0.2)));
-        // AlgaeOut.whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
-        // AlgaeHold.whileTrue();
-        // AlgaeHold.whileFalse();
+        AlgaeIn.whileTrue(new AlgaeInCommand());
+        AlgaeOut.whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0.7)));
+        AlgaeOut.whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
+        AlgaeHold.whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(-0.02)));
+        AlgaeHold.whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
         
         // Elevator      
         getDriverController().rightTrigger().onTrue(new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));

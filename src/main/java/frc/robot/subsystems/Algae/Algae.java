@@ -25,7 +25,7 @@ public class Algae extends SubsystemBase {
 
   private SparkClosedLoopController axisPID;
 
-  private RelativeEncoder axisTicks;
+  public RelativeEncoder axisTicks;
 
   private SparkMaxConfig wheelsConfig;
   private SparkMaxConfig axisConfig;

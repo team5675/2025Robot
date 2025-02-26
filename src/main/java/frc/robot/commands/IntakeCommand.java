@@ -9,6 +9,7 @@ import frc.robot.subsystems.Coral.Coral;
 public class IntakeCommand extends Command {
 
   private Coral coral;
+  private boolean needsReverse;
 
     public IntakeCommand() {
         coral = Coral.getInstance();
@@ -23,18 +24,30 @@ public class IntakeCommand extends Command {
     @Override
     public void execute() {
         if (coral.bb1Tripped && coral.bb2Tripped) {
+            needsReverse = false;
         // Both beam breaks are tripped: full speed
-            coral.motor.set(1);
+            coral.motor.set(.5);
         } else if (!coral.bb1Tripped && coral.bb2Tripped) {
+            needsReverse = false;
             // bb1 is not tripped, bb2 is tripped: 0.75 speed
-            coral.motor.set(0.75);
-        } else if (!coral.bb1Tripped && !coral.bb2Tripped) {
+            coral.motor.set(0.25);
+        } else if (!coral.bb1Tripped && !coral.bb2Tripped && !needsReverse) {
+            needsReverse = false;
             // Both beam breaks are not tripped: 0.5 speed
-            coral.motor.set(0.5);
+            coral.motor.set(0.1);
         } else if (coral.bb1Tripped && !coral.bb2Tripped) {
             // bb1 is tripped, bb2 is not tripped: stop the motor
             coral.motor.set(0);
+            needsReverse = true;
         }
+        else if (needsReverse && coral.bb1Tripped && !coral.bb2Tripped){
+            coral.motor.set(-0.1);
+        }
+        else if (needsReverse && !coral.bb1Tripped && !coral.bb2Tripped){
+            coral.motor.set(0.0);
+        }
+
+        
     }
 
     @Override
