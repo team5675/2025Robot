@@ -20,41 +20,42 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Coral extends SubsystemBase {
-  
+
   public SparkMax motor;
   SparkMaxConfig motorConfig;
   public CANdi bbCANdi;
   public boolean bb1Tripped;
   public boolean bb2Tripped;
-  
+
   public Coral() {
     motor = new SparkMax(CoralConstants.motorID, MotorType.kBrushless);
-    
+
     motorConfig = new SparkMaxConfig();
-    motorConfig.smartCurrentLimit(CoralConstants.voltsStallLimit);
+    motorConfig.smartCurrentLimit(CoralConstants.stallLimit);
     motorConfig.idleMode(IdleMode.kBrake);
-    
+
     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
     bbCANdi = new CANdi(CoralConstants.bbCANdi_ID);
 
-    bb1Tripped = bbCANdi.getS1Closed().getValue();
-    bb2Tripped = bbCANdi.getS2Closed().getValue();
   }
-  
+
   @Override
   public void periodic() {
-    SmartDashboard.getBoolean("Beam Break 1", bb1Tripped);
-    SmartDashboard.getBoolean("Beam Break 2", bb2Tripped);
+    bb1Tripped = bbCANdi.getS1Closed().getValue();
+    bb2Tripped = bbCANdi.getS2Closed().getValue();
+    SmartDashboard.putBoolean("Beam Break 1", bb1Tripped);
+    SmartDashboard.putBoolean("Beam Break 2", bb2Tripped);
   }
-  
+
   public static Command PlaceCommand() {
     return Commands.runOnce(() -> {
       Coral.getInstance().motor.set(1);
     });
   }
-  
+
   public static Coral instance;
+
   public static Coral getInstance() {
     if (instance == null) {
       instance = new Coral();
