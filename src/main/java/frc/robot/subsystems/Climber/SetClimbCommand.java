@@ -1,33 +1,34 @@
-package frc.robot.commands;
+
+    package frc.robot.subsystems.Climber;
 
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.Climber.Climber;
 
-public class ClimbCommand extends Command{
+public class SetClimbCommand extends Command{
 private Climber climber;
 
-public ClimbCommand() {
+public SetClimbCommand() {
     climber = Climber.getInstance();
 }
 
 @Override
 public void initialize(){
-    System.out.println("Climb Command Ready" );
+    System.out.println("Set Climb Command Ready" );
 }
     
 @Override
 public void execute(){
     if (climber.isTripped.getAsBoolean()){
-        climber.climberMotor.set(1);
-        climber.clawMotor.setVoltage(0);
+        climber.clawMotor.setVoltage(-5);
     }
-else if (!climber.isTripped.getAsBoolean()){
-    climber.clawMotor.setVoltage(5);
+    else if (climber.isTripped.getAsBoolean()){
+        climber.climberMotor.set(-0.5);
+    }
+    
 }
-}
+
 
 @Override
 public void end(boolean interrupted){
@@ -46,3 +47,4 @@ public static Object getInstance() {
     throw new UnsupportedOperationException("Unimplemented method 'getInstance'");
 }
 }
+
