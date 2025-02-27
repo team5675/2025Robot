@@ -20,19 +20,14 @@ public void initialize(){
     
 @Override
 public void execute(){
-    if (climber.isTripped.getAsBoolean()){
-        climber.clawMotor.setVoltage(-5);
-    }
-    else if (climber.isTripped.getAsBoolean()){
+   
         climber.climberMotor.set(-0.5);
-    }
     
 }
 
 
 @Override
 public void end(boolean interrupted){
-    climber.clawMotor.setVoltage(0);
     climber.climberMotor.set(0);
 }
 

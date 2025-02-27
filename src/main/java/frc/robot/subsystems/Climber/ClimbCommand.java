@@ -19,12 +19,12 @@ public void initialize(){
     
 @Override
 public void execute(){
-    if (climber.isTripped.getAsBoolean()){
+    if (!climber.isTripped.getAsBoolean()){
+        climber.clawMotor.setVoltage(5.5);
         climber.climberMotor.set(1);
-        climber.clawMotor.setVoltage(0);
     }
-else if (!climber.isTripped.getAsBoolean()){
-    climber.clawMotor.setVoltage(5);
+else if (climber.isTripped.getAsBoolean()){
+    climber.clawMotor.setVoltage(-3.5);
 }
 }
 
