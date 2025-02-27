@@ -17,11 +17,12 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Algae extends SubsystemBase {
   
-  private SparkMax wheelsMotor; //spins the algae intake wheels
-  private SparkMax axisMotor; //rotates the algae mechanism out and in
+  public SparkMax wheelsMotor; //spins the algae intake wheels
+  public SparkMax axisMotor; //rotates the algae mechanism out and in
 
   private SparkClosedLoopController axisPID;
 
@@ -30,7 +31,10 @@ public class Algae extends SubsystemBase {
   private SparkMaxConfig wheelsConfig;
   private SparkMaxConfig axisConfig;
 
+  private Trigger axisSpike;
+
   public Algae() {
+
     // wheel motor configs
     wheelsMotor = new SparkMax(AlgaeConstants.wheelsID, MotorType.kBrushless);
     
@@ -55,19 +59,29 @@ public class Algae extends SubsystemBase {
     
     axisMotor.configure(axisConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     
+    axisTicks.setPosition(0);
+
+    axisSpike = new Trigger(this::spike);
   }
   
   @Override
   public void periodic() {
-    
     //If the motor is stalled (> 15 Amps) then stop the motor
     //and reset encoder due to hard stop
-    if (axisMotor.getOutputCurrent() > 15) {
-      axisMotor.set(0);
+    // if (axisSpike.getAsBoolean()) {
+    //   axisMotor.set(0);
       
-      if (Math.abs(axisTicks.getPosition()) < AlgaeConstants.axisTicksTolerance) { // within 5 ticks of zero
-        axisTicks.setPosition(0);
-      }
+    //   if (Math.abs(axisTicks.getPosition()) < AlgaeConstants.axisTicksTolerance) { // within 5 ticks of zero
+    //     axisTicks.setPosition(0);
+    //   }
+    // }
+
+    if(axisSpike.getAsBoolean() && axisTicks.getPosition() < -60){
+      axisTicks.setPosition(0);
+    }
+    else if(axisSpike.getAsBoolean() && axisTicks.getPosition() > -20){
+      axisTicks.setPosition(0);
+      
     }
     
     SmartDashboard.putNumber("Axis Ticks", axisTicks.getPosition());
@@ -75,22 +89,19 @@ public class Algae extends SubsystemBase {
     SmartDashboard.putNumber("Flywheel Current", wheelsMotor.getOutputCurrent());
   }
   
-  //moves the axis out
-  public void AxisOut() {
-    System.out.println("Out");
-    axisPID.setReference(AlgaeConstants.AxisOutTicks, ControlType.kPosition);
-  }
-  
-  //brings axis back in
-  public void AxisIn() {
-    System.out.println("in");
-    axisPID.setReference(AlgaeConstants.AxisInTicks, ControlType.kPosition);
+  public void setAxisPosition(double position) {
+    // negative because the ticks are flipped
+    axisPID.setReference(-position, ControlType.kPosition);
   }
   
   //spins the wheels based on input speed
-  public void flywheelSpin(double speed) {
+  public void setFlywheelSpeed(double speed) {
     System.out.println("Spinning Wheel!");
     wheelsMotor.set(speed);
+  }
+
+  public Boolean spike() {
+    return axisMotor.getOutputCurrent() > 10;
   }
   
   private static Algae instance;

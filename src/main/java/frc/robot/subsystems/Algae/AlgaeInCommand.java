@@ -26,18 +26,22 @@ public class AlgaeInCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (algae.axisTicks.getPosition() < AlgaeConstants.AxisOutTicks) {
-      algae.AxisOut();
+    System.out.println("Algae in");
+
+    if (-algae.axisTicks.getPosition() < AlgaeConstants.AxisOutTicks) {
+      algae.setAxisPosition(AlgaeConstants.AxisOutTicks);
+      algae.setFlywheelSpeed(0.5);
     }
-    algae.flywheelSpin(-0.5);
-    if (algae.axisTicks.getPosition() > AlgaeConstants.AxisOutTicks - 2) {
-      algae.AxisIn();
-    }
+
+    // if (algae.axisTicks.getPosition() > AlgaeConstants.AxisOutTicks - 2) {
+    // algae.setAxisPosition(AlgaeConstants.AxisInTicks);
+    // }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    algae.setFlywheelSpeed(0);
   }
 
   // Returns true when the command should end.

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Algae.AlgaeInCommand;
+import frc.robot.subsystems.Algae.AlgaeOutCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
 import frc.robot.subsystems.Climber.SetClimbCommand;
 import frc.robot.subsystems.Algae.Algae;
@@ -62,12 +63,12 @@ public class RobotContainer {
     JoystickButton level4 = new JoystickButton(IpacSide1, 5);
     JoystickButton AlgaeHigh = new JoystickButton(IpacSide1, 6);
     JoystickButton AlgaeLow = new JoystickButton(IpacSide1, 7);
-    JoystickButton AlgaeIn = new JoystickButton(IpacSide2, 1);
-    JoystickButton AlgaeHold = new JoystickButton(IpacSide2, 2);
-    JoystickButton AlgaeOut = new JoystickButton(IpacSide2, 3);
-    JoystickButton CoralIn = new JoystickButton(IpacSide2, 4);
-    JoystickButton CoralReset = new JoystickButton(IpacSide2, 5);
-    JoystickButton Score = new JoystickButton(IpacSide2, 6);
+    JoystickButton CoralIn = new JoystickButton(IpacSide2, 1);
+    JoystickButton CoralReset = new JoystickButton(IpacSide2, 2);
+    JoystickButton Score = new JoystickButton(IpacSide2, 3);
+    JoystickButton AlgaeIn = new JoystickButton(IpacSide2, 4);
+    JoystickButton AlgaeHold = new JoystickButton(IpacSide2, 5);
+    JoystickButton AlgaeOut = new JoystickButton(IpacSide2, 6);
     JoystickButton SetClimb = new JoystickButton(IpacSide2, 7);
     //JoystickButton ManualClimb = new JoystickButton(IpacSide2, 13 & 14);
     JoystickButton ActivateClimb = new JoystickButton(IpacSide2, 8);
@@ -150,11 +151,19 @@ public class RobotContainer {
 
         // Algae
         AlgaeIn.whileTrue(new AlgaeInCommand());
-        AlgaeOut.whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0.7)));
-        AlgaeOut.whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
-        AlgaeHold.whileTrue(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(-0.02)));
-        AlgaeHold.whileFalse(Algae.getInstance().runOnce(() -> Algae.getInstance().flywheelSpin(0)));
+        AlgaeIn.onFalse(Commands.runOnce(() -> Algae.getInstance().setAxisPosition(0)));
+        AlgaeOut.whileTrue(new AlgaeOutCommand());
+        AlgaeOut.whileTrue(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0)));
         
+        AlgaeHold.whileTrue(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0.02)));
+        AlgaeHold.whileFalse(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0)));
+
+        getDriverController().rightBumper().onTrue((Commands.runOnce(() -> Algae.getInstance().axisMotor.set(0.2))));
+        getDriverController().rightBumper().onFalse((Commands.runOnce(() -> Algae.getInstance().axisMotor.set(0))));
+        getDriverController().leftBumper().onTrue((Commands.runOnce(() -> Algae.getInstance().axisMotor.set(-0.2))));
+        getDriverController().leftBumper().onFalse((Commands.runOnce(() -> Algae.getInstance().axisMotor.set(0))));
+
+
         // Elevator      
         level1.onTrue(new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
         level2.onTrue(new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));
