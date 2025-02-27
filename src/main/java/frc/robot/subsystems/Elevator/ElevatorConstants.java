@@ -20,5 +20,17 @@ public final class ElevatorConstants {
 	public static final double ALGAE_HIGH_HEIGHT = 1;
 	public static final double ALGAE_PROCESSOR_HEIGHT = 1;
 
+	public static final double MAX_VELOCITY = 1.75;
+	public static final double MAX_ACCEL = 0.75;
+
+	public static final double profileP = 1.3;
+	public static final double profileI = 0.00;
+	public static final double profileD = 0.7;
+	public static final double profileDt = 0.02;
+
+	public static final double profileS = 1.1;
+	public static final double profileG = 1.2;
+	public static final double profileV = 1.3;
+
 	///public static final double MAX_HEIGHT = 3.0;
 }

@@ -17,6 +17,9 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,7 +40,9 @@ public class Elevator extends SubsystemBase {
   //SparkAbsoluteEncoder angleEncoder;
   public RelativeEncoder ticksEncoder;
 
-  double setpoint;
+  private final TrapezoidProfile.Constraints trapezoidConstraints = new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCEL);
+  private final ProfiledPIDController profilePID = new ProfiledPIDController(ElevatorConstants.profileP, ElevatorConstants.profileI, ElevatorConstants.profileD, trapezoidConstraints, ElevatorConstants.profileDt);
+  private final ElevatorFeedforward feedforward = new ElevatorFeedforward(ElevatorConstants.profileS, ElevatorConstants.profileG, ElevatorConstants.profileV);
 
   public Elevator() {
     motor = new SparkMax(ElevatorConstants.motorID, MotorType.kBrushless);
@@ -62,12 +67,6 @@ public class Elevator extends SubsystemBase {
         .pid(ElevatorConstants.motorP, ElevatorConstants.motorI, ElevatorConstants.motorD);
 
     var status = motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-    
-    if (status == REVLibError.kOk) {
-      SmartDashboard.putString("Config status", "it worked");
-    } else {
-      SmartDashboard.putString("Config status", status.toString());
-    }
 
     bottomLimitSwitch = new DigitalInput(ElevatorConstants.bottomLimitSwitchChannel);
     topLimitSwitch = new DigitalInput(ElevatorConstants.topLimitSwitchChannel);
@@ -78,12 +77,15 @@ public class Elevator extends SubsystemBase {
 
   public void setTarget(double ticks) {
     SmartDashboard.putNumber("Ticks in subsystem", ticks);
-    setpoint = ticks;
     sparkPidController.setReference(ticks, ControlType.kPosition);
+
+    //profilePID.setGoal(ticks);
   }
 
   public void reset() {
     sparkPidController.setReference(0, ControlType.kPosition);
+
+    //profilePID.setGoal(0);
   }
 
   @Override
@@ -92,15 +94,18 @@ public class Elevator extends SubsystemBase {
     var bottomBool = !bottomTrigger.getAsBoolean();
     var topBool = topTrigger.getAsBoolean();
     
-    // if (!bottomBool) {
-    //   // motor.set(0);
-    //   ticksEncoder.setPosition(0);
-    // }
+    if (!bottomBool) {
+      // motor.set(0);
+      ticksEncoder.setPosition(0);
+    }
 
     //  (!topBool) {
     //   motor.set(0);
     // }
 
+    // set the motor
+    //motor.setVoltage(profilePID.calculate(ticksEncoder.getPosition()) + feedforward.calculate(profilePID.getSetpoint().velocity));
+ 
     SmartDashboard.putBoolean("Top Tripped", topBool);
     SmartDashboard.putBoolean("Bottom Tripped", bottomBool);
     SmartDashboard.putNumber("Elevator Current", motor.getOutputCurrent());
@@ -114,4 +119,5 @@ public class Elevator extends SubsystemBase {
     }
     return instance;
   }
+
 }
