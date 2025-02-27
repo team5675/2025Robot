@@ -22,6 +22,8 @@ import frc.robot.subsystems.Algae.AlgaeInCommand;
 import frc.robot.subsystems.Algae.AlgaeOutCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
 import frc.robot.subsystems.Climber.SetClimbCommand;
+import frc.robot.subsystems.Coral.Coral;
+import frc.robot.subsystems.Coral.IntakeCommand;
 import frc.robot.subsystems.Algae.Algae;
 import frc.robot.subsystems.Climber.ClimbCommand;
 import frc.robot.subsystems.Climber.Climber;
@@ -143,11 +145,11 @@ public class RobotContainer {
         // ManualClimb.onTrue((Climber.getInstance()).runOnce(() -> UnClimbCommand.getInstance()));
 
         // Coral
-        // CoralIn.whileTrue(new IntakeCommand());
-        // Score.whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(1)));
-        // Score.whileFalse(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(0)));
-        // CoralReset.whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(-1)));
-        // CoralReset.whileFalse(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(0)));
+        CoralIn.whileTrue(new IntakeCommand());
+        Score.whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(-1)));
+        Score.whileFalse(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(0)));
+        CoralReset.whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(1)));
+        CoralReset.whileFalse(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(0)));
 
         // Algae
         AlgaeIn.whileTrue(new AlgaeInCommand());
