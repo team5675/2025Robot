@@ -21,7 +21,7 @@ public void initialize(){
 public void execute(){
     if (!climber.isTripped.getAsBoolean()){
         climber.clawMotor.setVoltage(5.5);
-        climber.climberMotor.set(1);
+        climber.SetTarget(15);
     }
 else if (climber.isTripped.getAsBoolean()){
     climber.clawMotor.setVoltage(-3.5);

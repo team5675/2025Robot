@@ -1,12 +1,15 @@
 package frc.robot.subsystems.Climber;
 
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +20,8 @@ public class Climber extends SubsystemBase {
     
     public DigitalInput limitSwitch;
     public Trigger isTripped;
-    
+    public RelativeEncoder climberEncoder;
+
     private SparkClosedLoopController climberPID;
     public SparkMaxConfig clawMotorConfig; //Johnson motor to open-close claw
     public SparkMaxConfig climberMotorConfig; //NEO motor to climb and unclimb
@@ -37,8 +41,9 @@ public class Climber extends SubsystemBase {
         climberPID = climberMotor.getClosedLoopController();
         climberMotorConfig = new SparkMaxConfig();
         climberMotorConfig.idleMode(IdleMode.kBrake);
-        climberMotorConfig.closedLoop()
-        .feedbackSensor
+        climberMotorConfig.closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(ClimberConstants.climberMotorP, ClimberConstants.climberMotorI, ClimberConstants.climberMotorD);
         climberMotorConfig.smartCurrentLimit(ClimberConstants.voltsStallLimit);
         climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         
@@ -47,8 +52,8 @@ public class Climber extends SubsystemBase {
         isTripped = new Trigger(limitSwitch::get);
     }
 
-    public void SetTarget() {
-    
+    public void SetTarget(double ticks) {
+        climberPID.setReference(ticks, ControlType.kPosition);
     }
 
     @Override
