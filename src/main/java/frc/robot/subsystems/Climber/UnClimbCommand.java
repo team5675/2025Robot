@@ -16,11 +16,13 @@ public void initialize(){
     
 @Override
 public void execute(){
+    climber.climberMotor.set(-0.5);
     climber.clawMotor.setVoltage(-3);
 }
 @Override
 public void end(boolean interrupted){
     climber.clawMotor.setVoltage(0);
+    climber.climberMotor.set(0);
 }
 
 @Override

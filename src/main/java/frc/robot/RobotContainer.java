@@ -22,6 +22,7 @@ import frc.robot.subsystems.Algae.AlgaeInCommand;
 import frc.robot.subsystems.Algae.AlgaeOutCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
 import frc.robot.subsystems.Climber.SetClimbCommand;
+import frc.robot.subsystems.Climber.UnClimbCommand;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Coral.IntakeCommand;
 import frc.robot.subsystems.Algae.Algae;
@@ -140,8 +141,9 @@ public class RobotContainer {
         // Aux Button Board
 
         // Climber
-            ActivateClimb.onTrue(( new ClimbCommand()));
-            SetClimb.onTrue((new SetClimbCommand()));
+            SetClimb.and(ActivateClimb).whileTrue((new UnClimbCommand()));
+            ActivateClimb.whileTrue(( new ClimbCommand()).unless(SetClimb));
+            SetClimb.whileTrue((new SetClimbCommand()).unless(ActivateClimb));
         // ManualClimb.onTrue((Climber.getInstance()).runOnce(() -> UnClimbCommand.getInstance()));
 
         // Coral

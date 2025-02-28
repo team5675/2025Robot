@@ -16,12 +16,19 @@ public SetClimbCommand() {
 @Override
 public void initialize(){
     System.out.println("Set Climb Command Ready" );
+     climber.clawMotor.setVoltage(0);
+     climber.climberEncoder.setPosition(0);
 }
     
 @Override
 public void execute(){
-   
-        climber.climberMotor.set(-0.5);
+    climber.SetTarget(ClimberConstants.setclimberticks);
+
+    if (climber.climberEncoder.getPosition() < -42){
+       climber.clawMotor.setVoltage(-3.5);
+    }
+
+    
     
 }
 
@@ -29,17 +36,13 @@ public void execute(){
 @Override
 public void end(boolean interrupted){
     climber.climberMotor.set(0);
+    climber.clawMotor.setVoltage(0);
 }
 
 @Override
 public boolean isFinished() {
     return false;
 
-}
-
-public static Object getInstance() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getInstance'");
 }
 }
 

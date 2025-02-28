@@ -5,7 +5,8 @@ public class ClimberConstants {
 
     public static final int clawMotorID = 31;
     public static final int climberMotorID = 32;
-
+    public static final int climberticks = 40;
+    public static final int setclimberticks = -50;
     public static final int voltsStallLimit = 15;
 
     public static final double climberMotorP = 0.02;

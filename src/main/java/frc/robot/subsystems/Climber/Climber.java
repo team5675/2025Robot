@@ -22,7 +22,7 @@ public class Climber extends SubsystemBase {
     public Trigger isTripped;
     public RelativeEncoder climberEncoder;
 
-    private SparkClosedLoopController climberPID;
+    public SparkClosedLoopController climberPID;
     public SparkMaxConfig clawMotorConfig; //Johnson motor to open-close claw
     public SparkMaxConfig climberMotorConfig; //NEO motor to climb and unclimb
     
@@ -37,7 +37,7 @@ public class Climber extends SubsystemBase {
         clawMotorConfig.smartCurrentLimit(ClimberConstants.voltsStallLimit);
         
         climberMotor = new SparkMax(ClimberConstants.climberMotorID, MotorType.kBrushless);
-        
+        climberEncoder = climberMotor.getEncoder();
         climberPID = climberMotor.getClosedLoopController();
         climberMotorConfig = new SparkMaxConfig();
         climberMotorConfig.idleMode(IdleMode.kBrake);
@@ -60,6 +60,7 @@ public class Climber extends SubsystemBase {
     public void periodic() {
         // TODO Auto-generated method stub
         SmartDashboard.putBoolean("ClimberLimitSwitch" , isTripped.getAsBoolean());
+        SmartDashboard.putNumber("climber ticks", climberEncoder.getPosition());
     }
 
     private static Climber instance;
