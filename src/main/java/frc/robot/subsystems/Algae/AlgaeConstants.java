@@ -14,7 +14,7 @@ public final class AlgaeConstants {
     public static final double axisI = 0;
     public static final double axisD = 0;
 
-    public static final int AxisOutTicks = 35;
+    public static final int AxisOutTicks = 43;
     public static final int AxisInTicks = 0;
 
     public static final int voltsStallLimit = 15;

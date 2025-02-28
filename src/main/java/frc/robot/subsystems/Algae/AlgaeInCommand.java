@@ -27,7 +27,7 @@ public class AlgaeInCommand extends Command {
   @Override
   public void execute() {
     System.out.println("Algae in");
-
+    algae.setIntake(true);
     if (-algae.axisTicks.getPosition() < AlgaeConstants.AxisOutTicks) {
       algae.setAxisPosition(AlgaeConstants.AxisOutTicks);
       algae.setFlywheelSpeed(0.5);

@@ -33,6 +33,8 @@ public class Algae extends SubsystemBase {
 
   private Trigger axisSpike;
 
+  public static boolean intaking;
+
   public Algae() {
 
     // wheel motor configs
@@ -76,13 +78,28 @@ public class Algae extends SubsystemBase {
     //   }
     // }
 
-    if(axisSpike.getAsBoolean() && axisTicks.getPosition() < -60){
+    
+    if(!intaking && axisSpike.getAsBoolean()){
+      axisMotor.set(0);
+      setAxisPosition(0);
+    }
+    else if(!intaking && axisTicks.getPosition() > -0.5){
+      axisMotor.set(0);
       axisTicks.setPosition(0);
     }
-    else if(axisSpike.getAsBoolean() && axisTicks.getPosition() > -20){
-      axisTicks.setPosition(0);
+    else if(!intaking && axisTicks.getPosition() < -0.5 && !axisSpike.getAsBoolean()){
+      axisMotor.set(.25);
       
     }
+    // if(axisSpike.getAsBoolean() && axisTicks.getPosition() < -60){
+    //   setAxisPosition(0);
+    //   axisTicks.setPosition(0);
+    // }
+    // else if(axisSpike.getAsBoolean() && axisTicks.getPosition() > -20){
+    //   setAxisPosition(0);
+    //   axisTicks.setPosition(0);
+      
+    // }
     
     SmartDashboard.putNumber("Axis Ticks", axisTicks.getPosition());
     SmartDashboard.putNumber("Axis Current", axisMotor.getOutputCurrent());
@@ -102,6 +119,10 @@ public class Algae extends SubsystemBase {
 
   public Boolean spike() {
     return axisMotor.getOutputCurrent() > 10;
+  }
+
+  public void setIntake(boolean bool){
+    intaking = bool;
   }
   
   private static Algae instance;

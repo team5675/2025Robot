@@ -26,13 +26,15 @@ public class AlgaeOutCommand extends Command {
   @Override
   public void execute() {
     System.out.println("Algae out");
-    algae.setFlywheelSpeed(-0.5);
+    algae.setAxisPosition(5);
+    algae.setFlywheelSpeed(-1);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    algae.setFlywheelSpeed(0);
+    algae.setAxisPosition(0);
   }
 
   // Returns true when the command should end.
