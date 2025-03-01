@@ -8,15 +8,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class Constants {
 
     public class LimelightConstants {
-        public static String lowerLimelightName = "limelight";
-        public static String upperLimelightName = "limelight-back";
+        public static String lowerLimelightName = "limelight-lower";
+        public static String upperLimelightName = "limelight-upper";
         public static double kTolerance = 0.2;
         public static double minStrafe = 0.3;
-        public static double limelightForward = 0.3175;
-        public static double limelightSide = 0.0;
-        public static double limelightUp = 0.349;
+        public static double limelightForward = 0;
+        public static double limelightSide = 0.00635;
+        public static double limelightUp = 0.2254;
         public static double limelightRoll= 0.0;
-        public static double limelightPitch = -16.0;
+        public static double limelightPitch = 6.0;
         public static double limelightYaw = 0.0;
     }
     

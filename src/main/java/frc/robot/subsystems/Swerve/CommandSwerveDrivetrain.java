@@ -361,17 +361,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         LimelightHelpers.PoseEstimate lastValidPose = null;
 
        // Only run vision updates if we see a tag
-        if (lowerLimelightEstimate != null || upperLimelightEstimate != null) {
-            LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
+        // if (lowerLimelightEstimate != null || upperLimelightEstimate != null) {
+        //     LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
 
-            if (bestEstimate != null && bestEstimate.tagCount > 0) {
-                lastValidPose = bestEstimate;
-            }
+        //     if (bestEstimate != null && bestEstimate.tagCount > 0) {
+        //         lastValidPose = bestEstimate;
+        //     }
 
-            if (lastValidPose != null) {
-                m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
-                m_poseEstimator.addVisionMeasurement(lastValidPose.pose, lastValidPose.timestampSeconds);
-            }
+        //     if (lastValidPose != null) {
+        //         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
+        //         m_poseEstimator.addVisionMeasurement(lastValidPose.pose, lastValidPose.timestampSeconds);
+        //     }
+        // }
+        if(lowerLimelightEstimate.pose != null){
+
+             m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
+             m_poseEstimator.addVisionMeasurement(lowerLimelightEstimate.pose, lowerLimelightEstimate.timestampSeconds);
         }
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
