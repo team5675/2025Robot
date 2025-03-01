@@ -28,6 +28,7 @@ import frc.robot.subsystems.Coral.IntakeCommand;
 import frc.robot.subsystems.Algae.Algae;
 import frc.robot.subsystems.Climber.ClimbCommand;
 import frc.robot.subsystems.Climber.Climber;
+import frc.robot.subsystems.Climber.CloseClawCommand;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
@@ -141,10 +142,22 @@ public class RobotContainer {
         // Aux Button Board
 
         // Climber
-            SetClimb.and(ActivateClimb).whileTrue((new UnClimbCommand()));
-            ActivateClimb.whileTrue(( new ClimbCommand()).unless(SetClimb));
-            SetClimb.whileTrue((new SetClimbCommand()).unless(ActivateClimb));
+        // SetClimb.and(ActivateClimb).whileTrue((new UnClimbCommand()));
+        // ActivateClimb.whileTrue(new ClimbSequenceCommand(Climber.getInstance()).unless(SetClimb));
+        // SetClimb.whileTrue((new SetClimbCommand()).unless(ActivateClimb));
         // ManualClimb.onTrue((Climber.getInstance()).runOnce(() -> UnClimbCommand.getInstance()));
+
+        // If both SetClimb and ActivateClimb are pressed, run UnClimbCommand
+        ElevatorReset.whileTrue(new CloseClawCommand(Climber.getInstance()));
+        SetClimb.and(ActivateClimb).whileTrue(new UnClimbCommand());
+
+        // If only ActivateClimb is pressed, run ClimbSequenceCommand
+        ActivateClimb.whileTrue(new ClimbCommand(Climber.getInstance()));
+        SetClimb.and(ActivateClimb.negate()).whileTrue(new SetClimbCommand());
+
+    
+        
+
 
         // Coral
         CoralIn.whileTrue(new IntakeCommand());
@@ -173,7 +186,7 @@ public class RobotContainer {
         level2.onTrue(new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));
         level3.onTrue(new RunElevatorCommand(ElevatorConstants.L3_HEIGHT));
         level4.onTrue(new RunElevatorCommand(ElevatorConstants.L4_HEIGHT));
-        ElevatorReset.onTrue(new RunElevatorCommand(ElevatorConstants.IDLE_HEIGHT));
+        //ElevatorReset.onTrue(new RunElevatorCommand(ElevatorConstants.IDLE_HEIGHT));
         
         AlgaeHigh.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_HIGH_HEIGHT));
         AlgaeLow.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_LOW_HEIGHT));

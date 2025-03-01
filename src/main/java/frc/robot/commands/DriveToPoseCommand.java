@@ -25,10 +25,13 @@ public class DriveToPoseCommand extends Command {
     private Pose2d cache;
     private Command pathCommand;
     private boolean isBarge;
+    private boolean useReefTags;
+    private double aprilTagId;
 
-    public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction) {
+    public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction, boolean useReefTags) {
         this.drivetrain = drivetrain;
         this.direction = direction;
+        this.useReefTags = useReefTags;
         addRequirements(drivetrain);
     }
 
@@ -68,8 +71,11 @@ public class DriveToPoseCommand extends Command {
             pathCommand = null;  // Ensure we don't try to execute a null command
             return;
         }
-        
-        double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
+        if(!useReefTags){
+            double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
+        } else {
+            double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.upperLimelightName);
+        }
         cache = getTargetPose((int) drivetrain.aprilTagCache);
         
         if (aprilTagId == -1) {

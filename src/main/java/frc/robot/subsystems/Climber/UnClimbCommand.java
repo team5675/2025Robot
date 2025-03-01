@@ -12,17 +12,13 @@ public UnClimbCommand() {
 @Override
 public void initialize(){
     System.out.println("UnClimb Command Ready" );
+    climber.SetTarget(ClimberConstants.setclimberticks);
+    climber.clawMotor.setVoltage(-3);
 }
     
 @Override
-public void execute(){
-    climber.climberMotor.set(-0.5);
-    climber.clawMotor.setVoltage(-3);
-}
-@Override
 public void end(boolean interrupted){
     climber.clawMotor.setVoltage(0);
-    climber.climberMotor.set(0);
 }
 
 @Override
@@ -31,10 +27,6 @@ public boolean isFinished() {
 
 }
 
-public static Object getInstance() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getInstance'");
-}
 }
 
 
