@@ -34,7 +34,8 @@ public class AlgaeOutCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     algae.axisMotor.set(0.25);
-    algae.setAxisPosition(0);
+    //algae.setAxisPosition(0);
+    algae.setFlywheelSpeed(0);
   }
 
   // Returns true when the command should end.
