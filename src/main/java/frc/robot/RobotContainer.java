@@ -73,9 +73,10 @@ public class RobotContainer {
     JoystickButton AlgaeIn = new JoystickButton(IpacSide2, 4);
     JoystickButton AlgaeHold = new JoystickButton(IpacSide2, 5);
     JoystickButton AlgaeOut = new JoystickButton(IpacSide2, 6);
-    JoystickButton SetClimb = new JoystickButton(IpacSide2, 7);
+    JoystickButton CloseClimber = new JoystickButton(IpacSide2, 7);
     //JoystickButton ManualClimb = new JoystickButton(IpacSide2, 13 & 14);
-    JoystickButton ActivateClimb = new JoystickButton(IpacSide2, 8);
+    JoystickButton Climb = new JoystickButton(IpacSide2, 8);
+    JoystickButton SetClimber = new JoystickButton(IpacSide2, 9);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
@@ -148,12 +149,12 @@ public class RobotContainer {
         // ManualClimb.onTrue((Climber.getInstance()).runOnce(() -> UnClimbCommand.getInstance()));
 
         // If both SetClimb and ActivateClimb are pressed, run UnClimbCommand
-        ElevatorReset.whileTrue(new CloseClawCommand(Climber.getInstance()));
-        SetClimb.and(ActivateClimb).whileTrue(new UnClimbCommand());
+        CloseClimber.whileTrue(new CloseClawCommand(Climber.getInstance()));
+        SetClimber.and(Climb).whileTrue(new UnClimbCommand());
 
         // If only ActivateClimb is pressed, run ClimbSequenceCommand
-        ActivateClimb.whileTrue(new ClimbCommand(Climber.getInstance()));
-        SetClimb.and(ActivateClimb.negate()).whileTrue(new SetClimbCommand());
+        Climb.whileTrue(new ClimbCommand(Climber.getInstance()));
+        SetClimber.whileTrue(new SetClimbCommand());
 
     
         
