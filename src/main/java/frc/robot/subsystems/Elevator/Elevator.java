@@ -14,6 +14,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -34,7 +35,7 @@ public class Elevator extends SubsystemBase {
   private Trigger bottomTrigger;
   private Trigger topTrigger;
 
-  //SparkAbsoluteEncoder angleEncoder;
+  // SparkAbsoluteEncoder angleEncoder;
   public RelativeEncoder ticksEncoder;
 
   double setpoint;
@@ -47,27 +48,25 @@ public class Elevator extends SubsystemBase {
     // pidController = new ProfiledPIDController(ElevatorConstants.motorP,
     // ElevatorConstants.motorI, ElevatorConstants.motorD, null);
 
-    //angleEncoder = motor.getAbsoluteEncoder();
+    // angleEncoder = motor.getAbsoluteEncoder();
     ticksEncoder = motor.getEncoder();
 
-    motorConfig.smartCurrentLimit(30, 35);
-    motorConfig.voltageCompensation(12);
-    motorConfig.idleMode(IdleMode.kBrake);
+    motorConfig.
+    smartCurrentLimit(30, 35)
+      .voltageCompensation(12)
+      .idleMode(IdleMode.kBrake)
+      .closedLoopRampRate(0.15);
 
-    // temp replacement for trapezoidprofile
-    motorConfig.closedLoopRampRate(0.5);
-    
     motorConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(ElevatorConstants.motorP, ElevatorConstants.motorI, ElevatorConstants.motorD);
+      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+      .pid(ElevatorConstants.motorP, ElevatorConstants.motorI, ElevatorConstants.motorD);
+    // motorConfig.closedLoop.maxMotion
+    //   .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal)
+    //   .maxAcceleration(5000.0)
+    //   .maxVelocity(4000.0)
+    //   .allowedClosedLoopError(.1);
 
-    var status = motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-    
-    if (status == REVLibError.kOk) {
-      SmartDashboard.putString("Config status", "it worked");
-    } else {
-      SmartDashboard.putString("Config status", status.toString());
-    }
+    motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
     bottomLimitSwitch = new DigitalInput(ElevatorConstants.bottomLimitSwitchChannel);
     topLimitSwitch = new DigitalInput(ElevatorConstants.topLimitSwitchChannel);
@@ -77,7 +76,6 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setTarget(double ticks) {
-    SmartDashboard.putNumber("Ticks in subsystem", ticks);
     setpoint = ticks;
     sparkPidController.setReference(ticks, ControlType.kPosition);
   }
@@ -88,26 +86,31 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // flip for some reason
-    var bottomBool = !bottomTrigger.getAsBoolean();
+    // flip
+    var bottomBool = bottomTrigger.getAsBoolean();
     var topBool = topTrigger.getAsBoolean();
-    
-    // if (!bottomBool) {
-    //   // motor.set(0);
-    //   ticksEncoder.setPosition(0);
+
+    if (!bottomBool && setpoint < 5) {
+      // motor.set(0);
+      ticksEncoder.setPosition(0);
+    }
+
+    // (!topBool) {
+    // motor.set(0);
     // }
 
-    //  (!topBool) {
-    //   motor.set(0);
-    // }
-
-    SmartDashboard.putBoolean("Top Tripped", topBool);
-    SmartDashboard.putBoolean("Bottom Tripped", bottomBool);
-    SmartDashboard.putNumber("Elevator Current", motor.getOutputCurrent());
-    SmartDashboard.putNumber("Process Variable", ticksEncoder.getPosition());
+    SmartDashboard.putBoolean("Elevator: Top Tripped", topBool);
+    SmartDashboard.putBoolean("Elevator: Bottom Tripped", bottomBool);
+    SmartDashboard.putNumber("Elevator: Current", motor.getOutputCurrent());
+    SmartDashboard.putNumber("Elevator: Motor Output", motor.getAppliedOutput());
+    SmartDashboard.putNumber("Elevator: Ticks", ticksEncoder.getPosition());
+    SmartDashboard.putNumber("Elevator: Target Position", setpoint);
+    SmartDashboard.putNumber("Elevator: Position Error", setpoint - ticksEncoder.getPosition());
+    SmartDashboard.putNumber("Elevator: Motor Velocity", ticksEncoder.getVelocity());
   }
 
   private static Elevator instance;
+
   public static Elevator getInstance() {
     if (instance == null) {
       instance = new Elevator();

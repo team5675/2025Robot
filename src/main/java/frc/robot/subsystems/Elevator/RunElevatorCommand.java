@@ -25,9 +25,7 @@ public class RunElevatorCommand extends Command {
 
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Setting target", height);
     elevator.setTarget(height);
-    SmartDashboard.putNumber("Command ticks", elevator.ticksEncoder.getPosition());
   }
 
   @Override
