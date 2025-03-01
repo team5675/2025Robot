@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.Alignment;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -149,38 +149,38 @@ public class DriveToPoseCommand extends Command {
 
         return switch (direction) {
             case "Left" -> switch (aprilTagId) {
-                case 18, 7 -> Constants.AlignmentConstants.A_BLUE;
-                case 19, 6 -> Constants.AlignmentConstants.K_BLUE;
-                case 20, 11 -> Constants.AlignmentConstants.I_BLUE;
-                case 21, 10 -> Constants.AlignmentConstants.G_BLUE;
-                case 22, 9 -> Constants.AlignmentConstants.E_BLUE;
-                case 17, 8 -> Constants.AlignmentConstants.C_BLUE;
-                case 12 -> Constants.AlignmentConstants.CORAL1LEFT;
-                case 13 -> Constants.AlignmentConstants.CORAL3LEFT;
-                // case 14, 5 -> Constants.AlignmentConstants.BARGELEFT;
-                case 3, 16 -> Constants.AlignmentConstants.PROCESSOR;
+                case 18, 7 -> AlignmentConstants.A_BLUE;
+                case 19, 6 -> AlignmentConstants.K_BLUE;
+                case 20, 11 -> AlignmentConstants.I_BLUE;
+                case 21, 10 -> AlignmentConstants.G_BLUE;
+                case 22, 9 -> AlignmentConstants.E_BLUE;
+                case 17, 8 -> AlignmentConstants.C_BLUE;
+                case 12 -> AlignmentConstants.CORAL1LEFT;
+                case 13 -> AlignmentConstants.CORAL3LEFT;
+                // case 14, 5 -> AlignmentConstants.BARGELEFT;
+                case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
-                    yield Constants.AlignmentConstants.A_BLUE;
+                    yield AlignmentConstants.A_BLUE;
                 }
             };
             case "Right" -> switch (aprilTagId) {
-                case 18, 7 -> Constants.AlignmentConstants.B_BLUE;
-                case 19, 6 -> Constants.AlignmentConstants.L_BLUE;
-                case 20, 11 -> Constants.AlignmentConstants.J_BLUE;
-                case 21, 10 -> Constants.AlignmentConstants.H_BLUE;
-                case 22, 9 -> Constants.AlignmentConstants.F_BLUE;
-                case 17, 8 -> Constants.AlignmentConstants.D_BLUE;
-                case 12 -> Constants.AlignmentConstants.CORAL1RIGHT;
-                case 13 -> Constants.AlignmentConstants.CORAL3RIGHT;
-                // case 14, 5 -> Constants.AlignmentConstants.BARGERIGHT;
-                case 3, 16 -> Constants.AlignmentConstants.PROCESSOR;
+                case 18, 7 -> AlignmentConstants.B_BLUE;
+                case 19, 6 -> AlignmentConstants.L_BLUE;
+                case 20, 11 -> AlignmentConstants.J_BLUE;
+                case 21, 10 -> AlignmentConstants.H_BLUE;
+                case 22, 9 -> AlignmentConstants.F_BLUE;
+                case 17, 8 -> AlignmentConstants.D_BLUE;
+                case 12 -> AlignmentConstants.CORAL1RIGHT;
+                case 13 -> AlignmentConstants.CORAL3RIGHT;
+                // case 14, 5 -> AlignmentConstants.BARGERIGHT;
+                case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
-                    yield Constants.AlignmentConstants.B_BLUE;
+                    yield AlignmentConstants.B_BLUE;
                 }
             };
-            default -> Constants.AlignmentConstants.A_BLUE;
+            default -> AlignmentConstants.A_BLUE;
         };
     }
    private PathPlannerPath getBargePath(){
