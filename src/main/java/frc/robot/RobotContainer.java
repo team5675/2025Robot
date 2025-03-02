@@ -91,15 +91,17 @@ public class RobotContainer {
     public Command pathfindingCommand;
 
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
 
         NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
-        NamedCommands.registerCommand("PlaceCommand",new PlaceCommand());
+        NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
         NamedCommands.registerCommand("ElevatorL1", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
-        NamedCommands.registerCommand("ElevatorL2", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
-        NamedCommands.registerCommand("ElevatorL3", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
-        NamedCommands.registerCommand("ElevatorL4", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL2", new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL3", new RunElevatorCommand(ElevatorConstants.L3_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL4", new RunElevatorCommand(ElevatorConstants.L4_HEIGHT));
+        NamedCommands.registerCommand("ElevatorReset", new RunElevatorCommand(ElevatorConstants.IDLE_HEIGHT));
+
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
 
 
         configureBindings();
@@ -134,14 +136,14 @@ public class RobotContainer {
         getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
         // Driver
         getDriverController().leftTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Left", false));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Left", true));
 
         getDriverController().rightTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Right", false));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Right", true));
 
-        getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", true));
-        getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",true));
-        getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",true));
+        getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", false));
+        getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",false));
+        getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",false));
 
         // Aux Button Board
 

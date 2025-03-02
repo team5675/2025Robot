@@ -360,11 +360,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         LimelightHelpers.PoseEstimate lastValidPose = null;
 
+
        // Only run vision updates if we see a tag
         if ((lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) ||
             (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0)) {
 
-            LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
+            LimelightHelpers.PoseEstimate bestEstimate = lowerLimelightEstimate;
 
             if (bestEstimate != null && bestEstimate.tagCount > 0) {
                 lastValidPose = bestEstimate;
@@ -377,6 +378,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
+
 
         //Debug Values
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());

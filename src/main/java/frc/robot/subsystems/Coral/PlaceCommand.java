@@ -33,6 +33,11 @@ private Coral coral;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(!coral.bb1Tripped && !coral.bb2Tripped){
+      return true;
+    }
+    else{
     return false;
+    }
   }
 }

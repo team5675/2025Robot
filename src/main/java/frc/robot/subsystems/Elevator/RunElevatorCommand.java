@@ -35,6 +35,6 @@ public class RunElevatorCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(height - Elevator.getInstance().ticksEncoder.getPosition()) < 1;
   }
 }

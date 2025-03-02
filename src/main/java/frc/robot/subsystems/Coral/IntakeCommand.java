@@ -58,6 +58,11 @@ public class IntakeCommand extends Command {
     @Override
     public boolean isFinished() {
         // This command runs continuously until interrupted
+        if (needsReverse && coral.bb1Tripped && coral.bb2Tripped){
+           return true;
+        }
+        else{
         return false;
+        }
     }
 }
