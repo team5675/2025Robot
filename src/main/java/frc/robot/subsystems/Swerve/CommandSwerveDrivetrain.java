@@ -361,22 +361,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         LimelightHelpers.PoseEstimate lastValidPose = null;
 
        // Only run vision updates if we see a tag
-        // if (lowerLimelightEstimate != null || upperLimelightEstimate != null) {
-        //     LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
+        if ((lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) ||
+            (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0)) {
 
-        //     if (bestEstimate != null && bestEstimate.tagCount > 0) {
-        //         lastValidPose = bestEstimate;
-        //     }
+            LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
 
-        //     if (lastValidPose != null) {
-        //         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
-        //         m_poseEstimator.addVisionMeasurement(lastValidPose.pose, lastValidPose.timestampSeconds);
-        //     }
-        // }
-        if(lowerLimelightEstimate.pose != null){
-
-             m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
-             m_poseEstimator.addVisionMeasurement(lowerLimelightEstimate.pose, lowerLimelightEstimate.timestampSeconds);
+            if (bestEstimate != null && bestEstimate.tagCount > 0) {
+                lastValidPose = bestEstimate;
+            }
+            // If it's updating to an older position, use && lastValidPose.timestampSeconds > Timer.getFPGATimestamp() - 0.5
+            if (lastValidPose != null) {
+                m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
+                m_poseEstimator.addVisionMeasurement(lastValidPose.pose, lastValidPose.timestampSeconds);
+            }
         }
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
@@ -439,18 +436,32 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         );
     }
     private LimelightHelpers.PoseEstimate selectBestEstimate(LimelightHelpers.PoseEstimate upper, LimelightHelpers.PoseEstimate lower) {
+        
+        // Case: Both are null, return null
+        if ((upper == null || upper.tagCount == 0) && (lower == null || lower.tagCount == 0)) {
+            return null;
+        }
+
+        // Case: One is null or has no valid tags, return the other
         if (upper == null || upper.tagCount == 0) {
-            return lower; 
+            return lower;
         }
         if (lower == null || lower.tagCount == 0) {
             return upper;
         }
-        if (upper.avgTagDist < lower.avgTagDist){
+
+        // Case: Favor closer estimate
+        if (upper.avgTagDist < lower.avgTagDist) {
             isReefLimelight = true;
             return upper;
-        } else {
+        } 
+        if (lower.avgTagDist < upper.avgTagDist) {
             isReefLimelight = false;
             return lower;
         }
+
+        // Case: Same distance, use most recent timestamp
+        return (upper.timestampSeconds > lower.timestampSeconds) ? upper : lower;
     }
+
 }

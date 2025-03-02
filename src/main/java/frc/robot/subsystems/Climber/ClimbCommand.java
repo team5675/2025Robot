@@ -13,16 +13,23 @@ public class ClimbCommand extends Command {
     @Override
     public void initialize() {
         System.out.println("Climbing Up...");
-        climber.SetTarget(ClimberConstants.climberticks);
+        climber.climberMotor.set(0.6);
     }
 
+    // @Override
+    // public void execute() {
+    //     if(!climber.isTripped.getAsBoolean()){
+    //         climber.climberMotor.set(0);
+    //     }
+    // }
     @Override
     public boolean isFinished() {
-        return Math.abs(climber.climberEncoder.getPosition() - ClimberConstants.climberticks) < 2; // Adjust tolerance
+        return !climber.isTripped.getAsBoolean();
     }
 
     @Override
     public void end(boolean interrupted) {
+        climber.climberMotor.set(0);
         System.out.println("Climb Complete.");
         //To Stay up in the air if needed
         //climber.climberMotor.set(0.1);

@@ -23,19 +23,12 @@ public class SetClimbCommand extends Command {
         timer.start(); // Start the timeout timer
     }
 
-    @Override
-    public void execute() {
-
-        if (climber.climberEncoder.getPosition() < ClimberConstants.setclimberticks) {
-            climber.clawMotor.setVoltage(-3.5);
-        }
-    }
 
     @Override
     public void end(boolean interrupted) {
+        climber.clawMotor.setVoltage(ClimberConstants.setClaw);
         System.out.println("Set Climb Command Finished");
         climber.climberMotor.set(0);
-        climber.clawMotor.setVoltage(0);
         climber.climberEncoder.setPosition(0); // Reset encoder position when finished
     }
 
