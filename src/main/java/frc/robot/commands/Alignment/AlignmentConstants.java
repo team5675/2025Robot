@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class AlignmentConstants {
-
     // Rotation constants
     // Blue letters come first
     private static final Rotation2d AB = new Rotation2d(Math.toRadians(0));
@@ -18,43 +17,30 @@ public class AlignmentConstants {
     private static final Rotation2d BARGE = new Rotation2d(Math.toRadians(180));
     private static final Rotation2d PROCESSORANGLE = new Rotation2d(Math.toRadians(-90));
 
-    // Corrected Pose2d values (same X and Y, updated rotation)
-    public static final Pose2d A_BLUE = new Pose2d(3.171, 4.19, AB);
-    public static final Pose2d A_RED = new Pose2d(14.381, 3.862, AB);
-
-    public static final Pose2d B_BLUE = new Pose2d(3.171, 3.83, AB);
-    public static final Pose2d B_RED = new Pose2d(14.386, 4.163, AB);
-
-    public static final Pose2d C_BLUE = new Pose2d(3.662, 2.963, CD);
-    public static final Pose2d C_RED = new Pose2d(13.871, 5.079, CD);
-
-    public static final Pose2d D_BLUE = new Pose2d(3.9, 2.818, CD);
-    public static final Pose2d D_RED = new Pose2d(13.579, 5.231, CD);
-
-    public static final Pose2d E_BLUE = new Pose2d(5.03, 2.828, EF);
-    public static final Pose2d E_RED = new Pose2d(12.531, 5.229, EF);
-
-    public static final Pose2d F_BLUE = new Pose2d(5.320, 2.963, EF);
-    public static final Pose2d F_RED = new Pose2d(12.261, 5.076, EF);
-
-    public static final Pose2d G_BLUE = new Pose2d(5.807, 3.833, GH);
-    public static final Pose2d G_RED = new Pose2d(11.750, 4.183, GH);
-
-    public static final Pose2d H_BLUE = new Pose2d(5.807, 4.175, GH);
-    public static final Pose2d H_RED = new Pose2d(11.750, 3.858, GH);
-
-    public static final Pose2d I_BLUE = new Pose2d(5.289, 5.077, IJ);
-    public static final Pose2d I_RED = new Pose2d(12.258, 2.971, IJ);
-
-    public static final Pose2d J_BLUE = new Pose2d(5.019, 5.232, IJ);
-    public static final Pose2d J_RED = new Pose2d(12.544, 2.802, IJ);
-
-    public static final Pose2d K_BLUE = new Pose2d(3.969, 5.197, KL);
-    public static final Pose2d K_RED = new Pose2d(13.564, 2.804, KL);
-
-    public static final Pose2d L_BLUE = new Pose2d(3.729, 5.087, KL);
-    public static final Pose2d L_RED = new Pose2d(13.564, 2.804, KL);
-
+    public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
+   
+    public static final Pose2d REEF_B = new Pose2d(3.245, 3.821, AB);
+   
+    public static final Pose2d REEF_C = new Pose2d(3.695, 3.008, CD);
+   
+    public static final Pose2d REEF_D = new Pose2d(4.005, 2.862, CD);
+   
+    public static final Pose2d REEF_E = new Pose2d(4.970, 2.839, EF);
+    
+    public static final Pose2d REEF_F = new Pose2d(5.265, 3.037, EF);
+    
+    public static final Pose2d REEF_G = new Pose2d(5.762, 3.851, GH);
+    
+    public static final Pose2d REEF_H = new Pose2d(5.73, 4.21, GH);
+    
+    public static final Pose2d REEF_I = new Pose2d(5.274, 5.037, IJ);
+    
+    public static final Pose2d REEF_J = new Pose2d(4.939, 5.198, IJ);
+    
+    public static final Pose2d REEF_K = new Pose2d(3.989, 5.201, KL);
+    
+    public static final Pose2d REEF_L = new Pose2d(3.707, 5.010, KL);
+    
     public static final Pose2d CORAL1RIGHT = new Pose2d(1.536, 0.726, RIGHTCORALSTATION);
     public static final Pose2d CORAL1LEFT = new Pose2d(0.800, 1.258, RIGHTCORALSTATION);
 

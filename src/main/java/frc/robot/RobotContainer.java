@@ -25,6 +25,7 @@ import frc.robot.subsystems.Climber.SetClimbCommand;
 import frc.robot.subsystems.Climber.UnClimbCommand;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Coral.IntakeCommand;
+import frc.robot.commands.Alignment.DriveToPoseCommand;
 import frc.robot.subsystems.Algae.Algae;
 import frc.robot.subsystems.Climber.ClimbCommand;
 import frc.robot.subsystems.Climber.Climber;
@@ -127,18 +128,18 @@ public class RobotContainer {
         getDriverController().start().and(getDriverController().x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press and resets gyro on b button press
-       // getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+       getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
         getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
         // Driver
-        // getDriverController().leftTrigger()
-        //     .whileTrue(new DriveToPoseCommand(drivetrain, "Left"));
+        getDriverController().leftTrigger()
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Left", false));
 
-        // getDriverController().rightTrigger()
-        //     .whileTrue(new DriveToPoseCommand(drivetrain, "Right"));
+        getDriverController().rightTrigger()
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Right", false));
 
-        // getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge"));
-        // getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge"));
-        // getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge"));
+        getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", true));
+        getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",true));
+        getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",true));
 
         // Aux Button Board
 
@@ -187,7 +188,7 @@ public class RobotContainer {
         level2.onTrue(new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));
         level3.onTrue(new RunElevatorCommand(ElevatorConstants.L3_HEIGHT));
         level4.onTrue(new RunElevatorCommand(ElevatorConstants.L4_HEIGHT));
-        //ElevatorReset.onTrue(new RunElevatorCommand(ElevatorConstants.IDLE_HEIGHT));
+        ElevatorReset.onTrue(new RunElevatorCommand(ElevatorConstants.IDLE_HEIGHT));
         
         AlgaeHigh.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_HIGH_HEIGHT));
         AlgaeLow.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_LOW_HEIGHT));

@@ -149,38 +149,38 @@ public class DriveToPoseCommand extends Command {
 
         return switch (direction) {
             case "Left" -> switch (aprilTagId) {
-                case 18, 7 -> AlignmentConstants.A_BLUE;
-                case 19, 6 -> AlignmentConstants.K_BLUE;
-                case 20, 11 -> AlignmentConstants.I_BLUE;
-                case 21, 10 -> AlignmentConstants.G_BLUE;
-                case 22, 9 -> AlignmentConstants.E_BLUE;
-                case 17, 8 -> AlignmentConstants.C_BLUE;
+                case 18, 7 -> AlignmentConstants.REEF_A;
+                case 19, 6 -> AlignmentConstants.REEF_K;
+                case 20, 11 -> AlignmentConstants.REEF_I;
+                case 21, 10 -> AlignmentConstants.REEF_G;
+                case 22, 9 -> AlignmentConstants.REEF_E;
+                case 17, 8 -> AlignmentConstants.REEF_C;
                 case 12 -> AlignmentConstants.CORAL1LEFT;
                 case 13 -> AlignmentConstants.CORAL3LEFT;
                 // case 14, 5 -> AlignmentConstants.BARGELEFT;
                 case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
-                    yield AlignmentConstants.A_BLUE;
+                    yield AlignmentConstants.REEF_A;
                 }
             };
             case "Right" -> switch (aprilTagId) {
-                case 18, 7 -> AlignmentConstants.B_BLUE;
-                case 19, 6 -> AlignmentConstants.L_BLUE;
-                case 20, 11 -> AlignmentConstants.J_BLUE;
-                case 21, 10 -> AlignmentConstants.H_BLUE;
-                case 22, 9 -> AlignmentConstants.F_BLUE;
-                case 17, 8 -> AlignmentConstants.D_BLUE;
+                case 18, 7 -> AlignmentConstants.REEF_B;
+                case 19, 6 -> AlignmentConstants.REEF_L;
+                case 20, 11 -> AlignmentConstants.REEF_J;
+                case 21, 10 -> AlignmentConstants.REEF_H;
+                case 22, 9 -> AlignmentConstants.REEF_F;
+                case 17, 8 -> AlignmentConstants.REEF_D;
                 case 12 -> AlignmentConstants.CORAL1RIGHT;
                 case 13 -> AlignmentConstants.CORAL3RIGHT;
                 // case 14, 5 -> AlignmentConstants.BARGERIGHT;
                 case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
-                    yield AlignmentConstants.B_BLUE;
+                    yield AlignmentConstants.REEF_B;
                 }
             };
-            default -> AlignmentConstants.A_BLUE;
+            default -> AlignmentConstants.REEF_A;
         };
     }
    private PathPlannerPath getBargePath(){
