@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -25,7 +27,7 @@ import frc.robot.subsystems.Climber.SetClimbCommand;
 import frc.robot.subsystems.Climber.UnClimbCommand;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Coral.IntakeCommand;
-import frc.robot.commands.Alignment.DriveToPoseCommand;
+import frc.robot.subsystems.Coral.PlaceCommand;
 import frc.robot.subsystems.Algae.Algae;
 import frc.robot.subsystems.Climber.ClimbCommand;
 import frc.robot.subsystems.Climber.Climber;
@@ -33,6 +35,7 @@ import frc.robot.subsystems.Climber.CloseClawCommand;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Swerve.DriveToPoseCommand;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
 
@@ -66,8 +69,8 @@ public class RobotContainer {
     JoystickButton level2 = new JoystickButton(IpacSide1, 3);
     JoystickButton level3 = new JoystickButton(IpacSide1, 4);
     JoystickButton level4 = new JoystickButton(IpacSide1, 5);
-    JoystickButton AlgaeHigh = new JoystickButton(IpacSide1, 6);
-    JoystickButton AlgaeLow = new JoystickButton(IpacSide1, 7);
+    JoystickButton AlgaeLow = new JoystickButton(IpacSide1, 6);
+    JoystickButton AlgaeHigh = new JoystickButton(IpacSide1, 7);
     JoystickButton CoralIn = new JoystickButton(IpacSide2, 1);
     JoystickButton CoralReset = new JoystickButton(IpacSide2, 2);
     JoystickButton Score = new JoystickButton(IpacSide2, 3);
@@ -88,16 +91,15 @@ public class RobotContainer {
     public Command pathfindingCommand;
 
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("P");
+        autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        //NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
-        //NamedCommands.registerCommand("Missed Intake", );
-        //NamedCommands.registerCommand("PlaceCommand",new PlaceCommand());
-        // NamedCommands.registerCommand("ElevatorL1", Elevator.setTargetCommand(ElevatorConstants.L1_HEIGHT));
-        // NamedCommands.registerCommand("ElevatorL2", Elevator.setTargetCommand(ElevatorConstants.L2_HEIGHT));
-        // NamedCommands.registerCommand("ElevatorL3", Elevator.setTargetCommand(ElevatorConstants.L3_HEIGHT));
-        // NamedCommands.registerCommand("ElevatorL4", Elevator.setTargetCommand(ElevatorConstants.L4_HEIGHT));
+        NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
+        NamedCommands.registerCommand("PlaceCommand",new PlaceCommand());
+        NamedCommands.registerCommand("ElevatorL1", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL2", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL3", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL4", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
 
 
         configureBindings();
@@ -115,10 +117,10 @@ public class RobotContainer {
             )
         );
 
-        getDriverController().a().whileTrue(drivetrain.applyRequest(() -> brake));
-        getDriverController().b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-getDriverController().getLeftY(), -getDriverController().getLeftX()))
-        ));
+        // getDriverController().a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // getDriverController().b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-getDriverController().getLeftY(), -getDriverController().getLeftX()))
+        // ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -128,7 +130,7 @@ public class RobotContainer {
         getDriverController().start().and(getDriverController().x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press and resets gyro on b button press
-       getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
         getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
         // Driver
         getDriverController().leftTrigger()
@@ -143,12 +145,6 @@ public class RobotContainer {
 
         // Aux Button Board
 
-        // Climber
-        // SetClimb.and(ActivateClimb).whileTrue((new UnClimbCommand()));
-        // ActivateClimb.whileTrue(new ClimbSequenceCommand(Climber.getInstance()).unless(SetClimb));
-        // SetClimb.whileTrue((new SetClimbCommand()).unless(ActivateClimb));
-        // ManualClimb.onTrue((Climber.getInstance()).runOnce(() -> UnClimbCommand.getInstance()));
-
         // If both SetClimb and ActivateClimb are pressed, run UnClimbCommand
         CloseClimber.whileTrue(new CloseClawCommand(Climber.getInstance()));
         SetClimber.and(Climb).whileTrue(new UnClimbCommand());
@@ -156,10 +152,6 @@ public class RobotContainer {
         // If only ActivateClimb is pressed, run ClimbSequenceCommand
         Climb.whileTrue(new ClimbCommand(Climber.getInstance()));
         SetClimber.whileTrue(new SetClimbCommand());
-
-    
-        
-
 
         // Coral
         CoralIn.whileTrue(new IntakeCommand());
@@ -177,11 +169,8 @@ public class RobotContainer {
         AlgaeHold.whileTrue(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0.1)));
         AlgaeHold.whileFalse(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0)));
 
-        getDriverController().rightBumper().onTrue((Commands.runOnce(() -> Algae.getInstance().axisMotor.set(0.2))));
-        getDriverController().rightBumper().onFalse((Commands.runOnce(() -> Algae.getInstance().axisMotor.set(0))));
-        getDriverController().leftBumper().onTrue((Commands.runOnce(() -> Algae.getInstance().axisMotor.set(-0.2))));
-        getDriverController().leftBumper().onFalse((Commands.runOnce(() -> Algae.getInstance().axisMotor.set(0))));
-
+        AlgaeHigh.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_HIGH_HEIGHT));
+        AlgaeLow.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_LOW_HEIGHT));
 
         // Elevator      
         level1.onTrue(new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
@@ -190,22 +179,7 @@ public class RobotContainer {
         level4.onTrue(new RunElevatorCommand(ElevatorConstants.L4_HEIGHT));
         ElevatorReset.onTrue(new RunElevatorCommand(ElevatorConstants.IDLE_HEIGHT));
         
-        AlgaeHigh.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_HIGH_HEIGHT));
-        AlgaeLow.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_LOW_HEIGHT));
         
-        //ElevatorReset.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.IDLE_HEIGHT)));
-        // AlgaeHigh.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_HIGH_HEIGHT)));
-        // AlgaeLow.onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.ALGAE_LOW_HEIGHT)));
-        // getDriverController().leftBumper().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L1_HEIGHT)));
-        // getDriverController().rightBumper().onTrue(Commands.runOnce(() -> Elevator.getInstance().setTarget(ElevatorConstants.L2_HEIGHT)));
-
-        getDriverController().povLeft().onTrue(Commands.runOnce(() -> Elevator.getInstance().motor.set(-0.3)));
-        getDriverController().povLeft().onFalse(Commands.runOnce(() -> Elevator.getInstance().motor.set(0)));
-
-        getDriverController().povRight().onTrue(Commands.runOnce(() -> Elevator.getInstance().motor.set(0.3)));
-        getDriverController().povRight().onFalse(Commands.runOnce(() -> Elevator.getInstance().motor.set(0)));
-      //  getDriverController().x().whileTrue(Commands.runOnce(() -> ClimbCommand.getInstance().));
-
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
