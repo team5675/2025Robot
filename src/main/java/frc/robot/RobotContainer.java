@@ -136,17 +136,17 @@ public class RobotContainer {
         getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
         // Driver
         getDriverController().leftTrigger().and(getDriverController().rightTrigger().negate())
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Left", () -> drivetrain.useReefTags));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Left", () -> drivetrain.useReefTags, false));
 
         getDriverController().rightTrigger().and(getDriverController().leftTrigger().negate())
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Right", () -> drivetrain.useReefTags));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Right", () -> drivetrain.useReefTags, false));
 
         getDriverController().rightTrigger().and(getDriverController().leftTrigger())
-        .whileTrue(new DriveToPoseCommand(drivetrain, "Algae", () -> true));
+        .whileTrue(new DriveToPoseCommand(drivetrain, "Algae", () -> true, true));
 
-        getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", () -> false));
-        getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",() -> false));
-        getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",() -> false));
+        getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", () -> false, false));
+        getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",() -> false, false));
+        getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",() -> false, false));
 
         // Aux Button Board
 

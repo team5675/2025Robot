@@ -25,11 +25,13 @@ public class DriveToPoseCommand extends Command {
     private boolean isBarge;
     private double aprilTagId;
     private final Supplier<Boolean> useReefTagsSupplier;
+    private boolean isAlgae;
 
-    public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction, Supplier<Boolean> useReefTagsSupplier) {
+    public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction, Supplier<Boolean> useReefTagsSupplier, boolean isAlgae) {
         this.drivetrain = drivetrain;
         this.direction = direction;
         this.useReefTagsSupplier = useReefTagsSupplier;
+        this.isAlgae = isAlgae;
         addRequirements(drivetrain);
 }
 
@@ -63,14 +65,13 @@ public class DriveToPoseCommand extends Command {
 
     /** Updates the target pose dynamically based on AprilTag ID */
     private void updateTargetPose() {
-
-        SmartDashboard.putBoolean("ReefSupplier", useReefTagsSupplier.get());
+        
         if (targetPose != null && drivetrain.m_poseEstimator.getEstimatedPosition().equals(targetPose)) {
             System.out.println("Already at target pose. No path needed.");
             pathCommand = null; 
             return;
         }
-        if (!useReefTagsSupplier.get() || !Coral.getInstance().bb2Tripped) {  
+        if ((!useReefTagsSupplier.get() || !Coral.getInstance().bb2Tripped) && !isAlgae) {  
             aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.upperLimelightName);
         } else {
             aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
