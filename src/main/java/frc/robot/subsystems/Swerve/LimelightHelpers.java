@@ -1,4 +1,4 @@
-//LimelightHelpers v1.11 (REQUIRES LLOS 2025.0 OR LATER)
+//LimelightHelpers v1.12 (REQUIRES LLOS 2025.0 OR LATER)
 
 package frc.robot.subsystems.Swerve;
 
@@ -7,8 +7,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TimestampedDoubleArray;
-import frc.robot.subsystems.Swerve.LimelightHelpers.LimelightResults;
-import frc.robot.subsystems.Swerve.LimelightHelpers.PoseEstimate;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,6 +19,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -487,6 +486,21 @@ public class LimelightHelpers {
             this.distToRobot = distToRobot;
             this.ambiguity = ambiguity;
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            RawFiducial other = (RawFiducial) obj;
+            return id == other.id &&
+                Double.compare(txnc, other.txnc) == 0 &&
+                Double.compare(tync, other.tync) == 0 &&
+                Double.compare(ta, other.ta) == 0 &&
+                Double.compare(distToCamera, other.distToCamera) == 0 &&
+                Double.compare(distToRobot, other.distToRobot) == 0 &&
+                Double.compare(ambiguity, other.ambiguity) == 0;
+        }
+
     }
 
     /**
@@ -570,6 +584,22 @@ public class LimelightHelpers {
             this.avgTagArea = avgTagArea;
             this.rawFiducials = rawFiducials;
             this.isMegaTag2 = isMegaTag2;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            PoseEstimate that = (PoseEstimate) obj;
+            // We don't compare the timestampSeconds as it isn't relevant for equality and makes
+            // unit testing harder
+            return Double.compare(that.latency, latency) == 0
+                && tagCount == that.tagCount
+                && Double.compare(that.tagSpan, tagSpan) == 0
+                && Double.compare(that.avgTagDist, avgTagDist) == 0
+                && Double.compare(that.avgTagArea, avgTagArea) == 0
+                && pose.equals(that.pose)
+                && Arrays.equals(rawFiducials, that.rawFiducials);
         }
 
     }
@@ -1482,6 +1512,27 @@ public class LimelightHelpers {
      */
     public static void SetIMUMode(String limelightName, int mode) {
         setLimelightNTDouble(limelightName, "imumode_set", mode);
+    }
+
+    /**
+     * Configures the complementary filter alpha value for IMU Assist Modes (Modes 3 and 4)
+     * 
+     * @param limelightName Name/identifier of the Limelight
+     * @param alpha Defaults to .001. Higher values will cause the internal IMU to converge onto the assist source more rapidly.
+     */
+    public static void SetIMUAssistAlpha(String limelightName, double alpha) {
+        setLimelightNTDouble(limelightName, "imuassistalpha_set", alpha);
+    }
+
+    
+    /**
+     * Configures the throttle value. Set to 100-200 while disabled to reduce thermal output/temperature.
+     * 
+     * @param limelightName Name/identifier of the Limelight
+     * @param throttle Defaults to 0. Your Limelgiht will process one frame after skipping <throttle> frames.
+     */
+    public static void SetThrottle(String limelightName, int throttle) {
+        setLimelightNTDouble(limelightName, "throttle_set", throttle);
     }
 
     /**
