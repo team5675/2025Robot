@@ -3,6 +3,7 @@ package frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.PathplannerConstants;
+import frc.robot.subsystems.Coral.Coral;
 import edu.wpi.first.math.geometry.Pose2d;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
@@ -67,10 +68,10 @@ public class DriveToPoseCommand extends Command {
             pathCommand = null; 
             return;
         }
-        if (useReefTagsSupplier.get()) {  
-            aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
-        } else {
+        if (!useReefTagsSupplier.get() || !Coral.getInstance().bb2Tripped) {  
             aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.upperLimelightName);
+        } else {
+            aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
         }
 
         cache = getTargetPose((int) drivetrain.aprilTagCache);
@@ -174,6 +175,18 @@ public class DriveToPoseCommand extends Command {
                 case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
+                    yield drivetrain.m_poseEstimator.getEstimatedPosition();
+                }
+            };
+            case "Algae" -> switch (aprilTagId) {
+                case 18, 7 -> AlignmentConstants.ALGAE_AB;
+                case 19, 6 -> AlignmentConstants.ALGAE_KL;
+                case 20, 11 -> AlignmentConstants.ALGAE_IJ;
+                case 21, 10 -> AlignmentConstants.ALGAE_GH;
+                case 22, 9 -> AlignmentConstants.ALGAE_EF;
+                case 17, 8 -> AlignmentConstants.ALGAE_CD;
+                default -> {
+                    System.out.println("Unknown AprilTag ID for algae: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
                 }
             };

@@ -378,19 +378,38 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_poseEstimator.addVisionMeasurement(lastValidPose.pose, lastValidPose.timestampSeconds);
             }
         }
+        //Switch to only one limelight for pose estimation
+        // LimelightHelpers.PoseEstimate lowerLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName);
+
+        // if (lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) {
+        //     m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
+        //     m_poseEstimator.addVisionMeasurement(lowerLimelightEstimate.pose, lowerLimelightEstimate.timestampSeconds);
+        // }
+
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
 
         //Debug Values
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-        SmartDashboard.putNumber("Limelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.lowerLimelightName, "tid"));
+        SmartDashboard.putNumber("LowerLimelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.lowerLimelightName, "tid"));
+        //SmartDashboard.putNumber("UpperLimelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.upperLimelightName, "tid"));
         SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
         SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
         SmartDashboard.putNumber("CacheID", aprilTagCache);
         SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putBoolean("IsReefLimelight", useReefTags);
+
+         if (lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) {
+            //SmartDashboard.putNumber("Limelight Yaw", lowerLimelightEstimate.pose.getRotation().getDegrees());
+            SmartDashboard.putNumber("BottomLL Tag Distance", lowerLimelightEstimate.avgTagDist);
+         }
+        
+        // Check if upperLimelightEstimate is null before accessing its pose
+        if (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0) {
+            SmartDashboard.putNumber("UpperLL Tag Distance", upperLimelightEstimate.avgTagDist);
+        }
         
     }
 
@@ -445,6 +464,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if ((upper == null || upper.tagCount == 0) && (lower == null || lower.tagCount == 0)) {
             return null;
         }
+
+        //  if (upper.avgTagDist > 3 && lower.avgTagDist > 3) {
+        //     return null; // Use odometry-only if no Limelight sees a tag within 3m
+        // }
 
         // Case: One is null or has no valid tags, return the other
         if (upper == null || upper.tagCount == 0) {

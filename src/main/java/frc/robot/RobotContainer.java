@@ -135,11 +135,14 @@ public class RobotContainer {
         getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
         getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
         // Driver
-        getDriverController().leftTrigger()
+        getDriverController().leftTrigger().and(getDriverController().rightTrigger().negate())
             .whileTrue(new DriveToPoseCommand(drivetrain, "Left", () -> drivetrain.useReefTags));
 
-        getDriverController().rightTrigger()
+        getDriverController().rightTrigger().and(getDriverController().leftTrigger().negate())
             .whileTrue(new DriveToPoseCommand(drivetrain, "Right", () -> drivetrain.useReefTags));
+
+        getDriverController().rightTrigger().and(getDriverController().leftTrigger())
+        .whileTrue(new DriveToPoseCommand(drivetrain, "Algae", () -> drivetrain.useReefTags));
 
         getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", () -> false));
         getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",() -> false));

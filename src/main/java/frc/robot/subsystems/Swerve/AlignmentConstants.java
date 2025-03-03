@@ -54,22 +54,16 @@ public class AlignmentConstants {
     public static final Pose2d PROCESSOR = new Pose2d(5.979, 0.541, PROCESSORANGLE);
 
     // Algae center positions
-    public static final Pose2d ALGAE_1_RED = new Pose2d();
-    public static final Pose2d ALGAE_1_BLUE = new Pose2d();
+    public static final Pose2d ALGAE_AB = new Pose2d();
 
-    public static final Pose2d ALGAE_2_RED = new Pose2d();
-    public static final Pose2d ALGAE_2_BLUE = new Pose2d();
+    public static final Pose2d ALGAE_CD = new Pose2d();
 
-    public static final Pose2d ALGAE_3_RED = new Pose2d();
-    public static final Pose2d ALGAE_3_BLUE = new Pose2d();
+    public static final Pose2d ALGAE_EF = new Pose2d();
 
-    public static final Pose2d ALGAE_4_RED = new Pose2d();
-    public static final Pose2d ALGAE_4_BLUE = new Pose2d();
+    public static final Pose2d ALGAE_GH = new Pose2d();
 
-    public static final Pose2d ALGAE_5_RED = new Pose2d();
-    public static final Pose2d ALGAE_5_BLUE = new Pose2d();
-
-    public static final Pose2d ALGAE_6_RED = new Pose2d();
-    public static final Pose2d ALGAE_6_BLUE = new Pose2d();
+    public static final Pose2d ALGAE_IJ = new Pose2d();
+    
+    public static final Pose2d ALGAE_KL = new Pose2d();
 
 }
