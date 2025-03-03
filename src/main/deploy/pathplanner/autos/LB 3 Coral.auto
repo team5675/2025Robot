@@ -55,7 +55,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ElevatorL1"
+                  "name": "ElevatorReset"
                 }
               },
               {
@@ -68,7 +68,7 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -106,7 +106,7 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -118,7 +118,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ElevatorL1"
+                  "name": "ElevatorReset"
                 }
               },
               {

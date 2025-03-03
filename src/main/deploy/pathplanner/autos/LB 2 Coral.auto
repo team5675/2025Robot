@@ -112,7 +112,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ElevatorL1"
+                  "name": "ElevatorReset"
                 }
               },
               {
