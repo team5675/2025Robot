@@ -71,4 +71,5 @@ public class AlignmentConstants {
 
     public static final Pose2d ALGAE_6_RED = new Pose2d();
     public static final Pose2d ALGAE_6_BLUE = new Pose2d();
+
 }

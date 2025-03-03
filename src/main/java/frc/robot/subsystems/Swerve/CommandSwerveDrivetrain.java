@@ -60,7 +60,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public double aprilTagCache = -1;
 
-    public Boolean isReefLimelight = true;
+    public Boolean useReefTags = true;
+
+    private String limelightName;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -347,10 +349,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //     redAllianceYaw += 180;
         // }
         //redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
-
+        if(useReefTags){
+            limelightName = Constants.LimelightConstants.lowerLimelightName;
+        } else {
+            limelightName = Constants.LimelightConstants.upperLimelightName;
+        }
         
         LimelightHelpers.SetRobotOrientation(
-            Constants.LimelightConstants.lowerLimelightName,
+            limelightName,
             redAllianceYaw,
             0, 0, 0, 0, 0
         );
@@ -365,7 +371,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if ((lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) ||
             (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0)) {
 
-            LimelightHelpers.PoseEstimate bestEstimate = lowerLimelightEstimate;
+            LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
 
             if (bestEstimate != null && bestEstimate.tagCount > 0) {
                 lastValidPose = bestEstimate;
@@ -388,7 +394,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("CacheID", aprilTagCache);
         SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
-        SmartDashboard.putBoolean("IsReefLimelight", isReefLimelight);
+        SmartDashboard.putBoolean("IsReefLimelight", useReefTags);
         
     }
 
@@ -438,7 +444,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         );
     }
     private LimelightHelpers.PoseEstimate selectBestEstimate(LimelightHelpers.PoseEstimate upper, LimelightHelpers.PoseEstimate lower) {
-        
+
         // Case: Both are null, return null
         if ((upper == null || upper.tagCount == 0) && (lower == null || lower.tagCount == 0)) {
             return null;
@@ -454,11 +460,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         // Case: Favor closer estimate
         if (upper.avgTagDist < lower.avgTagDist) {
-            isReefLimelight = true;
+            useReefTags = false;
             return upper;
         } 
         if (lower.avgTagDist < upper.avgTagDist) {
-            isReefLimelight = false;
+            useReefTags = true;
             return lower;
         }
 

@@ -26,6 +26,7 @@ public class Coral extends SubsystemBase {
   public CANdi bbCANdi;
   public boolean bb1Tripped;
   public boolean bb2Tripped;
+  public static Coral instance;
 
   public Coral() {
     motor = new SparkMax(CoralConstants.motorID, MotorType.kBrushless);
@@ -53,8 +54,10 @@ public class Coral extends SubsystemBase {
       Coral.getInstance().motor.set(1);
     });
   }
-
-  public static Coral instance;
+  //Check with Connor to see if these are the right values
+  public static Boolean isTripped() {
+    return Coral.getInstance().bb1Tripped && Coral.getInstance().bb2Tripped;
+  }
 
   public static Coral getInstance() {
     if (instance == null) {

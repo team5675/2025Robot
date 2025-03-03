@@ -136,14 +136,14 @@ public class RobotContainer {
         getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
         // Driver
         getDriverController().leftTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Left", true));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Left", () -> drivetrain.useReefTags));
 
         getDriverController().rightTrigger()
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Right", true));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "Right", () -> drivetrain.useReefTags));
 
-        getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", false));
-        getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",false));
-        getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",false));
+        getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", () -> false));
+        getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",() -> false));
+        getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",() -> false));
 
         // Aux Button Board
 

@@ -4,13 +4,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.PathplannerConstants;
 import edu.wpi.first.math.geometry.Pose2d;
-
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FlippingUtil;
-
 import java.util.List;
-
+import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindThenFollowPath;
 import com.pathplanner.lib.path.GoalEndState;
@@ -23,15 +21,15 @@ public class DriveToPoseCommand extends Command {
     private Pose2d cache;
     private Command pathCommand;
     private boolean isBarge;
-    private boolean useReefTags;
     private double aprilTagId;
+    private final Supplier<Boolean> useReefTagsSupplier;
 
-    public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction, boolean useReefTags) {
+    public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction, Supplier<Boolean> useReefTagsSupplier) {
         this.drivetrain = drivetrain;
         this.direction = direction;
-        this.useReefTags = useReefTags;
+        this.useReefTagsSupplier = useReefTagsSupplier;
         addRequirements(drivetrain);
-    }
+}
 
     @Override
     public void initialize() {
@@ -66,14 +64,15 @@ public class DriveToPoseCommand extends Command {
 
         if (targetPose != null && drivetrain.m_poseEstimator.getEstimatedPosition().equals(targetPose)) {
             System.out.println("Already at target pose. No path needed.");
-            pathCommand = null;  // Ensure we don't try to execute a null command
+            pathCommand = null; 
             return;
         }
-        if(!useReefTags){
-            double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
+        if (useReefTagsSupplier.get()) {  
+            aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
         } else {
-            double aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.upperLimelightName);
+            aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.upperLimelightName);
         }
+
         cache = getTargetPose((int) drivetrain.aprilTagCache);
         
         if (aprilTagId == -1) {
@@ -120,7 +119,9 @@ public class DriveToPoseCommand extends Command {
                     }
                 //if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) bargePath = bargePath.flipPath();
                 pathCommand = AutoBuilder.pathfindThenFollowPath(bargePath, Constants.PathplannerConstants.constraints);
+
             } else {
+
                 PathPlannerPath generatedPath = new PathPlannerPath(waypoints, 
                 Constants.PathplannerConstants.constraints, null, 
                 new GoalEndState(0, targetPose.getRotation()));
@@ -155,11 +156,10 @@ public class DriveToPoseCommand extends Command {
                 case 17, 8 -> AlignmentConstants.REEF_C;
                 case 12 -> AlignmentConstants.CORAL1LEFT;
                 case 13 -> AlignmentConstants.CORAL3LEFT;
-                // case 14, 5 -> AlignmentConstants.BARGELEFT;
                 case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
-                    yield AlignmentConstants.REEF_A;
+                    yield drivetrain.m_poseEstimator.getEstimatedPosition();
                 }
             };
             case "Right" -> switch (aprilTagId) {
@@ -171,14 +171,13 @@ public class DriveToPoseCommand extends Command {
                 case 17, 8 -> AlignmentConstants.REEF_D;
                 case 12 -> AlignmentConstants.CORAL1RIGHT;
                 case 13 -> AlignmentConstants.CORAL3RIGHT;
-                // case 14, 5 -> AlignmentConstants.BARGERIGHT;
                 case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
-                    yield AlignmentConstants.REEF_B;
+                    yield drivetrain.m_poseEstimator.getEstimatedPosition();
                 }
             };
-            default -> AlignmentConstants.REEF_A;
+            default -> drivetrain.m_poseEstimator.getEstimatedPosition();
         };
     }
    private PathPlannerPath getBargePath(){
