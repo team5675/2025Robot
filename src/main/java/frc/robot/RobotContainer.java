@@ -72,8 +72,8 @@ public class RobotContainer {
     JoystickButton AlgaeLow = new JoystickButton(IpacSide1, 6);
     JoystickButton AlgaeHigh = new JoystickButton(IpacSide1, 7);
     JoystickButton CoralIn = new JoystickButton(IpacSide2, 1);
-    JoystickButton CoralReset = new JoystickButton(IpacSide2, 2);
-    JoystickButton Score = new JoystickButton(IpacSide2, 3);
+    JoystickButton Score = new JoystickButton(IpacSide2,2);
+    JoystickButton CoralReset = new JoystickButton(IpacSide2, 3);
     JoystickButton AlgaeIn = new JoystickButton(IpacSide2, 4);
     JoystickButton AlgaeHold = new JoystickButton(IpacSide2, 5);
     JoystickButton AlgaeOut = new JoystickButton(IpacSide2, 6);
@@ -142,7 +142,7 @@ public class RobotContainer {
             .whileTrue(new DriveToPoseCommand(drivetrain, "Right", () -> drivetrain.useReefTags));
 
         getDriverController().rightTrigger().and(getDriverController().leftTrigger())
-        .whileTrue(new DriveToPoseCommand(drivetrain, "Algae", () -> drivetrain.useReefTags));
+        .whileTrue(new DriveToPoseCommand(drivetrain, "Algae", () -> true));
 
         getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", () -> false));
         getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",() -> false));
@@ -159,7 +159,7 @@ public class RobotContainer {
         SetClimber.whileTrue(new SetClimbCommand());
 
         // Coral
-        CoralIn.whileTrue(new IntakeCommand());
+        CoralIn.onTrue(new IntakeCommand());
         Score.whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(-1)));
         Score.whileFalse(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(0)));
         CoralReset.whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(1)));

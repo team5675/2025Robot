@@ -465,9 +465,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return null;
         }
 
-        //  if (upper.avgTagDist > 3 && lower.avgTagDist > 3) {
-        //     return null; // Use odometry-only if no Limelight sees a tag within 3m
-        // }
+         if (upper.avgTagDist > 3 && lower.avgTagDist > 3) {
+            return null; // Use odometry-only if no Limelight sees a tag within 3m
+        }
+
+        if(upper.avgTagDist > 3 && (lower == null || lower.tagCount == 0)){
+            return lower;
+        }
+
+        if(lower.avgTagDist > 3 && (upper == null || upper.tagCount == 0)){
+            return upper;
+        }
 
         // Case: One is null or has no valid tags, return the other
         if (upper == null || upper.tagCount == 0) {

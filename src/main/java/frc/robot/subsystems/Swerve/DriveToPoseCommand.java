@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindThenFollowPath;
 import com.pathplanner.lib.path.GoalEndState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveToPoseCommand extends Command {
     private final CommandSwerveDrivetrain drivetrain;
@@ -63,6 +64,7 @@ public class DriveToPoseCommand extends Command {
     /** Updates the target pose dynamically based on AprilTag ID */
     private void updateTargetPose() {
 
+        SmartDashboard.putBoolean("ReefSupplier", useReefTagsSupplier.get());
         if (targetPose != null && drivetrain.m_poseEstimator.getEstimatedPosition().equals(targetPose)) {
             System.out.println("Already at target pose. No path needed.");
             pathCommand = null; 
