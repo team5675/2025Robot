@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.282173649301714,
-        "y": 2.9626215697269225
+        "x": 5.267895284521124,
+        "y": 2.947872756401793
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.997468521096586,
-        "y": 2.392908210169814
+        "x": 4.983190156315996,
+        "y": 2.3781593968446844
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CORAL_F"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CORALSTATION_RIGHT"
     }
   ],
   "rotationTargets": [],

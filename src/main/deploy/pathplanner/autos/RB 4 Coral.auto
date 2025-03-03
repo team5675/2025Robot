@@ -19,6 +19,12 @@
                 "data": {
                   "name": "ElevatorL4"
                 }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": []
+                }
               }
             ]
           }
@@ -138,6 +144,69 @@
                 "type": "path",
                 "data": {
                   "pathName": "RC to C"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "PlaceCommand"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C to RC"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorReset"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RC to B"
                 }
               },
               {
