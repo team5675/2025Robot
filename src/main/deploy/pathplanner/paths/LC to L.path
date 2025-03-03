@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3250326241040136,
-        "y": 7.122763842647364
+        "x": 1.2513461538461532,
+        "y": 7.069551282051282
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1434086028370256,
-        "y": 6.44570759691248
+        "x": 2.069722132579165,
+        "y": 6.392495036316397
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CORALSTATION"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CORAL_L"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": "LB",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -54.04757199990077
+    "rotation": -53.18827709825421
   },
   "useDefaultConstraints": true
 }

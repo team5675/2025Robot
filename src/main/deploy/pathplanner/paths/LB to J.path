@@ -12,7 +12,7 @@
         "y": 5.556813010517145
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LB_START"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CORAL_J"
     }
   ],
   "rotationTargets": [],

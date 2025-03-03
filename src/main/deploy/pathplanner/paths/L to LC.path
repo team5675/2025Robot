@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.658051275730449,
-        "y": 5.06230278179268
+        "x": 3.690793381734548,
+        "y": 5.079081320376741
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4385607478093427,
-        "y": 5.236151677929151
+        "x": 3.454458958778864,
+        "y": 5.289726127009533
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CORAL_L"
     },
     {
       "anchor": {
-        "x": 1.1864442535730513,
-        "y": 7.056949195469466
+        "x": 1.2513461538461532,
+        "y": 7.069551282051282
       },
       "prevControl": {
-        "x": 0.992184230350929,
-        "y": 7.214311971810443
+        "x": 1.6248531770033459,
+        "y": 6.745178821520148
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CORALSTATION"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -55.757130803804024
+    "rotation": -53.18827709825421
   },
   "reversed": false,
   "folder": "LB",
