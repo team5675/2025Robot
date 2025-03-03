@@ -20,7 +20,9 @@ public class AlgaeOutCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    algae.setIntake(true);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -33,8 +35,7 @@ public class AlgaeOutCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algae.axisMotor.set(0.25);
-    //algae.setAxisPosition(0);
+    algae.setIntake(false);
     algae.setFlywheelSpeed(0);
   }
 

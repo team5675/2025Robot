@@ -167,10 +167,7 @@ public class RobotContainer {
 
         // Algae
         AlgaeIn.whileTrue(new AlgaeInCommand());
-        AlgaeIn.whileFalse(Commands.runOnce(() -> Algae.getInstance().setIntake(false)));
         AlgaeOut.whileTrue(new AlgaeOutCommand());
-        AlgaeOut.whileTrue(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0)));
-        
         AlgaeHold.whileTrue(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0.1)));
         AlgaeHold.whileFalse(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0)));
 

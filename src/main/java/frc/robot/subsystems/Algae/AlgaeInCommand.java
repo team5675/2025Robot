@@ -42,6 +42,7 @@ public class AlgaeInCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     algae.setFlywheelSpeed(0);
+    algae.setIntake(false);
   }
 
   // Returns true when the command should end.
