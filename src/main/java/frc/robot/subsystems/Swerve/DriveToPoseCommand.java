@@ -154,8 +154,8 @@ public class DriveToPoseCommand extends Command {
                 case 21, 10 -> AlignmentConstants.REEF_G;
                 case 22, 9 -> AlignmentConstants.REEF_E;
                 case 17, 8 -> AlignmentConstants.REEF_C;
-                case 12 -> AlignmentConstants.CORAL1LEFT;
-                case 13 -> AlignmentConstants.CORAL3LEFT;
+                case 12, 2 -> AlignmentConstants.CORAL1LEFT;
+                case 13, 1 -> AlignmentConstants.CORAL3LEFT;
                 case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
@@ -169,8 +169,8 @@ public class DriveToPoseCommand extends Command {
                 case 21, 10 -> AlignmentConstants.REEF_H;
                 case 22, 9 -> AlignmentConstants.REEF_F;
                 case 17, 8 -> AlignmentConstants.REEF_D;
-                case 12 -> AlignmentConstants.CORAL1RIGHT;
-                case 13 -> AlignmentConstants.CORAL3RIGHT;
+                case 12, 2 -> AlignmentConstants.CORAL1RIGHT;
+                case 13, 1 -> AlignmentConstants.CORAL3RIGHT;
                 case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
