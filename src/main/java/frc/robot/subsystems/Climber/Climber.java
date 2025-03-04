@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class Climber extends SubsystemBase {
     
     public DigitalInput limitSwitch;
+    public DigitalInput ClimberForwardlimit;
     public Trigger isTripped;
+    public Trigger Tripped;
     public RelativeEncoder climberEncoder;
 
     public SparkClosedLoopController climberPID;
@@ -47,9 +49,10 @@ public class Climber extends SubsystemBase {
         climberMotorConfig.smartCurrentLimit(ClimberConstants.voltsStallLimit);
         climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         
-
+        ClimberForwardlimit = new DigitalInput(ClimberConstants.ClimberForwardlimitChannel);
         limitSwitch = new DigitalInput(ClimberConstants.limitSwitchChannel);
         isTripped = new Trigger(limitSwitch::get);
+        Tripped = new Trigger(ClimberForwardlimit::get);
     }
 
     public void SetTarget(double ticks) {
@@ -60,6 +63,7 @@ public class Climber extends SubsystemBase {
     public void periodic() {
         // TODO Auto-generated method stub
         SmartDashboard.putBoolean("ClimberLimitSwitch" , isTripped.getAsBoolean());
+        SmartDashboard.putBoolean("ClimberForwardLimit", Tripped.getAsBoolean());
         SmartDashboard.putNumber("climber ticks", climberEncoder.getPosition());
     }
 
@@ -69,6 +73,11 @@ public class Climber extends SubsystemBase {
             instance = new Climber();
         }
         return instance;
+    }
+
+    public Object ClimberForwardlimit() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'ClimberForwardlimit'");
     }
 
 }

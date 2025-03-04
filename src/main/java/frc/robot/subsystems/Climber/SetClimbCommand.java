@@ -35,7 +35,6 @@ public class SetClimbCommand extends Command {
     @Override
     public boolean isFinished() {
         // Ends when position is reached or timeout happens
-        return Math.abs(climber.climberEncoder.getPosition() - ClimberConstants.setclimberticks) < 2 
-                || timer.hasElapsed(TIMEOUT);
+        return !climber.Tripped.getAsBoolean();
     }
 }
