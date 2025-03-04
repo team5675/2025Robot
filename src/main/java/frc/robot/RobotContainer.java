@@ -26,6 +26,7 @@ import frc.robot.subsystems.Elevator.RunElevatorCommand;
 import frc.robot.subsystems.Climber.SetClimbCommand;
 import frc.robot.subsystems.Climber.UnClimbCommand;
 import frc.robot.subsystems.Coral.Coral;
+import frc.robot.subsystems.Coral.InstantIntake;
 import frc.robot.subsystems.Coral.IntakeCommand;
 import frc.robot.subsystems.Coral.PlaceCommand;
 import frc.robot.subsystems.Algae.Algae;
@@ -92,7 +93,7 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
+        NamedCommands.registerCommand("IntakeCommand", new InstantIntake());
         NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
         NamedCommands.registerCommand("ElevatorL1", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
         NamedCommands.registerCommand("ElevatorL2", new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));

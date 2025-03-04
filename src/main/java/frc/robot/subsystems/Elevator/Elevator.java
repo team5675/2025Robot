@@ -32,8 +32,8 @@ public class Elevator extends SubsystemBase {
 
   private DigitalInput topLimitSwitch;
   private DigitalInput bottomLimitSwitch;
-  private Trigger bottomTrigger;
-  private Trigger topTrigger;
+  public Trigger bottomTrigger;
+  public Trigger topTrigger;
 
   // SparkAbsoluteEncoder angleEncoder;
   public RelativeEncoder ticksEncoder;
