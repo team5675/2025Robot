@@ -392,7 +392,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         //Debug Values
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-        SmartDashboard.putNumber("LowerLimelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.lowerLimelightName, "tid"));
+        //SmartDashboard.putNumber("LowerLimelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.lowerLimelightName, "tid"));
         //SmartDashboard.putNumber("UpperLimelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.upperLimelightName, "tid"));
         SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
         SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
@@ -401,15 +401,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putBoolean("IsReefLimelight", useReefTags);
 
-         if (lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) {
-            //SmartDashboard.putNumber("Limelight Yaw", lowerLimelightEstimate.pose.getRotation().getDegrees());
-            SmartDashboard.putNumber("BottomLL Tag Distance", lowerLimelightEstimate.avgTagDist);
-         }
+        //  if (lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) {
+        //     //SmartDashboard.putNumber("Limelight Yaw", lowerLimelightEstimate.pose.getRotation().getDegrees());
+        //     SmartDashboard.putNumber("BottomLL Tag Distance", lowerLimelightEstimate.avgTagDist);
+        //  }
         
         // Check if upperLimelightEstimate is null before accessing its pose
-        if (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0) {
-            SmartDashboard.putNumber("UpperLL Tag Distance", upperLimelightEstimate.avgTagDist);
-        }
+        // if (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0) {
+        //     SmartDashboard.putNumber("UpperLL Tag Distance", upperLimelightEstimate.avgTagDist);
+        // }
         
     }
 

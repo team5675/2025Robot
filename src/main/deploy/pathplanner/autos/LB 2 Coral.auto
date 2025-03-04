@@ -68,7 +68,7 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -106,19 +106,13 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
                   "name": "ElevatorReset"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeCommand"
                 }
               }
             ]

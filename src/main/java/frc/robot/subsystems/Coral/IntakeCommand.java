@@ -25,15 +25,15 @@ public class IntakeCommand extends Command {
         if (!coral.bb1Tripped && !coral.bb2Tripped) {
             needsReverse = false;
         // Both beam breaks are tripped: full speed
-            coral.motor.set(-.65);
+            coral.motor.set(-1);
         } else if (coral.bb1Tripped && !coral.bb2Tripped) {
             needsReverse = false;
             // bb1 is not tripped, bb2 is tripped: 0.75 speed
-            coral.motor.set(-0.45);
+            coral.motor.set(-0.75);
         } else if (coral.bb1Tripped && coral.bb2Tripped && !needsReverse) {
             needsReverse = false;
             // Both beam breaks are not tripped: 0.5 speed
-            coral.motor.set(-0.25);
+            coral.motor.set(-0.5);
         } else if (!coral.bb1Tripped && coral.bb2Tripped && !needsReverse) {
             // bb1 is tripped, bb2 is not tripped: stop the motor
             coral.motor.set(0);
