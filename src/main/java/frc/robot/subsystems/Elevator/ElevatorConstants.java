@@ -15,7 +15,7 @@ public final class ElevatorConstants {
 	public static final double L3_HEIGHT = 48;
 	public static final double L2_HEIGHT = 19;
 	public static final double L1_HEIGHT = 4;
-	public static final double IDLE_HEIGHT = 0.1;
+	public static final double IDLE_HEIGHT = 0;
 	public static final double ALGAE_LOW_HEIGHT = 48;
 	public static final double ALGAE_HIGH_HEIGHT = 70;
 
