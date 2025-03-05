@@ -13,7 +13,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "CB",
   "choreoAuto": false
 }

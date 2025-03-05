@@ -45,7 +45,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "LB",
   "choreoAuto": false
 }
