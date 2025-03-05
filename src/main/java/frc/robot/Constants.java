@@ -2,8 +2,6 @@ package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Constants {
 

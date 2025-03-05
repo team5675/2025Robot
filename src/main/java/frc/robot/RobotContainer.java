@@ -10,8 +10,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,21 +17,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Algae.AlgaeInCommand;
 import frc.robot.subsystems.Algae.AlgaeOutCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
 import frc.robot.subsystems.Climber.SetClimbCommand;
 import frc.robot.subsystems.Climber.UnClimbCommand;
 import frc.robot.subsystems.Coral.Coral;
-import frc.robot.subsystems.Coral.InstantIntake;
 import frc.robot.subsystems.Coral.IntakeCommand;
 import frc.robot.subsystems.Coral.PlaceCommand;
 import frc.robot.subsystems.Algae.Algae;
 import frc.robot.subsystems.Climber.ClimbCommand;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Climber.CloseClawCommand;
-import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.DriveToPoseCommand;
@@ -127,10 +122,10 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        getDriverController().back().and(getDriverController().y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        getDriverController().back().and(getDriverController().x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        getDriverController().start().and(getDriverController().y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        getDriverController().start().and(getDriverController().x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // getDriverController().back().and(getDriverController().y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // getDriverController().back().and(getDriverController().x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // getDriverController().start().and(getDriverController().y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // getDriverController().start().and(getDriverController().x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press and resets gyro on b button press
         getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -153,14 +148,14 @@ public class RobotContainer {
 
         // If both SetClimb and ActivateClimb are pressed, run UnClimbCommand
         CloseClimber.whileTrue(new CloseClawCommand(Climber.getInstance()));
-        SetClimber.and(Climb).whileTrue(new UnClimbCommand());
+        SetClimber.and(Climb).whileTrue(new UnClimbCommand(Climber.getInstance()));
 
         // If only ActivateClimb is pressed, run ClimbSequenceCommand
         Climb.whileTrue(new ClimbCommand(Climber.getInstance()));
-        SetClimber.whileTrue(new SetClimbCommand());
+        SetClimber.whileTrue(new SetClimbCommand(Climber.getInstance()));
 
         // Coral
-        CoralIn.onTrue(new IntakeCommand());
+        CoralIn.whileTrue(new IntakeCommand());
         Score.whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(-1)));
         Score.whileFalse(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(0)));
         CoralReset.whileTrue(Coral.getInstance().runOnce(() -> Coral.getInstance().motor.set(1)));
