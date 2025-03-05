@@ -48,7 +48,7 @@
   "folder": "RB",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 52.50000000000001
+    "rotation": 54.0
   },
   "useDefaultConstraints": true
 }

@@ -48,7 +48,7 @@
   "folder": "LB",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -53.0
+    "rotation": -54.0
   },
   "useDefaultConstraints": false
 }
