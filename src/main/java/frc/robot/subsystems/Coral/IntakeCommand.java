@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Coral;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.RumbleCommand;
 
 
 public class IntakeCommand extends Command {
@@ -50,6 +51,7 @@ public class IntakeCommand extends Command {
     public void end(boolean interrupted) {
         // Stop the motor when the command ends
         coral.motor.set(0);
+        //new RumbleCommand().schedule();
     }
 
     @Override
