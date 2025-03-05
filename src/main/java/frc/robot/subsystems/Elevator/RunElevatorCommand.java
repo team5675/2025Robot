@@ -26,13 +26,6 @@ public class RunElevatorCommand extends Command {
 
   @Override
   public void execute() {
-    if (DriverStation.isAutonomousEnabled() && !elevator.bottomTrigger.getAsBoolean()) {
-      if (Coral.getInstance().bb2Tripped && !Coral.getInstance().bb1Tripped) {
-        elevator.setTarget(height);
-      }
-      return;
-    }
-
     elevator.setTarget(height);
   }
 

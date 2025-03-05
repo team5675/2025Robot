@@ -61,7 +61,7 @@ public class IntakeCommand extends Command {
            return true;
         }
         else{
-        return false;
+            return false;
         }
     }
 }
