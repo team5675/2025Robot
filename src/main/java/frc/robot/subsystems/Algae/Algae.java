@@ -64,6 +64,9 @@ public class Algae extends SubsystemBase {
     axisTicks.setPosition(0);
 
     axisSpike = new Trigger(this::spike);
+
+    setAxisPosition(5);
+    axisTicks.setPosition(0);
   }
   
   @Override

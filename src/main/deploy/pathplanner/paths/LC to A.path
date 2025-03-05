@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4981367173386677,
-        "y": 6.3708925041353925
+        "x": 1.5853010990427534,
+        "y": 6.18941804448918
       },
       "isLocked": false,
       "linkedName": "CORALSTATION"
@@ -20,8 +20,8 @@
         "y": 4.184584739331593
       },
       "prevControl": {
-        "x": 2.915227224302488,
-        "y": 4.645475487151938
+        "x": 3.036028019453618,
+        "y": 4.398395022507003
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -50,5 +50,5 @@
     "velocity": 0,
     "rotation": -53.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

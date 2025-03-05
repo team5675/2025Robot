@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.689877480643812,
-        "y": 2.9584219328686214
+        "x": 3.697,
+        "y": 2.982
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.491166644832281,
-        "y": 2.8059371779270457
+        "x": 3.4982891641884692,
+        "y": 2.8295152450584244
       },
       "isLocked": false,
       "linkedName": "CORAL_C"
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.00000000000001
+    "rotation": 52.50000000000001
   },
   "reversed": false,
   "folder": "RB",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 54.00477912527732
+    "rotation": 59.00000000000001
   },
   "useDefaultConstraints": true
 }

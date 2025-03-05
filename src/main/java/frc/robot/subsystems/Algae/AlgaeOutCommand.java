@@ -28,7 +28,6 @@ public class AlgaeOutCommand extends Command {
   @Override
   public void execute() {
     System.out.println("Algae out");
-    algae.setAxisPosition(5);
     algae.setFlywheelSpeed(-1);
   }
 
