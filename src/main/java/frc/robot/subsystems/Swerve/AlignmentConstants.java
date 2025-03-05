@@ -12,8 +12,8 @@ public class AlignmentConstants {
     private static final Rotation2d GH = new Rotation2d(Math.toRadians(180));
     private static final Rotation2d IJ = new Rotation2d(Math.toRadians(240));
     private static final Rotation2d KL = new Rotation2d(Math.toRadians(300));
-    private static final Rotation2d RIGHTCORALSTATION = new Rotation2d(Math.toRadians(53));
-    private static final Rotation2d LEFTCORALSTATION = new Rotation2d(Math.toRadians(-53));
+    private static final Rotation2d RIGHTCORALSTATION = new Rotation2d(Math.toRadians(54));
+    private static final Rotation2d LEFTCORALSTATION = new Rotation2d(Math.toRadians(-54));
     private static final Rotation2d BARGE = new Rotation2d(Math.toRadians(180));
     private static final Rotation2d PROCESSORANGLE = new Rotation2d(Math.toRadians(-90));
 
