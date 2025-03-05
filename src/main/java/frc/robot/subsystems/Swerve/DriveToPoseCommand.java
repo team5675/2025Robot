@@ -98,7 +98,7 @@ public class DriveToPoseCommand extends Command {
             double distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
             double angleDifference = Math.abs(currentPose.getRotation().getDegrees() - targetPose.getRotation().getDegrees());
     
-            if (distance < 0.05 && angleDifference < 1) { // 5 cm and 2 degrees tolerance
+            if (distance < 0.05 && angleDifference < 0.7) { // 5 cm and 0.7 degrees tolerance
                 System.out.println("Already at target pose. No path needed.");
                 pathCommand = null;
                 return;

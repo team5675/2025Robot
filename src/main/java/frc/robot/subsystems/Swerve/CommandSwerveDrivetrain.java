@@ -434,7 +434,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         xVelocity = MathUtil.applyDeadband(xVelocity, 0.05);
         yVelocity = MathUtil.applyDeadband(yVelocity, 0.05);
-        angularVelocity = MathUtil.applyDeadband(angularVelocity, 0.05);
+        // angularVelocity = MathUtil.applyDeadband(angularVelocity, 0.05);
         this.setControl(
             new SwerveRequest.FieldCentric()
                 //.withDeadband(DEADBAND)
