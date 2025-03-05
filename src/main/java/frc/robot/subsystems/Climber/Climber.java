@@ -20,8 +20,8 @@ public class Climber extends SubsystemBase {
     
     public DigitalInput limitSwitch;
     public DigitalInput ClimberForwardlimit;
-    public Trigger isTripped;
-    public Trigger Tripped;
+    public Trigger isUpperLimitSwitchTripped;
+    public Trigger isLowerLimitSwitchTripped;
     public RelativeEncoder climberEncoder;
 
     public SparkClosedLoopController climberPID;
@@ -51,8 +51,8 @@ public class Climber extends SubsystemBase {
         
         ClimberForwardlimit = new DigitalInput(ClimberConstants.ClimberForwardlimitChannel);
         limitSwitch = new DigitalInput(ClimberConstants.limitSwitchChannel);
-        isTripped = new Trigger(limitSwitch::get);
-        Tripped = new Trigger(ClimberForwardlimit::get);
+        isUpperLimitSwitchTripped = new Trigger(limitSwitch::get);
+        isLowerLimitSwitchTripped = new Trigger(ClimberForwardlimit::get);
     }
 
     public void SetTarget(double ticks) {
@@ -62,8 +62,8 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
         // TODO Auto-generated method stub
-        SmartDashboard.putBoolean("ClimberLimitSwitch" , isTripped.getAsBoolean());
-        SmartDashboard.putBoolean("ClimberForwardLimit", Tripped.getAsBoolean());
+        SmartDashboard.putBoolean("ClimberLimitSwitch" , isUpperLimitSwitchTripped.getAsBoolean());
+        SmartDashboard.putBoolean("ClimberForwardLimit", isLowerLimitSwitchTripped.getAsBoolean());
         SmartDashboard.putNumber("climber ticks", climberEncoder.getPosition());
     }
 

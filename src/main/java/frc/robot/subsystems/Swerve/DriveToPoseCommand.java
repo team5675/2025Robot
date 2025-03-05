@@ -2,7 +2,6 @@ package frc.robot.subsystems.Swerve;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.PathplannerConstants;
 import frc.robot.subsystems.Coral.Coral;
 import edu.wpi.first.math.geometry.Pose2d;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -11,10 +10,8 @@ import com.pathplanner.lib.util.FlippingUtil;
 import java.util.List;
 import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathfindThenFollowPath;
 import com.pathplanner.lib.path.GoalEndState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveToPoseCommand extends Command {
     private final CommandSwerveDrivetrain drivetrain;

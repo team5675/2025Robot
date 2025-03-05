@@ -6,9 +6,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class SetClimbCommand extends Command {
     private final Climber climber;
     private final Timer timer = new Timer();
-    private static final double TIMEOUT = 3.0; // Failsafe timeout in seconds
 
-    public SetClimbCommand() {
+    public SetClimbCommand(Climber climber) {
         this.climber = Climber.getInstance();
         addRequirements(climber); // Ensures no other command interferes
     }
@@ -35,6 +34,6 @@ public class SetClimbCommand extends Command {
     @Override
     public boolean isFinished() {
         // Ends when position is reached or timeout happens
-        return !climber.Tripped.getAsBoolean();
+        return !climber.isLowerLimitSwitchTripped.getAsBoolean();
     }
 }

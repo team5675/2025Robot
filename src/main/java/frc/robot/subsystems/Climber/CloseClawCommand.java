@@ -1,13 +1,9 @@
 package frc.robot.subsystems.Climber;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class CloseClawCommand extends Command {
     private final Climber climber;
     
-    
-
     public CloseClawCommand(Climber climber) {
         this.climber = climber;
         addRequirements(climber); // Locks Climber subsystem

@@ -157,7 +157,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             this.getState().Pose
         );
 
-        this.getPigeon2().setYaw(0);
+        
         this.getPigeon2().reset();
 
         this.m_field = new Field2d();
@@ -206,7 +206,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-        this.getPigeon2().setYaw(0);
+       
         this.getPigeon2().reset();
 
         
@@ -258,7 +258,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-       this.getPigeon2().setYaw(0);
+       
        this.getPigeon2().reset();
 
        
@@ -331,14 +331,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        if(LimelightHelpers.getTV(Constants.LimelightConstants.lowerLimelightName)) {
-            aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName); 
-        }
         
         m_poseEstimator.update(this.getPigeon2().getRotation2d(), this.getState().ModulePositions);
 
         //Pose Estimation using AprilTags
-        double redAllianceYaw = this.getPigeon2().getYaw().getValueAsDouble();
 
         // If on Red Alliance add 180° to the yaw
         // if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
@@ -353,7 +349,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
         LimelightHelpers.SetRobotOrientation(
             limelightName,
-            redAllianceYaw,
+            this.getPigeon2().getYaw().getValueAsDouble(),
             0, 0, 0, 0, 0
         );
         // LimelightHelpers.SetIMUMode(Constants.LimelightConstants.lowerLimelightName, 0);
@@ -362,6 +358,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         LimelightHelpers.PoseEstimate lastValidPose = null;
 
+        //Cache the AprilTag ID Coral Only
+        if(LimelightHelpers.getTV(Constants.LimelightConstants.lowerLimelightName) && lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) {
+            aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName); 
+        }
 
        // Only run vision updates if we see a tag
         if ((lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) ||
@@ -392,24 +392,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         //Debug Values
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-        //SmartDashboard.putNumber("LowerLimelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.lowerLimelightName, "tid"));
-        //SmartDashboard.putNumber("UpperLimelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.upperLimelightName, "tid"));
         SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
-        SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
         SmartDashboard.putNumber("CacheID", aprilTagCache);
         SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putBoolean("IsReefLimelight", useReefTags);
-
-        //  if (lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) {
-        //     //SmartDashboard.putNumber("Limelight Yaw", lowerLimelightEstimate.pose.getRotation().getDegrees());
-        //     SmartDashboard.putNumber("BottomLL Tag Distance", lowerLimelightEstimate.avgTagDist);
-        //  }
-        
-        // Check if upperLimelightEstimate is null before accessing its pose
-        // if (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0) {
-        //     SmartDashboard.putNumber("UpperLL Tag Distance", upperLimelightEstimate.avgTagDist);
-        // }
         
     }
 

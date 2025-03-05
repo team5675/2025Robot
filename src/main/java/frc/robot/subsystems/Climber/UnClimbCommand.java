@@ -3,11 +3,12 @@ package frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class UnClimbCommand extends Command{
-private Climber climber;
+    private final Climber climber;
 
-public UnClimbCommand() {
+public UnClimbCommand(Climber climber) {
 
-    climber = Climber.getInstance();
+    this.climber = Climber.getInstance();
+    addRequirements(climber);
 }
 @Override
 public void initialize(){
@@ -24,7 +25,7 @@ public void end(boolean interrupted){
 
 @Override
 public boolean isFinished() {
-    return !climber.Tripped.getAsBoolean();
+    return !climber.isLowerLimitSwitchTripped.getAsBoolean();
 
 }
 

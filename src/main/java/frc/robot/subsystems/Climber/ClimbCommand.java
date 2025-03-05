@@ -24,7 +24,7 @@ public class ClimbCommand extends Command {
     // }
     @Override
     public boolean isFinished() {
-        return !climber.isTripped.getAsBoolean();
+        return !climber.isUpperLimitSwitchTripped.getAsBoolean();
     }
 
     @Override
