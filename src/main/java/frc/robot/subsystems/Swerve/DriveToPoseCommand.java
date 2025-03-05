@@ -160,7 +160,7 @@ public class DriveToPoseCommand extends Command {
                 case 17, 8 -> AlignmentConstants.REEF_C;
                 case 12, 2 -> AlignmentConstants.CORAL1LEFT;
                 case 13, 1 -> AlignmentConstants.CORAL3LEFT;
-                case 3, 16 -> AlignmentConstants.PROCESSOR;
+                // case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
@@ -175,7 +175,7 @@ public class DriveToPoseCommand extends Command {
                 case 17, 8 -> AlignmentConstants.REEF_D;
                 case 12, 2 -> AlignmentConstants.CORAL1RIGHT;
                 case 13, 1 -> AlignmentConstants.CORAL3RIGHT;
-                case 3, 16 -> AlignmentConstants.PROCESSOR;
+                // case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
