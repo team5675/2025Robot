@@ -75,9 +75,4 @@ public class Climber extends SubsystemBase {
         return instance;
     }
 
-    public Object ClimberForwardlimit() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'ClimberForwardlimit'");
-    }
-
 }
