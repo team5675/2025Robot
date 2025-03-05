@@ -5,6 +5,7 @@
 package frc.robot.subsystems.Coral;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class InstantIntake extends Command {
   Coral coralSubsystem;
@@ -15,7 +16,7 @@ public class InstantIntake extends Command {
 
   @Override
   public void initialize() {
-    new IntakeCommand();
+    new IntakeCommand().schedule();
   }
 
   @Override
