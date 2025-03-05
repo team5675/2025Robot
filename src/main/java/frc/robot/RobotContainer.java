@@ -93,7 +93,7 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        NamedCommands.registerCommand("IntakeCommand", new InstantIntake());
+        NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
         NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
         NamedCommands.registerCommand("ElevatorL1", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
         NamedCommands.registerCommand("ElevatorL2", new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));

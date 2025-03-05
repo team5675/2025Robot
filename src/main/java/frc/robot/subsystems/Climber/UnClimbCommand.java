@@ -19,6 +19,7 @@ public void initialize(){
 @Override
 public void end(boolean interrupted){
     climber.clawMotor.setVoltage(0);
+    climber.climberMotor.set(0);
 }
 
 @Override
