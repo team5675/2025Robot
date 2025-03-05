@@ -11,9 +11,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Test"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorReset"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Test"
+                }
+              }
+            ]
           }
         }
       ]
