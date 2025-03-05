@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.1998469343872795,
-        "y": 5.7167578125
+        "x": 8.264126712328768,
+        "y": 1.3278895547945204
       },
       "isLocked": false,
       "linkedName": "CORAL_H"
     },
     {
       "anchor": {
-        "x": 1.528,
-        "y": 7.335259693287037
+        "x": 1.593,
+        "y": 0.697
       },
       "prevControl": {
-        "x": 3.221679470486112,
-        "y": 7.015507450810185
+        "x": 4.7483953709826645,
+        "y": 0.5167186517396942
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CORALSTATION_RIGHT_OUTSIDE"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.0
+    "rotation": 55.0
   },
   "reversed": false,
   "folder": "CB",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
