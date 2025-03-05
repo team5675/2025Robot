@@ -155,15 +155,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             this.getState().Pose
         );
 
-        this.getPigeon2().setYaw(0);
-        this.getPigeon2().reset();
+        
+        
 
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
-        Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
-        Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
+        // LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
+        // Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
+        // Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
     }
 
     /**
@@ -204,12 +204,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-        this.getPigeon2().setYaw(0);
-        this.getPigeon2().reset();
+        
+       
 
-        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
-        Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
-        Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
+        // LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
+        // Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
+        // Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
     }
 
     /**
@@ -258,12 +258,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
 
-       this.getPigeon2().setYaw(0);
-       this.getPigeon2().reset();
+       
+      
 
-        LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
-        Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
-        Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
+        // LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
+        // Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
+        // Constants.LimelightConstants.limelightPitch, Constants.LimelightConstants.limelightYaw);  // Since your Limelight faces forward, CAMERA_YAW should be 0°
     }
 
     /**
@@ -333,9 +333,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        if(LimelightHelpers.getTV(Constants.LimelightConstants.lowerLimelightName)) {
-            aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName); 
-        }
+        // if(LimelightHelpers.getTV(Constants.LimelightConstants.lowerLimelightName)) {
+        //     aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName); 
+        // }
         
         m_poseEstimator.update(this.getPigeon2().getRotation2d(), this.getState().ModulePositions);
 
@@ -348,65 +348,37 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // }
         //redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
 
-        if(isReefLimelight){
+        
         LimelightHelpers.SetRobotOrientation(
             Constants.LimelightConstants.lowerLimelightName,
-            redAllianceYaw,
-            0, 0, 0, 0, 0
-        ); }
-        else{
-            LimelightHelpers.SetRobotOrientation(
-
-            Constants.LimelightConstants.upperLimelightName,
-            redAllianceYaw,
-            0, 0, 0, 0, 0
-        );
-        }
-        // LimelightHelpers.SetIMUMode(Constants.LimelightConstants.lowerLimelightName, 0);
-        LimelightHelpers.PoseEstimate upperLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.upperLimelightName);
+            this.getPigeon2().getYaw().getValueAsDouble(),
+            0, 0, 0, 0, 0);
+        
+        
+        LimelightHelpers.SetIMUMode(Constants.LimelightConstants.lowerLimelightName, 2);
+        
         LimelightHelpers.PoseEstimate lowerLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName);
 
-        LimelightHelpers.PoseEstimate lastValidPose = null;
-
        // Only run vision updates if we see a tag
-        if (lowerLimelightEstimate != null || upperLimelightEstimate != null) {
-            LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
+        if (lowerLimelightEstimate != null  && lowerLimelightEstimate.tagCount > 0) {
 
-            if (bestEstimate != null && bestEstimate.tagCount > 0) {
-                lastValidPose = bestEstimate;
-            }
-
-            if (lastValidPose != null) {
+           
                 m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
-                m_poseEstimator.addVisionMeasurement(lastValidPose.pose, lastValidPose.timestampSeconds);
-            }
+                m_poseEstimator.addVisionMeasurement(lowerLimelightEstimate.pose, lowerLimelightEstimate.timestampSeconds);
+            
         }
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
         //Debug Values
-        //SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+        SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
         SmartDashboard.putNumber("Limelight TID", LimelightHelpers.getLimelightNTDouble(Constants.LimelightConstants.lowerLimelightName, "tid"));
-        //SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
-        //SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
+        SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
+        SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
         //SmartDashboard.putNumber("CacheID", aprilTagCache);
         //SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
         //SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putBoolean("IsReefLimelight", isReefLimelight);
-
-        if (lowerLimelightEstimate != null) {
-            //SmartDashboard.putNumber("Limelight Yaw", lowerLimelightEstimate.pose.getRotation().getDegrees());
-            SmartDashboard.putNumber("BottomLL Tag Distance", lowerLimelightEstimate.avgTagDist);
-        } else {
-            //SmartDashboard.putString("Limelight Yaw", "No tags detected");
-        }
-        
-        // Check if upperLimelightEstimate is null before accessing its pose
-        if (upperLimelightEstimate != null) {
-            SmartDashboard.putNumber("UpperLL Tag Distance", upperLimelightEstimate.avgTagDist);
-        } else {
-            SmartDashboard.putString("UpperLL Tag Distance", "No tags detected");
-        }
 
     }
 

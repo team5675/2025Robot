@@ -17,7 +17,7 @@ public class Constants {
         public static double limelightUp = 0.349;
         public static double limelightRoll= 0.0;
         public static double limelightPitch = -16.0;
-        public static double limelightYaw = 0.0;
+        public static double limelightYaw = 180;
     }
     
     public class PathplannerConstants {
