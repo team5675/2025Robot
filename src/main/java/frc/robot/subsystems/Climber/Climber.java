@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Climber extends SubsystemBase {
     
-    public DigitalInput limitSwitch;
+    public DigitalInput SetLimitSwitch;
     public DigitalInput ClimberForwardlimit;
-    public Trigger isUpperLimitSwitchTripped;
-    public Trigger isLowerLimitSwitchTripped;
+    public Trigger isClimbLimitSwitchTripped;
+    public Trigger isSetLimitSwitchTripped;
     public RelativeEncoder climberEncoder;
 
     public SparkClosedLoopController climberPID;
@@ -49,10 +49,10 @@ public class Climber extends SubsystemBase {
         climberMotorConfig.smartCurrentLimit(ClimberConstants.voltsStallLimit);
         climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         
-        ClimberForwardlimit = new DigitalInput(ClimberConstants.ClimberForwardlimitChannel);
-        limitSwitch = new DigitalInput(ClimberConstants.limitSwitchChannel);
-        isUpperLimitSwitchTripped = new Trigger(limitSwitch::get);
-        isLowerLimitSwitchTripped = new Trigger(ClimberForwardlimit::get);
+        ClimberForwardlimit = new DigitalInput(ClimberConstants.ClimbLimitChannel);
+        SetLimitSwitch = new DigitalInput(ClimberConstants.SetClimbLimitChannel);
+        isClimbLimitSwitchTripped = new Trigger(SetLimitSwitch::get);
+        isSetLimitSwitchTripped = new Trigger(ClimberForwardlimit::get);
     }
 
     public void SetTarget(double ticks) {
@@ -62,8 +62,8 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
         // TODO Auto-generated method stub
-        SmartDashboard.putBoolean("ClimberLimitSwitch" , isUpperLimitSwitchTripped.getAsBoolean());
-        SmartDashboard.putBoolean("ClimberForwardLimit", isLowerLimitSwitchTripped.getAsBoolean());
+        SmartDashboard.putBoolean("ClimberLimitSwitch" , isClimbLimitSwitchTripped.getAsBoolean());
+        SmartDashboard.putBoolean("SetLimit", isSetLimitSwitchTripped.getAsBoolean());
         SmartDashboard.putNumber("climber ticks", climberEncoder.getPosition());
     }
 

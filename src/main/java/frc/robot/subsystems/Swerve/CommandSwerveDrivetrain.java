@@ -336,10 +336,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         //Pose Estimation using AprilTags
 
+        double redAllianceYaw = this.getPigeon2().getYaw().getValueAsDouble();
+
         // If on Red Alliance add 180° to the yaw
-        // if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-        //     redAllianceYaw += 180;
-        // }
+        if(DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue) {
+            redAllianceYaw += 180;
+        }
         //redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
         if(useReefTags){
             limelightName = Constants.LimelightConstants.lowerLimelightName;
@@ -349,7 +351,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
         LimelightHelpers.SetRobotOrientation(
             limelightName,
-            this.getPigeon2().getYaw().getValueAsDouble(),
+            redAllianceYaw,
             0, 0, 0, 0, 0
         );
         // LimelightHelpers.SetIMUMode(Constants.LimelightConstants.lowerLimelightName, 0);

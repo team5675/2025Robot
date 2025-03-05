@@ -1,8 +1,8 @@
 package frc.robot.subsystems.Climber;
 
 public class ClimberConstants {
-    public static final int limitSwitchChannel = 0;
-    public static final int ClimberForwardlimitChannel = 3;
+    public static final int SetClimbLimitChannel = 3;
+    public static final int ClimbLimitChannel = 4;
 
     public static final int clawMotorID = 31;
     public static final int climberMotorID = 32;
