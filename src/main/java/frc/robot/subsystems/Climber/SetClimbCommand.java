@@ -16,7 +16,8 @@ public class SetClimbCommand extends Command {
     public void initialize() {
         System.out.println("Set Climb Command Ready");
         climber.clawMotor.setVoltage(0);
-        climber.climberEncoder.setPosition(0);
+        //climber.climberEncoder.setPosition(0);
+        //climber.climberMotor.set(0.6);
         climber.SetTarget(ClimberConstants.setclimberticks);
         timer.reset();
         timer.start(); // Start the timeout timer
@@ -28,12 +29,12 @@ public class SetClimbCommand extends Command {
         climber.clawMotor.setVoltage(ClimberConstants.setClaw);
         System.out.println("Set Climb Command Finished");
         climber.climberMotor.set(0);
-        climber.climberEncoder.setPosition(0); // Reset encoder position when finished
+        // climber.climberEncoder.setPosition(0); // Reset encoder position when finished
     }
 
     @Override
     public boolean isFinished() {
         // Ends when position is reached or timeout happens
-        return !climber.isLowerLimitSwitchTripped.getAsBoolean();
+        return !climber.isLowerLimitSwitchTripped.getAsBoolean(); //|| Math.abs(climber.climberEncoder.getPosition() - ClimberConstants.setclimberticks) < 4;
     }
 }
