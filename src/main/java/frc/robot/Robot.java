@@ -22,6 +22,10 @@ public class Robot extends TimedRobot {
 
     SignalLogger.start();
     
+
+    Thread.setDefaultUncaughtExceptionHandler((thread, exception) -> {
+      Logger.logException(exception);
+    });
   }
 
   @Override
