@@ -458,14 +458,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return null; // Use odometry-only if no Limelight sees a tag within 3m
         }
 
-        // if(upperTagDist > 3 && (lower == null || lower.tagCount == 0)){
-        //     return lower;
-        // }
-
-        // if(lowerTagDist > 3 && (upper == null || upper.tagCount == 0)){
-        //     return upper;
-        // }
-
         // Case: One is null or has no valid tags, return the other
         if (upper == null || upper.tagCount == 0) {
             useReefTags = true;
