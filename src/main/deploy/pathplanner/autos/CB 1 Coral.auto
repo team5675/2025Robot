@@ -43,9 +43,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ElevatorReset"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "H Backoff"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorReset"
+                }
+              }
+            ]
           }
         }
       ]
