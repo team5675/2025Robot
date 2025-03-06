@@ -11,7 +11,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -36,6 +35,7 @@ import frc.robot.subsystems.Climber.CloseClawCommand;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.DriveToPoseCommand;
+import frc.robot.subsystems.Swerve.LimelightHelpers;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
 
@@ -93,6 +93,7 @@ public class RobotContainer {
     public RobotContainer() {
         Logger.setOptions(new DogLogOptions().withCaptureDs(true));
         Logger.setPdh(new PowerDistribution());
+        
 
         NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
         NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
@@ -135,7 +136,10 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press and resets gyro on b button press
         getDriverController().leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-        getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
+       getDriverController().b().onTrue(drivetrain.runOnce(() -> {
+            drivetrain.getPigeon2().setYaw(0);
+            LimelightHelpers.SetRobotOrientation(Constants.LimelightConstants.lowerLimelightName, 
+            0, 0, 0, 0,0,0); }));
         // Driver
         getDriverController().leftTrigger().and(getDriverController().rightTrigger().negate())
             .whileTrue(new DriveToPoseCommand(drivetrain, "Left", () -> drivetrain.useReefTags, false));
