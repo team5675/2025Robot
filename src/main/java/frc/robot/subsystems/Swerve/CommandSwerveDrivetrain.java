@@ -395,11 +395,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //Debug Values
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
         SmartDashboard.putNumber("Robot Yaw", this.getPigeon2().getYaw().getValueAsDouble());
-        try {
-            SmartDashboard.putNumber("Limelight Yaw", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName).pose.getRotation().getDegrees());
-        } catch (Exception e) {
-            System.out.println("CommandSwerveDriveTrain Periodic: Null pose estimate");
-        }
         SmartDashboard.putNumber("CacheID", aprilTagCache);
         SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
@@ -463,19 +458,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return null; // Use odometry-only if no Limelight sees a tag within 3m
         }
 
-        if(upper.avgTagDist > 3 && (lower == null || lower.tagCount == 0)){
-            return lower;
-        }
+        // if(upperTagDist > 3 && (lower == null || lower.tagCount == 0)){
+        //     return lower;
+        // }
 
-        if(lower.avgTagDist > 3 && (upper == null || upper.tagCount == 0)){
-            return upper;
-        }
+        // if(lowerTagDist > 3 && (upper == null || upper.tagCount == 0)){
+        //     return upper;
+        // }
 
         // Case: One is null or has no valid tags, return the other
         if (upper == null || upper.tagCount == 0) {
+            useReefTags = true;
             return lower;
         }
         if (lower == null || lower.tagCount == 0) {
+            useReefTags = false;
             return upper;
         }
 
