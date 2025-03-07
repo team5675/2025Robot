@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.963994871794872,
-        "y": 2.4651866404428913
+        "x": 4.367912873862156,
+        "y": 1.4969440832249665
       },
       "isLocked": false,
       "linkedName": "CORAL_F"
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -50,5 +50,5 @@
     "velocity": 0,
     "rotation": 119.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

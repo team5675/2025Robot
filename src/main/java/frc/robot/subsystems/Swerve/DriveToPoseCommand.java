@@ -65,7 +65,7 @@ public class DriveToPoseCommand extends Command {
     /** Updates the target pose dynamically based on AprilTag ID */
     private void updateTargetPose() {
         
-        if (targetPose != null && drivetrain.m_poseEstimator.getEstimatedPosition().equals(targetPose)) {
+        if (targetPose != null && drivetrain.m_poseEstimator.getEstimatedPosition().equals(targetPose) && !isBarge) {
             System.out.println("Already at target pose. No path needed.");
             pathCommand = null; 
             return;
@@ -98,7 +98,7 @@ public class DriveToPoseCommand extends Command {
             double distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
             double angleDifference = Math.abs(currentPose.getRotation().getDegrees() - targetPose.getRotation().getDegrees());
     
-            if (distance < 0.05 && angleDifference < 0.7) { // 5 cm and 0.7 degrees tolerance
+            if (distance < 0.05 && angleDifference < 0.7 && !isBarge) { // 5 cm and 0.7 degrees tolerance
                 System.out.println("Already at target pose. No path needed.");
                 pathCommand = null;
                 return;

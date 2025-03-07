@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5070011392095535,
-        "y": 5.909900417552977
+        "x": 3.8549739921976593,
+        "y": 6.4588426527958385
       },
       "isLocked": false,
       "linkedName": "CORAL_J"
@@ -20,8 +20,8 @@
         "y": 7.016
       },
       "prevControl": {
-        "x": 4.35597083056804,
-        "y": 5.606761254289853
+        "x": 2.944245773732119,
+        "y": 6.678673602080623
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -50,5 +50,5 @@
     "velocity": 0,
     "rotation": -119.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
