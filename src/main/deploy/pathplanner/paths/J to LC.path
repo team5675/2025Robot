@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.959,
-        "y": 5.1761866
+        "x": 4.9844,
+        "y": 5.21
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8549739921976593,
-        "y": 6.4588426527958385
+        "x": 3.8803739921976597,
+        "y": 6.492656052795838
       },
       "isLocked": false,
       "linkedName": "CORAL_J"
@@ -20,15 +20,20 @@
         "y": 7.016
       },
       "prevControl": {
-        "x": 2.944245773732119,
-        "y": 6.678673602080623
+        "x": 2.542755681818182,
+        "y": 6.024303977272727
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "CORALSTATION"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6785079928951995,
+      "rotationDegrees": -54.77940911452458
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],

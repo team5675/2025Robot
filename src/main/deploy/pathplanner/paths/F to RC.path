@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 5.2487,
-        "y": 3.0349
+        "y": 3.02
       },
       "prevControl": null,
       "nextControl": {
         "x": 4.367912873862156,
-        "y": 1.4969440832249665
+        "y": 1.4820440832249668
       },
       "isLocked": false,
       "linkedName": "CORAL_F"
@@ -28,7 +28,12 @@
       "linkedName": "CORALSTATION_RIGHT"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5008880994671389,
+      "rotationDegrees": 55.40447922287216
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],

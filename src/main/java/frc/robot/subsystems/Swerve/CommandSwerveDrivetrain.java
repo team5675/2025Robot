@@ -365,6 +365,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName); 
         }
 
+        if(DriverStation.isAutonomousEnabled() || DriverStation.isDisabled()){
+            int[] list = {2, 1, 13, 12};
+            LimelightHelpers.SetFiducialIDFiltersOverride(Constants.LimelightConstants.upperLimelightName, list );
+        } else {
+            int[] list = {13, 12, 2, 1, 4, 5, 14, 15};
+            LimelightHelpers.SetFiducialIDFiltersOverride(Constants.LimelightConstants.upperLimelightName, list );
+        }
+
        // Only run vision updates if we see a tag
         if ((lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) ||
             (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0)) {

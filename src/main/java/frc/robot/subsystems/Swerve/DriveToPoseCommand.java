@@ -44,7 +44,12 @@ public class DriveToPoseCommand extends Command {
     @Override
     public void execute() {
         if (pathCommand != null) {
-            pathCommand.execute(); 
+            try {
+                pathCommand.execute(); 
+            } catch (Exception e) {
+                pathCommand = null;
+                System.out.printf("PathCommand error: %s", e.toString());
+            } 
         }
     }
 

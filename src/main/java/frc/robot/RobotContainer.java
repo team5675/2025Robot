@@ -93,8 +93,8 @@ public class RobotContainer {
     public Command pathfindingCommand;
 
     public RobotContainer() {
-        Logger.setOptions(new DogLogOptions().withCaptureDs(true));
-        Logger.setPdh(new PowerDistribution());
+        // Logger.setOptions(new DogLogOptions().withCaptureDs(true));
+        //Logger.setPdh(new PowerDistribution());
         
 
         NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
