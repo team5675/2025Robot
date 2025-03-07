@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.066,
-        "y": 1.063
+        "x": 1.14639,
+        "y": 0.999603
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8932363013698632,
-        "y": 1.2677868150684934
+        "x": 1.9736263013698632,
+        "y": 1.2043898150684935
       },
       "isLocked": false,
       "linkedName": "CORALSTATION_RIGHT"
     },
     {
       "anchor": {
-        "x": 3.188,
-        "y": 3.862
+        "x": 3.2517,
+        "y": 3.8554
       },
       "prevControl": {
-        "x": 3.1429229452054797,
-        "y": 3.2008698630136987
+        "x": 2.772102272727273,
+        "y": 3.4516335227272723
       },
       "nextControl": null,
       "isLocked": false,

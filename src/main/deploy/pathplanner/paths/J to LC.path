@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.0184614870006685,
-        "y": 5.227561205723891
+        "x": 4.959,
+        "y": 5.1761866
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5664626262102224,
-        "y": 5.961275023276867
+        "x": 3.5070011392095535,
+        "y": 5.909900417552977
       },
       "isLocked": false,
       "linkedName": "CORAL_J"
@@ -48,7 +48,7 @@
   "folder": "LB",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -120.31156241917903
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

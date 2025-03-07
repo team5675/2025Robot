@@ -12,6 +12,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import dev.doglog.DogLogOptions;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -111,6 +113,18 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+         if(DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue) {
+
+             drivetrain.setDefaultCommand(
+            // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(getDriverController().getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-getDriverController().getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
+        ); } else {
+
+        
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -120,7 +134,7 @@ public class RobotContainer {
                     .withVelocityY(-getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-getDriverController().getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
-        );
+        ); }
 
         // getDriverController().a().whileTrue(drivetrain.applyRequest(() -> brake));
         // getDriverController().b().whileTrue(drivetrain.applyRequest(() ->
