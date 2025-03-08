@@ -377,7 +377,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if ((lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) ||
             (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0)) {
 
-            LimelightHelpers.PoseEstimate bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
+            LimelightHelpers.PoseEstimate bestEstimate;
+            try {
+                bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
+            } catch (Exception ex) {
+                bestEstimate = null;
+                DriverStation.reportError("Failed to get Best Estimate", ex.getStackTrace());
+            }
 
             if (bestEstimate != null && bestEstimate.tagCount > 0) {
                 lastValidPose = bestEstimate;
@@ -456,7 +462,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         );
     }
     private LimelightHelpers.PoseEstimate selectBestEstimate(LimelightHelpers.PoseEstimate upper, LimelightHelpers.PoseEstimate lower) {
-
+        
         // Case: Both are null, return null
         if ((upper == null || upper.tagCount == 0) && (lower == null || lower.tagCount == 0)) {
             return null;
