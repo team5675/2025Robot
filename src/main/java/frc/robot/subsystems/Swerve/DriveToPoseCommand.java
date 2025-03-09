@@ -75,7 +75,7 @@ public class DriveToPoseCommand extends Command {
             pathCommand = null; 
             return;
         }
-        if ((!useReefTagsSupplier.get() || !Coral.getInstance().bb2Tripped) && !isAlgae) {  
+        if ((!useReefTagsSupplier.get()) && !isAlgae) {  
             aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.upperLimelightName);
         } else {
             aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
@@ -162,9 +162,6 @@ public class DriveToPoseCommand extends Command {
                 case 21, 10 -> AlignmentConstants.REEF_G;
                 case 22, 9 -> AlignmentConstants.REEF_E;
                 case 17, 8 -> AlignmentConstants.REEF_C;
-                case 12, 2 -> AlignmentConstants.CORAL1LEFT;
-                case 13, 1 -> AlignmentConstants.CORAL3LEFT;
-                // case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
@@ -177,9 +174,6 @@ public class DriveToPoseCommand extends Command {
                 case 21, 10 -> AlignmentConstants.REEF_H;
                 case 22, 9 -> AlignmentConstants.REEF_F;
                 case 17, 8 -> AlignmentConstants.REEF_D;
-                case 12, 2 -> AlignmentConstants.CORAL1RIGHT;
-                case 13, 1 -> AlignmentConstants.CORAL3RIGHT;
-                // case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
                     System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
@@ -194,6 +188,25 @@ public class DriveToPoseCommand extends Command {
                 case 17, 8 -> AlignmentConstants.ALGAE_CD;
                 default -> {
                     System.out.println("Unknown AprilTag ID for algae: " + aprilTagId);
+                    yield drivetrain.m_poseEstimator.getEstimatedPosition();
+                }
+            };
+
+            case "LeftCoralStation" -> switch (aprilTagId) {
+                case 12, 2 -> AlignmentConstants.CORAL1LEFT;
+                case 13, 1 -> AlignmentConstants.CORAL3LEFT;
+                case 3, 16 -> AlignmentConstants.PROCESSOR;
+                default -> {
+                    System.out.println("Unknown AprilTag ID for Left Coral Station: " + aprilTagId);
+                    yield drivetrain.m_poseEstimator.getEstimatedPosition();
+                }
+            };
+            case "RightCoralStation" -> switch (aprilTagId) {
+                case 12, 2 -> AlignmentConstants.CORAL1RIGHT;
+                case 13, 1 -> AlignmentConstants.CORAL3RIGHT;
+                case 3, 16 -> AlignmentConstants.PROCESSOR;
+                default -> {
+                    System.out.println("Unknown AprilTag ID for Left Coral Station: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
                 }
             };
