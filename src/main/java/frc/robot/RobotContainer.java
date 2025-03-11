@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -140,12 +141,19 @@ public class RobotContainer {
         //     point.withModuleDirection(new Rotation2d(-getDriverController().getLeftY(), -getDriverController().getLeftX()))
         // ));
 
+        // Run SysId routines when holding back/start and X/Y.
+        // Note that each routine should be run exactly once in a single log.
+        getDriverController().a().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        getDriverController().x().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        getDriverController().y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        getDriverController().b().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
         // Reset the field-centric heading on left bumper press and resets gyro on b button press
-       getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-       getDriverController().x().onTrue(drivetrain.runOnce(() -> {
-            drivetrain.getPigeon2().setYaw(0);
-            LimelightHelpers.SetRobotOrientation(Constants.LimelightConstants.lowerLimelightName, 
-            0, 0, 0, 0,0,0); }));
+    //    getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    //    getDriverController().x().onTrue(drivetrain.runOnce(() -> {
+    //         drivetrain.getPigeon2().setYaw(0);
+    //         LimelightHelpers.SetRobotOrientation(Constants.LimelightConstants.lowerLimelightName, 
+    //         0, 0, 0, 0,0,0); }));
 
         // Auto Lineups
         getDriverController().leftTrigger().and(getDriverController().rightTrigger().negate())
@@ -158,10 +166,10 @@ public class RobotContainer {
         .whileTrue(new DriveToPoseCommand(drivetrain, "Algae", () -> true, true));
 
         getDriverController().leftBumper().and(getDriverController().rightBumper().negate())
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Left", () -> false, false));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "LeftCoralStation", () -> false, false));
 
         getDriverController().rightBumper().and(getDriverController().leftBumper().negate())
-            .whileTrue(new DriveToPoseCommand(drivetrain, "Right", () -> false, false));
+            .whileTrue(new DriveToPoseCommand(drivetrain, "RightCoralStation", () -> false, false));
 
         getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", () -> false, false));
         getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",() -> false, false));
