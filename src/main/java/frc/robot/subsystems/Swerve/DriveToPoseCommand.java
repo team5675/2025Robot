@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.commands.RumbleCommand;
 import frc.robot.subsystems.Coral.Coral;
+import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.LEDStateManager.LineupState;
 import edu.wpi.first.math.geometry.Pose2d;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
@@ -25,13 +27,14 @@ public class DriveToPoseCommand extends Command {
     private final Supplier<Boolean> useReefTagsSupplier;
     private boolean isAlgae;
 
-    public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction, Supplier<Boolean> useReefTagsSupplier, boolean isAlgae) {
+    public DriveToPoseCommand(CommandSwerveDrivetrain drivetrain, String direction,
+            Supplier<Boolean> useReefTagsSupplier, boolean isAlgae) {
         this.drivetrain = drivetrain;
         this.direction = direction;
         this.useReefTagsSupplier = useReefTagsSupplier;
         this.isAlgae = isAlgae;
         addRequirements(drivetrain);
-}
+    }
 
     @Override
     public void initialize() {
@@ -45,11 +48,11 @@ public class DriveToPoseCommand extends Command {
     public void execute() {
         if (pathCommand != null) {
             try {
-                pathCommand.execute(); 
+                pathCommand.execute();
             } catch (Exception e) {
                 pathCommand = null;
                 System.out.printf("PathCommand error: %s", e.toString());
-            } 
+            }
         }
     }
 
@@ -64,25 +67,26 @@ public class DriveToPoseCommand extends Command {
             pathCommand.cancel();
             System.out.println("DriveToPoseCommand finished.");
             new RumbleCommand().schedule();
-            }
+            LEDStateManager.getInstance().setLineupState(LineupState.LINED_UP);
+        }
     }
 
     /** Updates the target pose dynamically based on AprilTag ID */
     private void updateTargetPose() {
-        
+
         if (targetPose != null && drivetrain.m_poseEstimator.getEstimatedPosition().equals(targetPose) && !isBarge) {
             System.out.println("Already at target pose. No path needed.");
-            pathCommand = null; 
+            pathCommand = null;
             return;
         }
-        if ((!useReefTagsSupplier.get()) && !isAlgae) {  
+        if ((!useReefTagsSupplier.get()) && !isAlgae) {
             aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.upperLimelightName);
         } else {
             aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
         }
 
         cache = getTargetPose((int) drivetrain.aprilTagCache);
-        
+
         if (aprilTagId == -1) {
             System.out.println("No valid AprilTag detected. Defaulting to last tag seen");
             targetPose = cache;
@@ -91,26 +95,29 @@ public class DriveToPoseCommand extends Command {
         }
 
         // Flip pose if we're on the red alliance
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) targetPose = FlippingUtil.flipFieldPose(targetPose);
-        
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+            targetPose = FlippingUtil.flipFieldPose(targetPose);
+
     }
 
     private void startPath() {
         if (targetPose != null) {
             Pose2d currentPose = drivetrain.m_poseEstimator.getEstimatedPosition();
-            
+
             // Check if the robot is already at the target position within a small tolerance
             double distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
-            double angleDifference = Math.abs(currentPose.getRotation().getDegrees() - targetPose.getRotation().getDegrees());
-    
+            double angleDifference = Math
+                    .abs(currentPose.getRotation().getDegrees() - targetPose.getRotation().getDegrees());
+
             if (distance < 0.05 && angleDifference < 0.7 && !isBarge) { // 5 cm and 0.7 degrees tolerance
                 System.out.println("Already at target pose. No path needed.");
+                LEDStateManager.getInstance().setLineupState(LineupState.LINED_UP);
                 pathCommand = null;
                 return;
             }
-            
+
             List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
-    
+
             if (waypoints.isEmpty()) {
                 System.out.println("No waypoints generated. Skipping path.");
                 pathCommand = null;
@@ -119,20 +126,22 @@ public class DriveToPoseCommand extends Command {
 
             if (isBarge) {
                 PathPlannerPath bargePath = getBargePath();
-                
-                    if (bargePath == null) {
-                        System.out.println("Error: Barge path is null. Skipping execution.");
-                        pathCommand = null;
-                        return; 
-                    }
-                //if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) bargePath = bargePath.flipPath();
+
+                if (bargePath == null) {
+                    System.out.println("Error: Barge path is null. Skipping execution.");
+                    pathCommand = null;
+                    return;
+                }
+                // if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+                // bargePath = bargePath.flipPath();
                 pathCommand = AutoBuilder.pathfindThenFollowPath(bargePath, Constants.PathplannerConstants.constraints);
 
             } else {
+                LEDStateManager.getInstance().setLineupState(LineupState.LINING_UP);
 
-                PathPlannerPath generatedPath = new PathPlannerPath(waypoints, 
-                Constants.PathplannerConstants.constraints, null, 
-                new GoalEndState(0, targetPose.getRotation()));
+                PathPlannerPath generatedPath = new PathPlannerPath(waypoints,
+                        Constants.PathplannerConstants.constraints, null,
+                        new GoalEndState(0, targetPose.getRotation()));
                 generatedPath.preventFlipping = true;
                 pathCommand = AutoBuilder.followPath(generatedPath);
             }
@@ -141,7 +150,7 @@ public class DriveToPoseCommand extends Command {
                 System.out.println("PathPlanner failed to generate a command. Skipping execution.");
                 return;
             }
-    
+
             try {
                 pathCommand.initialize();
             } catch (Exception e) {
@@ -213,18 +222,19 @@ public class DriveToPoseCommand extends Command {
             default -> drivetrain.m_poseEstimator.getEstimatedPosition();
         };
     }
-   private PathPlannerPath getBargePath(){
-    try {
-        return switch (direction) {
-            case "MidBarge" -> PathPlannerPath.fromPathFile("MidBarge");
-            case "LeftBarge" -> PathPlannerPath.fromPathFile("LeftBarge");
-            case "RightBarge" -> PathPlannerPath.fromPathFile("RightBarge");
-            default -> throw new IllegalStateException("Invalid barge direction: " + direction);
-        };
-    } catch (Exception e) {
-        System.err.println("Error loading PathPlanner path for direction: " + direction);
-        e.printStackTrace();
-        return null;
+
+    private PathPlannerPath getBargePath() {
+        try {
+            return switch (direction) {
+                case "MidBarge" -> PathPlannerPath.fromPathFile("MidBarge");
+                case "LeftBarge" -> PathPlannerPath.fromPathFile("LeftBarge");
+                case "RightBarge" -> PathPlannerPath.fromPathFile("RightBarge");
+                default -> throw new IllegalStateException("Invalid barge direction: " + direction);
+            };
+        } catch (Exception e) {
+            System.err.println("Error loading PathPlanner path for direction: " + direction);
+            e.printStackTrace();
+            return null;
+        }
     }
-}
 }

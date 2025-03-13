@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.LEDStateManager.ElevatorState;
 
 public class RunElevatorCommand extends Command {
   Elevator elevator;
@@ -14,7 +16,13 @@ public class RunElevatorCommand extends Command {
 
   @Override
   public void initialize() {
+    var position = Elevator.getInstance().ticksEncoder.getPosition();
 
+    if (position > level.getLevel()) {
+      LEDStateManager.getInstance().setElevatorState(ElevatorState.MOVING_DOWN);
+    } else if (position < level.getLevel()) {
+      LEDStateManager.getInstance().setElevatorState(ElevatorState.MOVING_UP);
+    }
   }
 
   @Override
@@ -24,7 +32,11 @@ public class RunElevatorCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-
+    if (level.getName() == "RESET_HEIGHT") { 
+      LEDStateManager.getInstance().setElevatorState(ElevatorState.NONE);
+    } else {
+      LEDStateManager.getInstance().setElevatorState(ElevatorState.AT_TARGET);
+    }
   }
 
   @Override

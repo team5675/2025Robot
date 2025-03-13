@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Algae.AlgaeInCommand;
 import frc.robot.subsystems.Algae.AlgaeOutCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
+import frc.robot.subsystems.LED.LEDStateManager;
 import frc.robot.subsystems.Climber.SetClimbCommand;
 import frc.robot.subsystems.Climber.UnClimbCommand;
 import frc.robot.subsystems.Coral.Coral;
@@ -91,6 +92,7 @@ public class RobotContainer {
 
  /* Path follower */
     private final SendableChooser<Command> autoChooser;
+    private static SendableChooser<Boolean> ledsEnabled;
 
     public Command pathfindingCommand;
 
@@ -98,6 +100,7 @@ public class RobotContainer {
         // Logger.setOptions(new DogLogOptions().withCaptureDs(true));
         //Logger.setPdh(new PowerDistribution());
         
+        LEDStateManager.getInstance();
 
         NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
         NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
@@ -110,6 +113,9 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
+        ledsEnabled = new SendableChooser<Boolean>();
+        SmartDashboard.putData("LEDs Enabled", ledsEnabled);
+       
 
         configureBindings();
     }
@@ -214,5 +220,15 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+    }
+
+    public static boolean getLEDsEnabled() {
+        return true;
+
+        // if (ledsEnabled.getSelected() != null) {
+        //     return ledsEnabled.getSelected();
+        // } else {
+        //     return false;
+        // }
     }
 }

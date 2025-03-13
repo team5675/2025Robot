@@ -42,9 +42,7 @@ public class IntakeCommand extends Command {
         }
         else if (needsReverse && coral.bb1Tripped && coral.bb2Tripped){
             coral.motor.set(0.0);
-        }
-
-        
+        }        
     }
 
     @Override
