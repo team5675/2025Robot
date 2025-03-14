@@ -36,6 +36,7 @@ import frc.robot.subsystems.Climber.ClimbCommand;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Climber.CloseClawCommand;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
+import frc.robot.subsystems.Elevator.ElevatorLevel;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.DriveToPoseCommand;
 import frc.robot.subsystems.Swerve.LimelightHelpers;
@@ -100,11 +101,11 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("IntakeCommand", new IntakeCommand());
         NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
-        NamedCommands.registerCommand("ElevatorL1", new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
-        NamedCommands.registerCommand("ElevatorL2", new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));
-        NamedCommands.registerCommand("ElevatorL3", new RunElevatorCommand(ElevatorConstants.L3_HEIGHT));
-        NamedCommands.registerCommand("ElevatorL4", new RunElevatorCommand(ElevatorConstants.L4_HEIGHT));
-        NamedCommands.registerCommand("ElevatorReset", new RunElevatorCommand(ElevatorConstants.IDLE_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL1", new RunElevatorCommand(ElevatorLevel.L1_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL2", new RunElevatorCommand(ElevatorLevel.L2_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL3", new RunElevatorCommand(ElevatorLevel.L3_HEIGHT));
+        NamedCommands.registerCommand("ElevatorL4", new RunElevatorCommand(ElevatorLevel.L4_HEIGHT));
+        NamedCommands.registerCommand("ElevatorReset", new RunElevatorCommand(ElevatorLevel.RESET_HEIGHT));
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -198,16 +199,15 @@ public class RobotContainer {
         AlgaeHold.whileTrue(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0.1)));
         AlgaeHold.whileFalse(Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0)));
 
-        AlgaeHigh.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_HIGH_HEIGHT));
-        AlgaeLow.onTrue(new RunElevatorCommand(ElevatorConstants.ALGAE_LOW_HEIGHT));
+        AlgaeHigh.onTrue(new RunElevatorCommand(ElevatorLevel.ALGAE_HIGH_HEIGHT));
+        AlgaeLow.onTrue(new RunElevatorCommand(ElevatorLevel.ALGAE_LOW_HEIGHT));
 
         // Elevator      
-        level1.onTrue(new RunElevatorCommand(ElevatorConstants.L1_HEIGHT));
-        level2.onTrue(new RunElevatorCommand(ElevatorConstants.L2_HEIGHT));
-        level3.onTrue(new RunElevatorCommand(ElevatorConstants.L3_HEIGHT));
-        level4.onTrue(new RunElevatorCommand(ElevatorConstants.L4_HEIGHT));
-        ElevatorReset.onTrue(new RunElevatorCommand(ElevatorConstants.IDLE_HEIGHT));
-        
+        level1.onTrue(new RunElevatorCommand(ElevatorLevel.L1_HEIGHT));
+        level2.onTrue(new RunElevatorCommand(ElevatorLevel.L2_HEIGHT));
+        level3.onTrue(new RunElevatorCommand(ElevatorLevel.L3_HEIGHT));
+        level4.onTrue(new RunElevatorCommand(ElevatorLevel.L4_HEIGHT));
+        ElevatorReset.onTrue(new RunElevatorCommand(ElevatorLevel.RESET_HEIGHT));
         
         drivetrain.registerTelemetry(logger::telemeterize);
     }

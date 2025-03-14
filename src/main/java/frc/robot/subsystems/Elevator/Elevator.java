@@ -24,60 +24,57 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Elevator.ElevatorLevel;
 
 public class Elevator extends SubsystemBase {
   public SparkMax motor;
   public SparkMaxConfig motorConfig;
   private SparkClosedLoopController sparkPidController;
 
-  private DigitalInput topLimitSwitch;
   private DigitalInput bottomLimitSwitch;
+  // private DigitalInput topLimitSwitch;
   public Trigger bottomTrigger;
-  public Trigger topTrigger;
+  // public Trigger topTrigger;
 
   // SparkAbsoluteEncoder angleEncoder;
   public RelativeEncoder ticksEncoder;
 
-  double setpoint;
+  public ElevatorLevel setPoint = ElevatorLevel.RESET_HEIGHT;
 
   public Elevator() {
     motor = new SparkMax(ElevatorConstants.motorID, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
 
     sparkPidController = motor.getClosedLoopController();
-    // pidController = new ProfiledPIDController(ElevatorConstants.motorP,
-    // ElevatorConstants.motorI, ElevatorConstants.motorD, null);
 
-    // angleEncoder = motor.getAbsoluteEncoder();
     ticksEncoder = motor.getEncoder();
 
-    motorConfig.
-    smartCurrentLimit(30, 35)
-      .voltageCompensation(12)
-      .idleMode(IdleMode.kBrake)
-      .closedLoopRampRate(0.15);
+    motorConfig.smartCurrentLimit(30, 35)
+        .voltageCompensation(12)
+        .idleMode(IdleMode.kBrake)
+        .closedLoopRampRate(0.15);
 
     motorConfig.closedLoop
-      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .pid(ElevatorConstants.motorP, ElevatorConstants.motorI, ElevatorConstants.motorD);
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pidf(ElevatorConstants.motorP, ElevatorConstants.motorI, ElevatorConstants.motorD, ElevatorConstants.motorff);
     // motorConfig.closedLoop.maxMotion
-    //   .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal)
-    //   .maxAcceleration(5000.0)
-    //   .maxVelocity(4000.0)
-    //   .allowedClosedLoopError(.1);
+    // .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal)
+    // .maxAcceleration(5000.0)
+    // .maxVelocity(4000.0)
+    // .allowedClosedLoopError(.1);
 
     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
     bottomLimitSwitch = new DigitalInput(ElevatorConstants.bottomLimitSwitchChannel);
-    topLimitSwitch = new DigitalInput(ElevatorConstants.topLimitSwitchChannel);
+    // topLimitSwitch = new DigitalInput(ElevatorConstants.topLimitSwitchChannel);
 
     bottomTrigger = new Trigger(bottomLimitSwitch::get);
-    topTrigger = new Trigger(topLimitSwitch::get);
+    // topTrigger = new Trigger(topLimitSwitch::get);
   }
 
-  public void setTarget(double ticks) {
-    setpoint = ticks;
-    sparkPidController.setReference(ticks, ControlType.kPosition);
+  public void setTarget(ElevatorLevel level) {
+    setPoint = level;
+    sparkPidController.setReference(level.getLevel(), ControlType.kPosition);
   }
 
   public void reset() {
@@ -86,26 +83,23 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // flip
+    // flip - so false = tripped
     var bottomBool = bottomTrigger.getAsBoolean();
-    var topBool = topTrigger.getAsBoolean();
+    // var topBool = topTrigger.getAsBoolean();
 
-    if (!bottomBool && setpoint < 5) {
+    // If we are resetting and the limit switch is hit
+    if (!bottomBool && (setPoint.getName() == "RESET_HEIGHT")) {
       // motor.set(0);
       ticksEncoder.setPosition(0);
     }
 
-    // (!topBool) {
-    // motor.set(0);
-    // }
-
-    SmartDashboard.putBoolean("Elevator: Top Tripped", topBool);
+    // SmartDashboard.putBoolean("Elevator: Top Tripped", topBool);
     SmartDashboard.putBoolean("Elevator: Bottom Tripped", bottomBool);
     SmartDashboard.putNumber("Elevator: Current", motor.getOutputCurrent());
     SmartDashboard.putNumber("Elevator: Motor Output", motor.getAppliedOutput());
     SmartDashboard.putNumber("Elevator: Ticks", ticksEncoder.getPosition());
-    SmartDashboard.putNumber("Elevator: Target Position", setpoint);
-    SmartDashboard.putNumber("Elevator: Position Error", setpoint - ticksEncoder.getPosition());
+    SmartDashboard.putNumber("Elevator: Target Position", setPoint.getLevel());
+    SmartDashboard.putNumber("Elevator: Position Error", setPoint.getLevel() - ticksEncoder.getPosition());
     SmartDashboard.putNumber("Elevator: Motor Velocity", ticksEncoder.getVelocity());
   }
 
