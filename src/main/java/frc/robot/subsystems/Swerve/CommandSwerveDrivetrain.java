@@ -429,12 +429,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                         .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
                         .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
                 ),
-                new PPHolonomicDriveController(
-                    // PID constants for translation
-                    new PIDConstants(4,0,0),
+                new PPHolonomicDriveController( 
+                    // PID constants for translation. Move the P value up until you hear oscillation (in my experience it’s pretty obvious). Then turn it down until there’s no oscillation. 
+                    //Usually good values land around 3-5 for the translation components iirc. Sometimes you’ll want a D value but I haven’t seen its value. 
+                    //Hopefully the PID won’t be doing much work if your robot is able to follow the path.
+                    new PIDConstants(4,0,0), /* Rotation controller:kP = 5.0;kI = 0;kD = 0.0; Position (x/y) controllers:kP = 2.5;kI = 0;kD = 0.0; */
+                    //Try kP: 3.0, kI: 0.0, kD: 0.0
                     // PID constants for rotation
-                    //R = rotation
-                    new PIDConstants(3,0,0)
+                    //Try kP: 5.0, kI: 0.0, kD: 0.0
+                    new PIDConstants(3,0,0) //Team 1466’s tuning for rotation was P = 5.0, I = 0.03, D = 0.4
                 ),
                 config,
                 // Assume the path needs to be flipped for Red vs Blue, this is normally the case
