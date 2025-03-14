@@ -24,9 +24,10 @@ public class RunElevatorCommand extends Command {
   @Override
   public void initialize() {
     if (DriverStation.isAutonomousEnabled()) {
-      Commands.waitUntil(Coral::clearToMove).andThen(() -> {
-        elevator.setTarget(height);
-      });
+        Command waitThenMove = Commands.waitUntil(Coral::clearToMove)
+            .andThen(() -> elevator.setTarget(height));
+
+        waitThenMove.schedule(); // Properly schedules the command
     } else {
       elevator.setTarget(height);
     } 

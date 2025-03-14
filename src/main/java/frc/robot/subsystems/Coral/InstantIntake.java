@@ -9,24 +9,26 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 public class InstantIntake extends Command {
   Coral coralSubsystem;
+  private IntakeCommand intakeCommand;
 
   public InstantIntake() {
     coralSubsystem = Coral.getInstance();
+    intakeCommand = new IntakeCommand();
   }
 
   @Override
   public void initialize() {
-    new IntakeCommand().schedule();
+    intakeCommand.schedule(); // Start IntakeCommand
   }
-
-  @Override
-  public void execute() {}
-
-  @Override
-  public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
-    return coralSubsystem.bb1Tripped;
+    return coralSubsystem.bb1Tripped; // End when bb1 is tripped
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    intakeCommand.cancel(); // Stop intake when command ends
   }
 }
+
