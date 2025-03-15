@@ -14,12 +14,11 @@ public class RunElevatorCommand extends Command {
 
   @Override
   public void initialize() {
-
+    elevator.setTarget(level);
   }
 
   @Override
   public void execute() {
-    elevator.setTarget(level);
   }
 
   @Override
