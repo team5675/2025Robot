@@ -27,6 +27,7 @@ public class Coral extends SubsystemBase {
   public boolean bb1Tripped;
   public boolean bb2Tripped;
   public static Coral instance;
+  public static boolean intaking;
 
   public Coral() {
     motor = new SparkMax(CoralConstants.motorID, MotorType.kBrushless);
@@ -39,6 +40,7 @@ public class Coral extends SubsystemBase {
 
     bbCANdi = new CANdi(CoralConstants.bbCANdi_ID);
 
+    Coral.intaking = false;
   }
 
   @Override
@@ -47,6 +49,7 @@ public class Coral extends SubsystemBase {
     bb2Tripped = bbCANdi.getS2Closed().getValue();
     SmartDashboard.putBoolean("Beam Break 1", bb1Tripped);
     SmartDashboard.putBoolean("Beam Break 2", bb2Tripped);
+    SmartDashboard.putBoolean("Intaking", intaking);
   }
 
   public static Command PlaceCommand() {
@@ -54,10 +57,16 @@ public class Coral extends SubsystemBase {
       Coral.getInstance().motor.set(1);
     });
   }
-  //Check with Connor to see if these are the right values
+
+  // Check with Connor to see if these are the right values
   public static Boolean isTripped() {
     return Coral.getInstance().bb1Tripped && Coral.getInstance().bb2Tripped;
   }
+
+  public static Boolean clearToMove() {
+    return !intaking;
+  }
+
 
   public static Coral getInstance() {
     if (instance == null) {

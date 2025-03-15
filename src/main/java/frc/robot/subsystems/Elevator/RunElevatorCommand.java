@@ -1,6 +1,9 @@
 package frc.robot.subsystems.Elevator;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Coral.Coral;
 
 public class RunElevatorCommand extends Command {
   Elevator elevator;
@@ -14,8 +17,16 @@ public class RunElevatorCommand extends Command {
 
   @Override
   public void initialize() {
-    elevator.setTarget(level);
+    if (DriverStation.isAutonomousEnabled() && Elevator.getInstance().ticksEncoder.getPosition() < 1) {
+        Command waitThenMove = Commands.waitUntil(Coral::clearToMove)
+            .andThen(() -> elevator.setTarget(level));
+
+        waitThenMove.schedule(); // Properly schedules the command
+    } else {
+      elevator.setTarget(level);
+    } 
   }
+  
 
   @Override
   public void execute() {
