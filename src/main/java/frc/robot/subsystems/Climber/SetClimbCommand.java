@@ -36,7 +36,6 @@ public class SetClimbCommand extends Command {
         }).schedule();
 
         System.out.println("Set Climb Command Finished");
-        // climber.climberEncoder.setPosition(0); // Reset encoder position when finished
     }
 
     @Override
