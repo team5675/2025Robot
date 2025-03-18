@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.137048611111111,
-        "y": 4.004094690393518
+        "x": 6.285,
+        "y": 4.009452039930555
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.809943302494184,
-        "y": 4.039368183774688
+        "x": 6.239284939236111,
+        "y": 3.5334049479166665
       },
       "isLocked": false,
-      "linkedName": "CB_START"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.7202,
-        "y": 4.1968
+        "x": 5.974969618055556,
+        "y": 0.5652586082175923
       },
       "prevControl": {
-        "x": 5.969817502649226,
-        "y": 4.182976021876328
+        "x": 5.980152271412038,
+        "y": 0.8175781250000005
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CORAL_H"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "CB",

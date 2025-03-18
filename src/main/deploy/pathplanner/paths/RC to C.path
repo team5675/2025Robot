@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.302227251446372,
-        "y": 1.7872825022087135
+        "x": 1.7533120129961222,
+        "y": 1.4509906004596673
       },
       "isLocked": false,
       "linkedName": "CORALSTATION_RIGHT"
     },
     {
       "anchor": {
-        "x": 3.7259,
-        "y": 3.029
+        "x": 3.695,
+        "y": 3.008
       },
       "prevControl": {
-        "x": 2.629593839512626,
-        "y": 2.310088459908014
+        "x": 3.057770428215991,
+        "y": 2.538600745660501
       },
       "nextControl": null,
       "isLocked": false,

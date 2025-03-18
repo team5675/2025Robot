@@ -5,18 +5,13 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
-
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
-import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,7 +31,6 @@ import frc.robot.subsystems.Algae.Algae;
 import frc.robot.subsystems.Climber.ClimbCommand;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Climber.CloseClawCommand;
-import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Elevator.ElevatorLevel;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.DriveToPoseCommand;
@@ -96,9 +90,6 @@ public class RobotContainer {
     public Command pathfindingCommand;
 
     public RobotContainer() {
-        // Logger.setOptions(new DogLogOptions().withCaptureDs(true));
-        //Logger.setPdh(new PowerDistribution());
-        
 
         NamedCommands.registerCommand("IntakeCommand", new AutoIntakeCommand());
         NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
@@ -107,6 +98,11 @@ public class RobotContainer {
         NamedCommands.registerCommand("ElevatorL3", new RunElevatorCommand(ElevatorLevel.L3_HEIGHT));
         NamedCommands.registerCommand("ElevatorL4", new RunElevatorCommand(ElevatorLevel.L4_HEIGHT));
         NamedCommands.registerCommand("ElevatorReset", new RunElevatorCommand(ElevatorLevel.RESET_HEIGHT));
+        NamedCommands.registerCommand("AlgaeLow", new RunElevatorCommand(ElevatorLevel.ALGAE_LOW_HEIGHT));
+        NamedCommands.registerCommand("AlgaeHigh", new RunElevatorCommand(ElevatorLevel.ALGAE_HIGH_HEIGHT));
+        NamedCommands.registerCommand("AlgaeIn", new AlgaeInCommand());
+        NamedCommands.registerCommand("AlgaeOut", new AlgaeOutCommand());
+        NamedCommands.registerCommand("AlgaeHold", Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0.1)));
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -142,20 +138,14 @@ public class RobotContainer {
         // getDriverController().b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-getDriverController().getLeftY(), -getDriverController().getLeftX()))
         // ));
-
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        getDriverController().a().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        getDriverController().x().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        getDriverController().y().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        getDriverController().b().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+       
 
         // Reset the field-centric heading on left bumper press and resets gyro on b button press
-    //    getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-    //    getDriverController().x().onTrue(drivetrain.runOnce(() -> {
-    //         drivetrain.getPigeon2().setYaw(0);
-    //         LimelightHelpers.SetRobotOrientation(Constants.LimelightConstants.lowerLimelightName, 
-    //         0, 0, 0, 0,0,0); }));
+       getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+       getDriverController().x().onTrue(drivetrain.runOnce(() -> {
+            drivetrain.getPigeon2().setYaw(0);
+            LimelightHelpers.SetRobotOrientation(Constants.LimelightConstants.lowerLimelightName, 
+            0, 0, 0, 0,0,0); }));
 
         // Auto Lineups
         getDriverController().leftTrigger().and(getDriverController().rightTrigger().negate())

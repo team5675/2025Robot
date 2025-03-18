@@ -167,6 +167,31 @@
               }
             ]
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C to Algae"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlgaeLow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlgaeIn"
+          }
         }
       ]
     }
