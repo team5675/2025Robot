@@ -22,7 +22,6 @@ import frc.robot.subsystems.Algae.AlgaeInCommand;
 import frc.robot.subsystems.Algae.AlgaeOutCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
 import frc.robot.subsystems.Climber.SetClimbCommand;
-import frc.robot.subsystems.Climber.UnClimbCommand;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Coral.IntakeCommand;
 import frc.robot.subsystems.Coral.PlaceCommand;
@@ -31,6 +30,7 @@ import frc.robot.subsystems.Algae.Algae;
 import frc.robot.subsystems.Climber.ClimbCommand;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Climber.CloseClawCommand;
+import frc.robot.subsystems.Climber.OpenClawCommand;
 import frc.robot.subsystems.Elevator.ElevatorLevel;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.DriveToPoseCommand;
@@ -76,10 +76,11 @@ public class RobotContainer {
     JoystickButton AlgaeIn = new JoystickButton(IpacSide2, 4);
     JoystickButton AlgaeHold = new JoystickButton(IpacSide2, 5);
     JoystickButton AlgaeOut = new JoystickButton(IpacSide2, 6);
-    JoystickButton CloseClimber = new JoystickButton(IpacSide2, 7);
+    JoystickButton CloseClaw = new JoystickButton(IpacSide2, 7);
     //JoystickButton ManualClimb = new JoystickButton(IpacSide2, 13 & 14);
     JoystickButton Climb = new JoystickButton(IpacSide2, 8);
     JoystickButton SetClimber = new JoystickButton(IpacSide2, 9);
+    JoystickButton OpenClaw = new JoystickButton(IpacSide2, 10);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
@@ -168,14 +169,10 @@ public class RobotContainer {
         getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",() -> false, false));
 
         // Aux Button Board
-
-        // If both SetClimb and ActivateClimb are pressed, run UnClimbCommand
-        CloseClimber.whileTrue(new CloseClawCommand(Climber.getInstance()));
-        SetClimber.and(Climb).whileTrue(new UnClimbCommand(Climber.getInstance()));
-
-        // If only ActivateClimb is pressed, run ClimbSequenceCommand
+        CloseClaw.whileTrue(new CloseClawCommand(Climber.getInstance()));
         Climb.whileTrue(new ClimbCommand(Climber.getInstance()));
         SetClimber.whileTrue(new SetClimbCommand(Climber.getInstance()));
+        OpenClaw.whileTrue(new OpenClawCommand(Climber.getInstance()));
 
         // Coral
         CoralIn.whileTrue(new IntakeCommand());

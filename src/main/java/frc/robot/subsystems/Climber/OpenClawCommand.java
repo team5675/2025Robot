@@ -1,18 +1,17 @@
 package frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class CloseClawCommand extends Command {
+public class OpenClawCommand extends Command {
     private final Climber climber;
     
-    public CloseClawCommand(Climber climber) {
+    public OpenClawCommand(Climber climber) {
         this.climber = climber;
         addRequirements(climber); // Locks Climber subsystem
     }
 
     @Override
     public void initialize() {
-        System.out.println("Closing Claw...");
-        climber.clawMotor.setVoltage(ClimberConstants.closeClaw);
+        climber.clawMotor.setVoltage(ClimberConstants.openClaw);
     }
 
     @Override
@@ -22,6 +21,5 @@ public class CloseClawCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Claw Closed.");
     }
 }
