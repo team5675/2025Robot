@@ -16,6 +16,7 @@ public class ClimbCommand extends Command {
         climber.climberMotor.set(0.6);
     }
 
+    
     // @Override
     // public void execute() {
     //     if(!climber.isTripped.getAsBoolean()){

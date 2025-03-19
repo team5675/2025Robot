@@ -17,5 +17,5 @@ public class ClimberConstants {
     public static final double CLAW_CLOSE_TIME = 2.0;
 
     public static final double closeClaw = 7.0;
-    public static final double setClaw = -4.5;
+    public static final double setClaw = -7.0;
 }
