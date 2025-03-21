@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.2326,
-        "y": 5.711
+        "x": 7.1086,
+        "y": 5.7817
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.7640533992796525,
-        "y": 5.712796731478851
+        "x": 6.640053399279653,
+        "y": 5.78349673147885
       },
       "isLocked": false,
       "linkedName": "LB_START"
