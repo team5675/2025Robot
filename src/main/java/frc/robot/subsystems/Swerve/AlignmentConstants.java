@@ -60,7 +60,7 @@ public class AlignmentConstants {
     
     public static final Pose2d REEF_I = new Pose2d(5.2577, 5.0261, IJ);
     //J works
-    public static final Pose2d REEF_J = new Pose2d(4.9627, 5.1784, IJ);
+    public static final Pose2d REEF_J = new Pose2d(4.9607, 5.1771, IJ);
     
     public static final Pose2d REEF_K = new Pose2d(4.00304, 5.1913, KL);
     
