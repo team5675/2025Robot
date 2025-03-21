@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.265,
-        "y": 3.037
+        "x": 5.256,
+        "y": 3.0469
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.384212873862156,
-        "y": 1.499044083224967
+        "x": 4.375212873862156,
+        "y": 1.508944083224967
       },
       "isLocked": false,
       "linkedName": "CORAL_F"
     },
     {
       "anchor": {
-        "x": 1.14639,
-        "y": 0.999603
+        "x": 1.269,
+        "y": 0.944
       },
       "prevControl": {
-        "x": 1.7863672858796285,
-        "y": 1.220212302662036
+        "x": 1.9089772858796283,
+        "y": 1.1646093026620359
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.5,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

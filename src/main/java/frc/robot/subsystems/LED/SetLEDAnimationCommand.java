@@ -1,5 +1,6 @@
 package frc.robot.subsystems.LED;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LED.LED;
 import frc.robot.subsystems.LED.LEDAnimation;
@@ -16,6 +17,7 @@ public class SetLEDAnimationCommand extends Command {
     
     @Override
     public void initialize() {
+        if (DriverStation.isAutonomous()) return;
         try {
             ledSubsystem.setAnimation(animation);
         } catch (Exception e) {

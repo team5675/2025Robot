@@ -32,7 +32,7 @@ public class LEDStateManager extends SubsystemBase {
 
   public final Blink BLINK_RESET;
 
-  private final CustomizableRainbow BASIC_PASTEL;
+  private final CustomizableRainbow DEFAULT;
 
   private final LED ledSubsystem;
 
@@ -49,10 +49,10 @@ public class LEDStateManager extends SubsystemBase {
     updateLEDPatternPeriodic();
 
     BASIC_RAINBOW = new CustomizableRainbow(
-      CustomizableRainbow.RainbowType.PASTEL,
+      CustomizableRainbow.RainbowType.COOL,
       CustomizableRainbow.PatternType.CONTINUOUS,
       CustomizableRainbow.Direction.FORWARD,
-      0.3,
+      0.4,
       1.0
     );
 
@@ -163,8 +163,8 @@ public class LEDStateManager extends SubsystemBase {
         //   true
         // );
         
-    BASIC_PASTEL = new CustomizableRainbow(
-      CustomizableRainbow.RainbowType.NEON,
+    DEFAULT = new CustomizableRainbow(
+      CustomizableRainbow.RainbowType.COOL,
       CustomizableRainbow.PatternType.CONTINUOUS,
       CustomizableRainbow.Direction.FORWARD,
       0.5,
@@ -179,7 +179,7 @@ public class LEDStateManager extends SubsystemBase {
       RainbowShootingLines.DirectionType.RANDOM,
       30, 
       0, 
-      2, 
+      0.5, 
       3, 
       0, 
       false
@@ -320,7 +320,7 @@ public class LEDStateManager extends SubsystemBase {
   // }
 
   public void setDefault() {
-    new SetLEDAnimationCommand(BASIC_PASTEL).schedule();
+    new SetLEDAnimationCommand(DEFAULT).schedule();
   }
 
   public void setDefaultDisabled() {

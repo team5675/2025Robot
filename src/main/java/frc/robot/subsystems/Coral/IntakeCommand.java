@@ -82,16 +82,15 @@ public class IntakeCommand extends Command {
             )
         ).schedule();
 
-        Commands.waitSeconds(2).andThen(Commands.runOnce(() -> LEDStateManager.getInstance().setDefault())).schedule();
-
+        Commands.waitSeconds(1).andThen(Commands.runOnce(() -> LEDStateManager.getInstance().setDefault())).schedule();
     }
 
     @Override
     public boolean isFinished() {
         // This command runs continuously until interrupted
         if (coral.bb1Tripped && coral.bb2Tripped) {
-            Coral.intaking = false;
             if (needsReverse) {
+                Coral.intaking = false;
                 return true;
             } else return false;
         } else {

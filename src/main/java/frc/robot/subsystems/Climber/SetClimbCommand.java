@@ -28,7 +28,7 @@ public class SetClimbCommand extends Command {
                 RainbowPulse.RainbowType.PASTEL_RAINBOW, 
                 0, 
                 1, 
-                1.5,
+                1.3,
                 0
             )
         ).schedule();

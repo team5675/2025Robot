@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3213,
-        "y": 7.16579
+        "x": 7.572945205479453,
+        "y": 1.3579409246575347
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1396759787330115,
-        "y": 6.488733754265116
+        "x": 6.783082012771654,
+        "y": 1.3561178892453767
       },
       "isLocked": false,
-      "linkedName": "CORALSTATION"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.7185,
-        "y": 4.993
+        "x": 5.82418967598424,
+        "y": 1.3579409246575347
       },
       "prevControl": {
-        "x": 2.467302836244044,
-        "y": 6.0878559867458675
+        "x": 6.074182236750667,
+        "y": 1.3598695411161632
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CORAL_L"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "LB",
+  "folder": "RB",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": 180.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
