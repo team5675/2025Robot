@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Coral.Coral;
+import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.SetLEDAnimationCommand;
 
 public class RunElevatorCommand extends Command {
   Elevator elevator;
@@ -23,6 +25,15 @@ public class RunElevatorCommand extends Command {
 
         waitThenMove.schedule(); // Properly schedules the command
     } else {
+      // var position = Elevator.getInstance().ticksEncoder.getPosition();
+
+      // if (position > level.getLevel()) {
+      //   LEDStateManager.getInstance().setElevatorState(ElevatorState.MOVING_DOWN);
+      // } else if (position < level.getLevel()) {
+      //   LEDStateManager.getInstance().setElevatorState(ElevatorState.MOVING_UP);
+      // }
+
+
       elevator.setTarget(level);
     } 
   }
@@ -34,7 +45,17 @@ public class RunElevatorCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    if (level.getName() != "RESET_HEIGHT") { 
+      // Set at target leds
+    } else {
+      new SetLEDAnimationCommand(
+        LEDStateManager.getInstance().BLINK_RESET
+      ).schedule();
 
+      Commands.waitSeconds(1).andThen(
+        Commands.runOnce(() -> LEDStateManager.getInstance().setDefault())
+      ).schedule();
+    }
   }
 
   @Override

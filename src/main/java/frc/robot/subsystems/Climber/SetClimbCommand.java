@@ -1,6 +1,10 @@
 package frc.robot.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.LED.SetLEDAnimationCommand;
+import frc.robot.subsystems.LED.CustomAnimations.Pulse;
+import frc.robot.subsystems.LED.CustomAnimations.RainbowPulse;
+import frc.robot.subsystems.LED.CustomAnimations.CustomizableRainbow.RainbowType;
 
 public class SetClimbCommand extends Command {
     private final Climber climber;
@@ -18,6 +22,16 @@ public class SetClimbCommand extends Command {
         //climber.climberEncoder.setPosition(0);
         climber.climberMotor.set(-0.4);
         // climber.SetTarget(ClimberConstants.setclimberticks);
+
+        new SetLEDAnimationCommand(
+            new RainbowPulse(
+                RainbowPulse.RainbowType.PASTEL_RAINBOW, 
+                0, 
+                1, 
+                1.5,
+                0
+            )
+        ).schedule();
     }
 
     @Override

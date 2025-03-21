@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Elevator.ElevatorLevel;
+import frc.robot.subsystems.LED.LEDStateManager;
 
 public class Elevator extends SubsystemBase {
   public SparkMax motor;
@@ -94,10 +95,10 @@ public class Elevator extends SubsystemBase {
     // }
     if (!bottomBool) { 
       ticksEncoder.setPosition(0); // Reset encoder
-    if (setPoint.getLevel() == ElevatorLevel.RESET_HEIGHT.getLevel()) {
+      if (setPoint.getLevel() == ElevatorLevel.RESET_HEIGHT.getLevel()) {
         motor.set(0); // Ensure motor stops at bottom
+      }
     }
-}
 
     // SmartDashboard.putBoolean("Elevator: Top Tripped", topBool);
     SmartDashboard.putBoolean("Elevator: Bottom Tripped", bottomBool);

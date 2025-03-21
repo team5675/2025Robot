@@ -4,7 +4,14 @@
 
 package frc.robot.subsystems.Algae;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.RGB;
+import frc.robot.subsystems.LED.SetLEDAnimationCommand;
+import frc.robot.subsystems.LED.CustomAnimations.Pulse;
+import frc.robot.subsystems.LED.CustomAnimations.ShootingLines;
+import frc.robot.subsystems.LED.CustomAnimations.SolidColor;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeOutCommand extends Command {
@@ -21,6 +28,15 @@ public class AlgaeOutCommand extends Command {
   @Override
   public void initialize() {
     algae.setIntake(true);
+
+    new SetLEDAnimationCommand(
+      new Pulse(
+        new RGB(Color.kSeaGreen), 
+        0.5, 
+        1, 
+        0.2
+      )
+    ).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,6 +51,8 @@ public class AlgaeOutCommand extends Command {
   public void end(boolean interrupted) {
     algae.setIntake(false);
     algae.setFlywheelSpeed(0);
+
+    LEDStateManager.getInstance().setDefault();
   }
 
   // Returns true when the command should end.
