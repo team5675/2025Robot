@@ -90,7 +90,7 @@ public class RobotContainer {
     public Command pathfindingCommand;
 
     public RobotContainer() {
-        LEDStateManager.getInstance().setDefault();
+        // LEDStateManager.getInstance().setDefault();
 
         NamedCommands.registerCommand("IntakeCommand", new AutoIntakeCommand());
         NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
@@ -197,19 +197,19 @@ public class RobotContainer {
         level4.onTrue(new RunElevatorCommand(ElevatorLevel.L4_HEIGHT));
         ElevatorReset.onTrue(new RunElevatorCommand(ElevatorLevel.RESET_HEIGHT));
         
-        getDriverController().a().onTrue(new SetLEDAnimationCommand(
-            new RainbowShootingLines(
-                RainbowShootingLines.RainbowType.PASTEL_RAINBOW, 
-                RainbowShootingLines.ColorDistribution.PER_LINE, 
-                RainbowShootingLines.DirectionType.FORWARD,
-                10, 
-                0, 
-                0, 
-                1, 
-                0, 
-                true
-            )
-        ));
+        // getDriverController().a().onTrue(new SetLEDAnimationCommand(
+        //     new RainbowShootingLines(
+        //         RainbowShootingLines.RainbowType.PASTEL_RAINBOW, 
+        //         RainbowShootingLines.ColorDistribution.PER_LINE, 
+        //         RainbowShootingLines.DirectionType.FORWARD,
+        //         10, 
+        //         0, 
+        //         0, 
+        //         1, 
+        //         0, 
+        //         true
+        //     )
+        // ));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
