@@ -1,6 +1,12 @@
 package frc.robot.subsystems.Climber;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.RGB;
+import frc.robot.subsystems.LED.SetLEDAnimationCommand;
+import frc.robot.subsystems.LED.CustomAnimations.Glitch;
+import frc.robot.subsystems.LED.CustomAnimations.RainbowPulse;
 
 public class ClimbCommand extends Command {
     private final Climber climber;
@@ -32,6 +38,11 @@ public class ClimbCommand extends Command {
     public void end(boolean interrupted) {
         climber.climberMotor.set(0);
         System.out.println("Climb Complete.");
+
+        new SetLEDAnimationCommand(
+            LEDStateManager.getInstance().STARTING_SHOOTING_LINES
+        ).schedule();
+
         //To Stay up in the air if needed
         //climber.climberMotor.set(0.1);
     }

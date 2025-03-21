@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
@@ -21,6 +17,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Algae.AlgaeInCommand;
 import frc.robot.subsystems.Algae.AlgaeOutCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
+import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.SetLEDAnimationCommand;
+import frc.robot.subsystems.LED.CustomAnimations.RainbowShootingLines;
 import frc.robot.subsystems.Climber.SetClimbCommand;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Coral.IntakeCommand;
@@ -91,6 +90,7 @@ public class RobotContainer {
     public Command pathfindingCommand;
 
     public RobotContainer() {
+        LEDStateManager.getInstance().setDefault();
 
         NamedCommands.registerCommand("IntakeCommand", new AutoIntakeCommand());
         NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
@@ -197,6 +197,20 @@ public class RobotContainer {
         level4.onTrue(new RunElevatorCommand(ElevatorLevel.L4_HEIGHT));
         ElevatorReset.onTrue(new RunElevatorCommand(ElevatorLevel.RESET_HEIGHT));
         
+        getDriverController().a().onTrue(new SetLEDAnimationCommand(
+            new RainbowShootingLines(
+                RainbowShootingLines.RainbowType.PASTEL_RAINBOW, 
+                RainbowShootingLines.ColorDistribution.PER_LINE, 
+                RainbowShootingLines.DirectionType.FORWARD,
+                10, 
+                0, 
+                0, 
+                1, 
+                0, 
+                true
+            )
+        ));
+
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 

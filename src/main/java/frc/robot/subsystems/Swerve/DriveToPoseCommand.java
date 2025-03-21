@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.commands.RumbleCommand;
 import frc.robot.subsystems.Coral.Coral;
+import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.LEDStateManager.LineupState;
 import edu.wpi.first.math.geometry.Pose2d;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
@@ -64,7 +66,8 @@ public class DriveToPoseCommand extends Command {
             pathCommand.cancel();
             System.out.println("DriveToPoseCommand finished.");
             new RumbleCommand().schedule();
-            }
+            LEDStateManager.getInstance().setLineupState(LineupState.LINED_UP);
+        }
     }
 
     /** Updates the target pose dynamically based on AprilTag ID */
@@ -105,6 +108,7 @@ public class DriveToPoseCommand extends Command {
     
             if (distance < 0.05 && angleDifference < 0.7 && !isBarge) { // 5 cm and 0.7 degrees tolerance
                 System.out.println("Already at target pose. No path needed.");
+                LEDStateManager.getInstance().setLineupState(LineupState.LINED_UP);
                 pathCommand = null;
                 return;
             }
@@ -129,12 +133,13 @@ public class DriveToPoseCommand extends Command {
                 pathCommand = AutoBuilder.pathfindThenFollowPath(bargePath, Constants.PathplannerConstants.constraints);
 
             } else {
-
                 PathPlannerPath generatedPath = new PathPlannerPath(waypoints, 
                 Constants.PathplannerConstants.constraints, null, 
                 new GoalEndState(0, targetPose.getRotation()));
                 generatedPath.preventFlipping = true;
                 pathCommand = AutoBuilder.followPath(generatedPath);
+                
+                LEDStateManager.getInstance().setLineupState(LineupState.LINING_UP);
             }
 
             if (pathCommand == null) {

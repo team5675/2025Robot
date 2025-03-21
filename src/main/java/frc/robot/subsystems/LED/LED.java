@@ -1,14 +1,96 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.LED;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class LED extends SubsystemBase {
+  private static final int port1 = 0;
+  private static final int kLength = 90;
+
+  private final AddressableLED led1;
+
+  private final AddressableLEDBuffer ledBuffer;
+  public LEDAnimation currentAnimation = null;
+
+  private double globalBrightness = 1;
+
+  private LED() {
+    led1 = new AddressableLED(port1);
+    led1.setLength(kLength);
+    led1.start();
+
+    ledBuffer = new AddressableLEDBuffer(kLength);
+  }
+
+  /**
+   * Sets the current animation for both LED strips.
+   * This will stop any currently running animation.
+   * 
+   * @param animation The animation to run
+   */
+  public void setAnimation(LEDAnimation animation) {
+    // if (!RobotContainer.getLEDsEnabled()) {
+    //   return;
+    // }
+
+    if (currentAnimation != null) {
+      currentAnimation.end();
+    }
+
+    currentAnimation = animation;
+    if (currentAnimation != null) {
+      currentAnimation.init(this);
+    }
+  }
+
+  public AddressableLEDBuffer getBuffer() {
+    return ledBuffer;
+  }
+
+  public int getLength() {
+    return kLength;
+  }
+
+  @Override
+  public void periodic() {
+    // if (!RobotContainer.getLEDsEnabled()) {
+    //   return;
+    // }
+
+    if (currentAnimation != null) {
+      currentAnimation.execute();
+    }
+
+    applyGlobalBrightness();
+
+    led1.setData(ledBuffer);
+  }
+
+  public void stopPattern() {
+    setAnimation(null);
+  }
+
+  // Global brightness
+  public void setGlobalBrightness(double brightness) {
+    this.globalBrightness = Math.min(1.0, Math.max(0.0, brightness));
+  }
+
+  public double getGlobalBrightness() {
+    return globalBrightness;
+  }
+
+  private void applyGlobalBrightness() {
+    for (int i = 0; i < ledBuffer.getLength(); i++) {
+      int r = (int) (ledBuffer.getRed(i) * globalBrightness);
+      int g = (int) (ledBuffer.getGreen(i) * globalBrightness);
+      int b = (int) (ledBuffer.getBlue(i) * globalBrightness);
+
+      ledBuffer.setRGB(i, r, g, b);
+    }
+  }
+
   private static LED instance;
 
   public static LED getInstance() {
@@ -16,22 +98,5 @@ public class LED extends SubsystemBase {
       instance = new LED();
     }
     return instance;
-  }
-
-  public AddressableLED led;
-  public AddressableLEDBuffer ledBuffer;
-
-  public LED() {
-    led = new AddressableLED(0);
-    ledBuffer = new AddressableLEDBuffer(90);
-    led.setLength(ledBuffer.getLength());
-
-    led.setData(ledBuffer);
-    led.start();
-  }
-  
-  @Override
-  public void periodic() {
-
   }
 }

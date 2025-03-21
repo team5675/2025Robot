@@ -10,8 +10,17 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.RGB;
+import frc.robot.subsystems.LED.SetLEDAnimationCommand;
+import frc.robot.subsystems.LED.CustomAnimations.Alert;
+import frc.robot.subsystems.LED.CustomAnimations.Glitch;
+import frc.robot.subsystems.LED.CustomAnimations.RainbowGlitch;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -38,7 +47,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    LEDStateManager.getInstance().setDefaultDisabled();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -53,13 +64,17 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    LEDStateManager.getInstance().setDefaultDisabled();
   }
 
   @Override
   public void autonomousPeriodic() {}
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+
+  }
 
   @Override
   public void teleopInit() {
