@@ -21,7 +21,7 @@ public class SetLEDAnimationCommand extends Command {
         try {
             ledSubsystem.setAnimation(animation);
         } catch (Exception e) {
-            System.out.println("");
+            // System.out.println("");
         }
     }
     

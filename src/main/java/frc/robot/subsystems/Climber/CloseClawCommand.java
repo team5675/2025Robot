@@ -11,7 +11,7 @@ public class CloseClawCommand extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Closing Claw...");
+        // System.out.println("Closing Claw...");
         climber.clawMotor.setVoltage(ClimberConstants.closeClaw);
     }
 
@@ -22,6 +22,6 @@ public class CloseClawCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Claw Closed.");
+        // System.out.println("Claw Closed.");
     }
 }

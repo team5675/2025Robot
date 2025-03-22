@@ -1,7 +1,7 @@
 package frc.robot.subsystems.Elevator;
 
 public enum ElevatorLevel {
-    L4_HEIGHT("L4_HEIGHT", 92),
+    L4_HEIGHT("L4_HEIGHT", 91.5),
     L3_HEIGHT("L3_HEIGHT", 48),
     L2_HEIGHT("L2_HEIGHT", 19),
     L1_HEIGHT("L1_HEIGHT", 4),

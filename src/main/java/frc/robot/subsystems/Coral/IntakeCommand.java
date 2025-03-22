@@ -25,7 +25,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("I am in the command");
+        // System.out.println("I am in the command");
         Coral.intaking = true;
 
         // Set the led pattern to shooting lines

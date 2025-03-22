@@ -38,7 +38,7 @@ public class DriveToPoseCommand extends Command {
     @Override
     public void initialize() {
         isBarge = direction.equals("MidBarge") || direction.equals("LeftBarge") || direction.equals("RightBarge");
-        System.out.println("Starting DriveToPoseCommand...");
+        // System.out.println("Starting DriveToPoseCommand...");
         updateTargetPose();
         startPath();
     }
@@ -64,7 +64,7 @@ public class DriveToPoseCommand extends Command {
     public void end(boolean interrupted) {
         if (pathCommand != null) {
             pathCommand.cancel();
-            System.out.println("DriveToPoseCommand finished.");
+            // System.out.println("DriveToPoseCommand finished.");
             new RumbleCommand().schedule();
             LEDStateManager.getInstance().setLineupState(LineupState.LINED_UP);
         }
@@ -74,7 +74,7 @@ public class DriveToPoseCommand extends Command {
     private void updateTargetPose() {
         
         if (targetPose != null && drivetrain.m_poseEstimator.getEstimatedPosition().equals(targetPose) && !isBarge) {
-            System.out.println("Already at target pose. No path needed.");
+            // System.out.println("Already at target pose. No path needed.");
             pathCommand = null; 
             return;
         }
@@ -87,7 +87,7 @@ public class DriveToPoseCommand extends Command {
         cache = getTargetPose((int) drivetrain.aprilTagCache);
         
         if (aprilTagId == -1) {
-            System.out.println("No valid AprilTag detected. Defaulting to last tag seen");
+            // System.out.println("No valid AprilTag detected. Defaulting to last tag seen");
             targetPose = cache;
         } else {
             targetPose = getTargetPose((int) aprilTagId);
@@ -107,7 +107,7 @@ public class DriveToPoseCommand extends Command {
             double angleDifference = Math.abs(currentPose.getRotation().getDegrees() - targetPose.getRotation().getDegrees());
     
             if (distance < 0.05 && angleDifference < 0.7 && !isBarge) { // 5 cm and 0.7 degrees tolerance
-                System.out.println("Already at target pose. No path needed.");
+                // System.out.println("Already at target pose. No path needed.");
                 LEDStateManager.getInstance().setLineupState(LineupState.LINED_UP);
                 pathCommand = null;
                 return;
@@ -116,7 +116,7 @@ public class DriveToPoseCommand extends Command {
             List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
     
             if (waypoints.isEmpty()) {
-                System.out.println("No waypoints generated. Skipping path.");
+                // System.out.println("No waypoints generated. Skipping path.");
                 pathCommand = null;
                 return;
             }
@@ -125,7 +125,7 @@ public class DriveToPoseCommand extends Command {
                 PathPlannerPath bargePath = getBargePath();
                 
                     if (bargePath == null) {
-                        System.out.println("Error: Barge path is null. Skipping execution.");
+                        // System.out.println("Error: Barge path is null. Skipping execution.");
                         pathCommand = null;
                         return; 
                     }
@@ -143,7 +143,7 @@ public class DriveToPoseCommand extends Command {
             }
 
             if (pathCommand == null) {
-                System.out.println("PathPlanner failed to generate a command. Skipping execution.");
+                // System.out.println("PathPlanner failed to generate a command. Skipping execution.");
                 return;
             }
     
@@ -168,7 +168,7 @@ public class DriveToPoseCommand extends Command {
                 case 22, 9 -> AlignmentConstants.REEF_E;
                 case 17, 8 -> AlignmentConstants.REEF_C;
                 default -> {
-                    System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
+                    // System.out.println("Unknown AprilTag ID for left: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
                 }
             };
@@ -180,7 +180,7 @@ public class DriveToPoseCommand extends Command {
                 case 22, 9 -> AlignmentConstants.REEF_F;
                 case 17, 8 -> AlignmentConstants.REEF_D;
                 default -> {
-                    System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
+                    // System.out.println("Unknown AprilTag ID for right: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
                 }
             };
@@ -192,7 +192,7 @@ public class DriveToPoseCommand extends Command {
                 case 22, 9 -> AlignmentConstants.ALGAE_EF;
                 case 17, 8 -> AlignmentConstants.ALGAE_CD;
                 default -> {
-                    System.out.println("Unknown AprilTag ID for algae: " + aprilTagId);
+                    // System.out.println("Unknown AprilTag ID for algae: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
                 }
             };
@@ -202,7 +202,7 @@ public class DriveToPoseCommand extends Command {
                 case 13, 1 -> AlignmentConstants.CORAL3LEFT;
                 case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
-                    System.out.println("Unknown AprilTag ID for Left Coral Station: " + aprilTagId);
+                    // System.out.println("Unknown AprilTag ID for Left Coral Station: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
                 }
             };
@@ -211,7 +211,7 @@ public class DriveToPoseCommand extends Command {
                 case 13, 1 -> AlignmentConstants.CORAL3RIGHT;
                 case 3, 16 -> AlignmentConstants.PROCESSOR;
                 default -> {
-                    System.out.println("Unknown AprilTag ID for Left Coral Station: " + aprilTagId);
+                    // System.out.println("Unknown AprilTag ID for Left Coral Station: " + aprilTagId);
                     yield drivetrain.m_poseEstimator.getEstimatedPosition();
                 }
             };

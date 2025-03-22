@@ -16,7 +16,7 @@ public class SetClimbCommand extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Set Climb Command Ready");
+        // System.out.println("Set Climb Command Ready");
         //climber.clawMotor.setVoltage(0);
         climber.clawMotor.setVoltage(ClimberConstants.closeClaw);
         //climber.climberEncoder.setPosition(0);
@@ -44,7 +44,7 @@ public class SetClimbCommand extends Command {
         //     System.out.println("We waited 1.5 seconds");
         // }).schedule();
 
-        System.out.println("Set Climb Command Finished");
+        // System.out.println("Set Climb Command Finished");
     }
 
     @Override

@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,6 +64,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Boolean useReefTags = true;
 
     private String limelightName;
+
+    private boolean isAutoFilterConfigured = false;
+    private boolean isTeleopFilterConfigured = false;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -312,6 +316,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
+
+    private int[] validUpperAprilTagsAuto = {2, 1, 13, 12};
+    private int[] validUpperAprilTagsTeleop =  {13, 12, 2, 1, 4, 5, 14, 15};
+
+    private double periodicInitTimestamp;
+    private double periodicEndTimestamp;
+
     @Override
     public void periodic() {
         /*
@@ -321,6 +332,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * Otherwise, only check and apply the operator perspective if the DS is disabled.
          * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
          */
+        periodicInitTimestamp = Timer.getFPGATimestamp();
+
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
@@ -365,12 +378,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName); 
         }
 
-        if(DriverStation.isAutonomousEnabled() || DriverStation.isDisabled()){
-            int[] list = {2, 1, 13, 12};
-            LimelightHelpers.SetFiducialIDFiltersOverride(Constants.LimelightConstants.upperLimelightName, list );
-        } else {
-            int[] list = {13, 12, 2, 1, 4, 5, 14, 15};
-            LimelightHelpers.SetFiducialIDFiltersOverride(Constants.LimelightConstants.upperLimelightName, list );
+
+        if((DriverStation.isAutonomousEnabled() || DriverStation.isDisabled()) && !isAutoFilterConfigured){
+            // int[] list = {2, 1, 13, 12};
+            LimelightHelpers.SetFiducialIDFiltersOverride(Constants.LimelightConstants.upperLimelightName, validUpperAprilTagsAuto);
+
+            isAutoFilterConfigured = true;
+        } else if(DriverStation.isTeleopEnabled() && !isTeleopFilterConfigured) {
+            // int[] list = {13, 12, 2, 1, 4, 5, 14, 15};
+            LimelightHelpers.SetFiducialIDFiltersOverride(Constants.LimelightConstants.upperLimelightName, validUpperAprilTagsTeleop);
+
+            isTeleopFilterConfigured = true;
         }
 
        // Only run vision updates if we see a tag
@@ -405,6 +423,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
+        periodicEndTimestamp = Timer.getFPGATimestamp();
 
         //Debug Values
         SmartDashboard.putNumber("Robot Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
@@ -413,6 +432,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putBoolean("IsReefLimelight", useReefTags);
+        SmartDashboard.putNumber("Periodic ExecutionTime", periodicEndTimestamp - periodicInitTimestamp);
         
     }
 

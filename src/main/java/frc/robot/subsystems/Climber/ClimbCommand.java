@@ -18,7 +18,7 @@ public class ClimbCommand extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Climbing Up...");
+        // System.out.println("Climbing Up...");
         climber.climberMotor.set(0.6);
     }
 
@@ -37,7 +37,7 @@ public class ClimbCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         climber.climberMotor.set(0);
-        System.out.println("Climb Complete.");
+        // System.out.println("Climb Complete.");
 
         new SetLEDAnimationCommand(
             LEDStateManager.getInstance().STARTING_SHOOTING_LINES

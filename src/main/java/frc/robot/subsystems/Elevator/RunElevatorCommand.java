@@ -48,6 +48,7 @@ public class RunElevatorCommand extends Command {
     if (level.getName() != "RESET_HEIGHT") { 
       // Set at target leds
     } else {
+      if (DriverStation.isAutonomous()) return; // temp 
       new SetLEDAnimationCommand(
         LEDStateManager.getInstance().BLINK_RESET
       ).schedule();

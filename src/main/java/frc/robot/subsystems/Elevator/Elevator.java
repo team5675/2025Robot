@@ -82,10 +82,13 @@ public class Elevator extends SubsystemBase {
     sparkPidController.setReference(0, ControlType.kPosition);
   }
 
+  boolean bottomBool;
+
   @Override
   public void periodic() {
+    bottomBool = bottomTrigger.getAsBoolean();
     // flip - so false = tripped
-    var bottomBool = bottomTrigger.getAsBoolean();
+    
     // var topBool = topTrigger.getAsBoolean();
 
     // If we are resetting and the limit switch is hit

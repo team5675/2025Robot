@@ -116,7 +116,7 @@ public class Algae extends SubsystemBase {
   
   //spins the wheels based on input speed
   public void setFlywheelSpeed(double speed) {
-    System.out.println("Spinning Wheel!");
+    // System.out.println("Spinning Wheel!");
     wheelsMotor.set(speed);
   }
 
