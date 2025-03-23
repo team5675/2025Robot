@@ -51,7 +51,7 @@ public class Climber extends SubsystemBase {
         
         ClimberForwardlimit = new DigitalInput(ClimberConstants.ClimbLimitChannel);
         SetLimitSwitch = new DigitalInput(ClimberConstants.SetClimbLimitChannel);
-        isClimbLimitSwitchTripped = new Trigger(SetLimitSwitch::get);
+        isClimbLimitSwitchTripped = new Trigger(SetLimitSwitch::get); 
         isSetLimitSwitchTripped = new Trigger(ClimberForwardlimit::get);
     }
 

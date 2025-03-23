@@ -1,6 +1,10 @@
 package frc.robot.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.LED.SetLEDAnimationCommand;
+import frc.robot.subsystems.LED.CustomAnimations.Pulse;
+import frc.robot.subsystems.LED.CustomAnimations.RainbowPulse;
+import frc.robot.subsystems.LED.CustomAnimations.CustomizableRainbow.RainbowType;
 
 public class SetClimbCommand extends Command {
     private final Climber climber;
@@ -12,12 +16,22 @@ public class SetClimbCommand extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Set Climb Command Ready");
+        // System.out.println("Set Climb Command Ready");
         //climber.clawMotor.setVoltage(0);
         climber.clawMotor.setVoltage(ClimberConstants.closeClaw);
         //climber.climberEncoder.setPosition(0);
         climber.climberMotor.set(-0.4);
         // climber.SetTarget(ClimberConstants.setclimberticks);
+
+        new SetLEDAnimationCommand(
+            new RainbowPulse(
+                RainbowPulse.RainbowType.PASTEL_RAINBOW, 
+                0, 
+                1, 
+                1.3,
+                0
+            )
+        ).schedule();
     }
 
     @Override
@@ -30,7 +44,7 @@ public class SetClimbCommand extends Command {
         //     System.out.println("We waited 1.5 seconds");
         // }).schedule();
 
-        System.out.println("Set Climb Command Finished");
+        // System.out.println("Set Climb Command Finished");
     }
 
     @Override

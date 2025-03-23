@@ -1,9 +1,18 @@
 package frc.robot.subsystems.Coral;
 
 import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.RGB;
+import frc.robot.subsystems.LED.SetLEDAnimationCommand;
+import frc.robot.subsystems.LED.CustomAnimations.Pulse;
+import frc.robot.subsystems.LED.CustomAnimations.ShootingLines;
+import frc.robot.subsystems.LED.CustomAnimations.SolidColor;
 
 public class IntakeCommand extends Command {
 
@@ -16,8 +25,21 @@ public class IntakeCommand extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("I am in the command");
+        // System.out.println("I am in the command");
         Coral.intaking = true;
+
+        // Set the led pattern to shooting lines
+        // new SetLEDAnimationCommand(
+        //     new ShootingLines(
+        //         new RGB(Color.kHotPink),
+        //         false,
+        //         20,
+        //         0,
+        //         0,
+        //         2,
+        //         true
+        //     )
+        // ).schedule();
     }
 
     @Override
@@ -50,14 +72,25 @@ public class IntakeCommand extends Command {
     public void end(boolean interrupted) {
         // Stop the motor when the command ends
         coral.motor.set(0);
+
+        new SetLEDAnimationCommand(
+            new Pulse(
+                new RGB(Color.kHotPink),
+                0.0,
+                1.0,
+                0.4
+            )
+        ).schedule();
+
+        Commands.waitSeconds(1).andThen(Commands.runOnce(() -> LEDStateManager.getInstance().setDefault())).schedule();
     }
 
     @Override
     public boolean isFinished() {
         // This command runs continuously until interrupted
         if (coral.bb1Tripped && coral.bb2Tripped) {
-            Coral.intaking = false;
             if (needsReverse) {
+                Coral.intaking = false;
                 return true;
             } else return false;
         } else {

@@ -50,6 +50,7 @@ public class Coral extends SubsystemBase {
     SmartDashboard.putBoolean("Beam Break 1", bb1Tripped);
     SmartDashboard.putBoolean("Beam Break 2", bb2Tripped);
     SmartDashboard.putBoolean("Intaking", intaking);
+    SmartDashboard.putBoolean("Intake: Clear", clearToMove());
   }
 
   public static Command PlaceCommand() {
