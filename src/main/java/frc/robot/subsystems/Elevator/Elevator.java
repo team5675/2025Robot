@@ -33,14 +33,12 @@ public class Elevator extends SubsystemBase {
   private SparkClosedLoopController sparkPidController;
 
   private DigitalInput bottomLimitSwitch;
-  // private DigitalInput topLimitSwitch;
   public Trigger bottomTrigger;
-  // public Trigger topTrigger;
-
-  // SparkAbsoluteEncoder angleEncoder;
   public RelativeEncoder ticksEncoder;
 
   public ElevatorLevel setPoint = ElevatorLevel.RESET_HEIGHT;
+
+  private boolean hasReset = false;
 
   public Elevator() {
     motor = new SparkMax(ElevatorConstants.motorID, MotorType.kBrushless);
@@ -96,14 +94,15 @@ public class Elevator extends SubsystemBase {
     //   // motor.set(0);
     //   ticksEncoder.setPosition(0);
     // }
-    if (!bottomBool) { 
+    if (!bottomBool && setPoint.getLevel() == ElevatorLevel.RESET_HEIGHT.getLevel() && !hasReset) { 
       ticksEncoder.setPosition(0); // Reset encoder
-      if (setPoint.getLevel() == ElevatorLevel.RESET_HEIGHT.getLevel()) {
-        motor.set(0); // Ensure motor stops at bottom
-      }
+      motor.set(0); //Stop motor for safety
+      hasReset = true;
+    }
+    else if (bottomBool) {
+        hasReset = false; // Reset flag when limit switch is un-tripped
     }
 
-    // SmartDashboard.putBoolean("Elevator: Top Tripped", topBool);
     SmartDashboard.putBoolean("Elevator: Bottom Tripped", bottomBool);
     SmartDashboard.putNumber("Elevator: Current", motor.getOutputCurrent());
     SmartDashboard.putNumber("Elevator: Motor Output", motor.getAppliedOutput());
