@@ -61,12 +61,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public double aprilTagCache = -1;
 
-    public Boolean useReefTags = true;
-
     private String limelightName;
 
-    private boolean isAutoFilterConfigured = false;
-    private boolean isTeleopFilterConfigured = false;
+    private double periodicInitTimestamp;
+    private double periodicEndTimestamp;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -161,11 +159,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             this.getState().Pose
         );
 
-        
         this.getPigeon2().reset();
 
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
+
+        limelightName = Constants.LimelightConstants.lowerLimelightName;
 
         // LimelightHelpers.setCameraPose_RobotSpace(Constants.LimelightConstants.lowerLimelightName, Constants.LimelightConstants.limelightForward,
         // Constants.LimelightConstants.limelightSide,Constants.LimelightConstants.limelightUp, Constants.LimelightConstants.limelightRoll,
@@ -209,11 +208,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
-
+        limelightName = Constants.LimelightConstants.lowerLimelightName;
        
         this.getPigeon2().reset();
-
-        
     }
 
     /**
@@ -261,11 +258,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         this.m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
-
+        limelightName = Constants.LimelightConstants.lowerLimelightName;
        
        this.getPigeon2().reset();
-
-       
     }
 
     /**
@@ -316,13 +311,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
-
-    private int[] validUpperAprilTagsAuto = {2, 1, 13, 12};
-    private int[] validUpperAprilTagsTeleop =  {13, 12, 2, 1, 4, 5, 14, 15};
-
-    private double periodicInitTimestamp;
-    private double periodicEndTimestamp;
-
     @Override
     public void periodic() {
         /*
@@ -347,80 +335,30 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
         m_poseEstimator.update(this.getPigeon2().getRotation2d(), this.getState().ModulePositions);
 
-        //Pose Estimation using AprilTags
-
         double redAllianceYaw = this.getPigeon2().getYaw().getValueAsDouble();
 
         // If on Red Alliance add 180° to the yaw
         if(DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue) {
             redAllianceYaw += 180;
         }
-        //redAllianceYaw = MathUtil.inputModulus(redAllianceYaw, -180, 180);
-        if(useReefTags){
-            limelightName = Constants.LimelightConstants.lowerLimelightName;
-        } else {
-            limelightName = Constants.LimelightConstants.upperLimelightName;
-        }
-        
+        //Pose Estimation using AprilTags
         LimelightHelpers.SetRobotOrientation(
             limelightName,
             redAllianceYaw,
             0, 0, 0, 0, 0
         );
-        // LimelightHelpers.SetIMUMode(Constants.LimelightConstants.lowerLimelightName, 0);
-        LimelightHelpers.PoseEstimate upperLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.upperLimelightName);
-        LimelightHelpers.PoseEstimate lowerLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName);
+        LimelightHelpers.PoseEstimate limelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
 
-        LimelightHelpers.PoseEstimate lastValidPose = null;
-
-        //Cache the AprilTag ID Coral Only
-        if(LimelightHelpers.getTV(Constants.LimelightConstants.lowerLimelightName) && lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) {
-            aprilTagCache = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName); 
+        //Cache the AprilTag ID
+        if(LimelightHelpers.getTV(limelightName) && limelightEstimate != null && limelightEstimate.tagCount > 0) {
+            aprilTagCache = LimelightHelpers.getFiducialID(limelightName);
         }
 
-
-        if((DriverStation.isAutonomousEnabled() || DriverStation.isDisabled()) && !isAutoFilterConfigured){
-            // int[] list = {2, 1, 13, 12};
-            LimelightHelpers.SetFiducialIDFiltersOverride(Constants.LimelightConstants.upperLimelightName, validUpperAprilTagsAuto);
-
-            isAutoFilterConfigured = true;
-        } else if(DriverStation.isTeleopEnabled() && !isTeleopFilterConfigured) {
-            // int[] list = {13, 12, 2, 1, 4, 5, 14, 15};
-            LimelightHelpers.SetFiducialIDFiltersOverride(Constants.LimelightConstants.upperLimelightName, validUpperAprilTagsTeleop);
-
-            isTeleopFilterConfigured = true;
+        if (limelightEstimate != null && limelightEstimate.tagCount > 0) {
+            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
+            m_poseEstimator.addVisionMeasurement(limelightEstimate.pose, limelightEstimate.timestampSeconds);
         }
 
-       // Only run vision updates if we see a tag
-        if ((lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) ||
-            (upperLimelightEstimate != null && upperLimelightEstimate.tagCount > 0)) {
-
-            LimelightHelpers.PoseEstimate bestEstimate;
-            try {
-                bestEstimate = selectBestEstimate(upperLimelightEstimate, lowerLimelightEstimate);
-            } catch (Exception ex) {
-                bestEstimate = null;
-                DriverStation.reportError("Failed to get Best Estimate", ex.getStackTrace());
-            }
-
-            if (bestEstimate != null && bestEstimate.tagCount > 0) {
-                lastValidPose = bestEstimate;
-            }
-            // If it's updating to an older position, use && lastValidPose.timestampSeconds > Timer.getFPGATimestamp() - 0.5
-            if (lastValidPose != null) {
-                m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
-                m_poseEstimator.addVisionMeasurement(lastValidPose.pose, lastValidPose.timestampSeconds);
-            }
-        }
-        //Switch to only one limelight for pose estimation
-        // LimelightHelpers.PoseEstimate lowerLimelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.LimelightConstants.lowerLimelightName);
-
-        // if (lowerLimelightEstimate != null && lowerLimelightEstimate.tagCount > 0) {
-        //     m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 0.7));
-        //     m_poseEstimator.addVisionMeasurement(lowerLimelightEstimate.pose, lowerLimelightEstimate.timestampSeconds);
-        // }
-
-        
         m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
         periodicEndTimestamp = Timer.getFPGATimestamp();
@@ -431,7 +369,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("CacheID", aprilTagCache);
         SmartDashboard.putNumber("Robot X", this.m_poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Robot Y", this.m_poseEstimator.getEstimatedPosition().getY());
-        SmartDashboard.putBoolean("IsReefLimelight", useReefTags);
         SmartDashboard.putNumber("Periodic ExecutionTime", periodicEndTimestamp - periodicInitTimestamp);
         
     }
@@ -484,39 +421,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
         );
     }
-    private LimelightHelpers.PoseEstimate selectBestEstimate(LimelightHelpers.PoseEstimate upper, LimelightHelpers.PoseEstimate lower) {
-        
-        // Case: Both are null, return null
-        if ((upper == null || upper.tagCount == 0) && (lower == null || lower.tagCount == 0)) {
-            return null;
-        }
-
-         if (upper.avgTagDist > 3 && lower.avgTagDist > 3) {
-            return null; // Use odometry-only if no Limelight sees a tag within 3m
-        }
-
-        // Case: One is null or has no valid tags, return the other
-        if (upper == null || upper.tagCount == 0) {
-            useReefTags = true;
-            return lower;
-        }
-        if (lower == null || lower.tagCount == 0) {
-            useReefTags = false;
-            return upper;
-        }
-
-        // Case: Favor closer estimate
-        if (upper.avgTagDist < lower.avgTagDist) {
-            useReefTags = false;
-            return upper;
-        } 
-        if (lower.avgTagDist < upper.avgTagDist) {
-            useReefTags = true;
-            return lower;
-        }
-
-        // Case: Same distance, use most recent timestamp
-        return (upper.timestampSeconds > lower.timestampSeconds) ? upper : lower;
+    
+    public void toggleLimelightSource() {
+    if (limelightName.equals(Constants.LimelightConstants.lowerLimelightName)) {
+        limelightName = Constants.LimelightConstants.upperLimelightName;
+    } else {
+        limelightName = Constants.LimelightConstants.lowerLimelightName;
     }
 
+    System.out.println("Switched Limelight to: " + limelightName);
+    }
 }
