@@ -78,16 +78,12 @@ public class DriveToPoseCommand extends Command {
             pathCommand = null; 
             return;
         }
-        if ((!useReefTagsSupplier.get()) && !isAlgae) {  
-            aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.upperLimelightName);
-        } else {
-            aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
-        }
+       
+        aprilTagId = LimelightHelpers.getFiducialID(Constants.LimelightConstants.lowerLimelightName);
 
         cache = getTargetPose((int) drivetrain.aprilTagCache);
         
         if (aprilTagId == -1) {
-            // System.out.println("No valid AprilTag detected. Defaulting to last tag seen");
             targetPose = cache;
         } else {
             targetPose = getTargetPose((int) aprilTagId);

@@ -167,6 +167,7 @@ public class RobotContainer {
         getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", () -> false, false));
         getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",() -> false, false));
         getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",() -> false, false));
+        getDriverController().povDown().onTrue(Commands.run(() -> drivetrain.toggleLimelightSource()));
 
         // Aux Button Board
         CloseClaw.whileTrue(new CloseClawCommand(Climber.getInstance()));
