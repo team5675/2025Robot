@@ -17,6 +17,7 @@ public class AlignmentConstants {
     private static final Rotation2d BARGE = new Rotation2d(Math.toRadians(180));
     private static final Rotation2d PROCESSORANGLE = new Rotation2d(Math.toRadians(-90));
 
+    //Home Locations
     public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
    
     public static final Pose2d REEF_B = new Pose2d(3.245, 3.821, AB);
