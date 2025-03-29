@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3213,
-        "y": 7.16579
+        "x": 1.5991214554398139,
+        "y": 7.38347583912037
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1396759787330115,
-        "y": 6.488733754265116
+        "x": 1.8773542390046285,
+        "y": 7.088472222222221
       },
       "isLocked": false,
       "linkedName": "CORALSTATION"
@@ -20,8 +20,8 @@
         "y": 5.01
       },
       "prevControl": {
-        "x": 2.4558028362440436,
-        "y": 6.104855986745867
+        "x": 3.236606987847221,
+        "y": 5.552718098958333
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,12 +29,26 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.8,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 2.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 4.6,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -50,5 +64,5 @@
     "velocity": 0,
     "rotation": -54.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

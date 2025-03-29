@@ -404,6 +404,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
+        
     }
 
     public void driveApplySpeeds(double xVelocity, double yVelocity, double angularVelocity) {
@@ -421,7 +422,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
         );
     }
-    
+
     public void toggleLimelightSource() {
     if (limelightName.equals(Constants.LimelightConstants.lowerLimelightName)) {
         limelightName = Constants.LimelightConstants.upperLimelightName;

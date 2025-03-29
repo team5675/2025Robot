@@ -16,6 +16,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -30,6 +31,7 @@ import frc.robot.subsystems.LED.LEDStateManager;
 public class Elevator extends SubsystemBase {
   public SparkMax motor;
   public SparkMaxConfig motorConfig;
+  public MAXMotionConfig maxMotionConfig;
   private SparkClosedLoopController sparkPidController;
 
   private DigitalInput bottomLimitSwitch;
@@ -43,25 +45,25 @@ public class Elevator extends SubsystemBase {
   public Elevator() {
     motor = new SparkMax(ElevatorConstants.motorID, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
+    maxMotionConfig = new MAXMotionConfig();
 
     sparkPidController = motor.getClosedLoopController();
 
     ticksEncoder = motor.getEncoder();
 
-    motorConfig.smartCurrentLimit(39, 39)
+    motorConfig.smartCurrentLimit(30, 35)
         .voltageCompensation(12)
         .idleMode(IdleMode.kBrake)
         .closedLoopRampRate(0.15);
 
     motorConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(ElevatorConstants.motorP, ElevatorConstants.motorI, ElevatorConstants.motorD, ElevatorConstants.motorff);
-    // motorConfig.closedLoop.maxMotion
-    // .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal)
-    // .maxAcceleration(5000.0)
-    // .maxVelocity(4000.0)
-    // .allowedClosedLoopError(.1);
-
+        .p(ElevatorConstants.motorP).i(ElevatorConstants.motorI).d(ElevatorConstants.motorD).velocityFF(0).maxOutput(1).minOutput(-1)
+        .maxMotion.maxVelocity(5000.0)
+        .maxAcceleration(5000.0)
+        .allowedClosedLoopError(.5);
+    
+        
     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
     bottomLimitSwitch = new DigitalInput(ElevatorConstants.bottomLimitSwitchChannel);
@@ -73,7 +75,7 @@ public class Elevator extends SubsystemBase {
 
   public void setTarget(ElevatorLevel level) {
     setPoint = level;
-    sparkPidController.setReference(level.getLevel(), ControlType.kPosition);
+    sparkPidController.setReference(level.getLevel(), ControlType.kMAXMotionPositionControl);
   }
 
   public void reset() {

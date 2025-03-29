@@ -5,6 +5,8 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
@@ -216,6 +218,15 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        PathPlannerPath path;
+        try{
+            path = PathPlannerPath.fromPathFile("PID Test");
+            if(autoChooser.getSelected().equals("PID Test")){
+            AutoBuilder.resetOdom(path.getStartingDifferentialPose());
+        }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return autoChooser.getSelected();
     }
 }
