@@ -5,8 +5,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,11 +17,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Algae.AlgaeInCommand;
 import frc.robot.subsystems.Algae.AlgaeOutCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
-import frc.robot.subsystems.LED.LEDAnimation;
 import frc.robot.subsystems.LED.LEDStateManager;
-import frc.robot.subsystems.LED.LEDStateManager.LineupState;
 import frc.robot.subsystems.LED.SetLEDAnimationCommand;
-import frc.robot.subsystems.LED.CustomAnimations.RainbowShootingLines;
 import frc.robot.subsystems.Climber.SetClimbCommand;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.Coral.IntakeCommand;
@@ -37,7 +32,6 @@ import frc.robot.subsystems.Climber.OpenClawCommand;
 import frc.robot.subsystems.Elevator.ElevatorLevel;
 import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.DriveToPoseCommand;
-import frc.robot.subsystems.Swerve.LimelightHelpers;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
 
@@ -80,21 +74,16 @@ public class RobotContainer {
     JoystickButton AlgaeHold = new JoystickButton(IpacSide2, 5);
     JoystickButton AlgaeOut = new JoystickButton(IpacSide2, 6);
     JoystickButton CloseClaw = new JoystickButton(IpacSide2, 7);
-    //JoystickButton ManualClimb = new JoystickButton(IpacSide2, 13 & 14);
     JoystickButton Climb = new JoystickButton(IpacSide2, 8);
     JoystickButton SetClimber = new JoystickButton(IpacSide2, 9);
     JoystickButton OpenClaw = new JoystickButton(IpacSide2, 10);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
-
  /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
-    public Command pathfindingCommand;
-
     public RobotContainer() {
-        // LEDStateManager.getInstance().setDefault();
 
         NamedCommands.registerCommand("IntakeCommand", new AutoIntakeCommand());
         NamedCommands.registerCommand("PlaceCommand", new PlaceCommand());
@@ -108,11 +97,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("AlgaeIn", new AlgaeInCommand());
         NamedCommands.registerCommand("AlgaeOut", new AlgaeOutCommand());
         NamedCommands.registerCommand("AlgaeHold", Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0.1)));
-        // NamedCommands.registerCommand("LEDCommand", new SetLEDAnimationCommand(LEDAnimation.));
+        NamedCommands.registerCommand("LEDCommand", new SetLEDAnimationCommand(LEDStateManager.getInstance().PULSE_GREEN_LINEUPDONE));
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
-
 
         configureBindings();
     }
@@ -129,7 +117,6 @@ public class RobotContainer {
             )
         ); } else {
 
-        
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -140,18 +127,9 @@ public class RobotContainer {
                     .withRotationalRate(-getDriverController().getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         ); }
-
-        // getDriverController().b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-getDriverController().getLeftY(), -getDriverController().getLeftX()))
-        // ));
        
-
         // Reset the field-centric heading on left bumper press and resets gyro on b button press
        getDriverController().b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-       getDriverController().x().onTrue(drivetrain.runOnce(() -> {
-            drivetrain.getPigeon2().setYaw(0);
-            LimelightHelpers.SetRobotOrientation(Constants.LimelightConstants.lowerLimelightName, 
-            0, 0, 0, 0,0,0); }));
 
         // Auto Lineups
         getDriverController().leftTrigger().and(getDriverController().rightTrigger().negate())
@@ -172,7 +150,6 @@ public class RobotContainer {
         getDriverController().povUp().whileTrue(new DriveToPoseCommand(drivetrain, "MidBarge", () -> false, false));
         getDriverController().povLeft().whileTrue(new DriveToPoseCommand(drivetrain, "LeftBarge",() -> false, false));
         getDriverController().povRight().whileTrue(new DriveToPoseCommand(drivetrain, "RightBarge",() -> false, false));
-        getDriverController().povDown().onTrue(Commands.run(() -> drivetrain.toggleLimelightSource()));
 
         // Aux Button Board
         CloseClaw.whileTrue(new CloseClawCommand(Climber.getInstance()));
@@ -202,34 +179,11 @@ public class RobotContainer {
         level3.onTrue(new RunElevatorCommand(ElevatorLevel.L3_HEIGHT));
         level4.onTrue(new RunElevatorCommand(ElevatorLevel.L4_HEIGHT));
         ElevatorReset.onTrue(new RunElevatorCommand(ElevatorLevel.RESET_HEIGHT));
-        
-        // getDriverController().a().onTrue(new SetLEDAnimationCommand(
-        //     new RainbowShootingLines(
-        //         RainbowShootingLines.RainbowType.PASTEL_RAINBOW, 
-        //         RainbowShootingLines.ColorDistribution.PER_LINE, 
-        //         RainbowShootingLines.DirectionType.FORWARD,
-        //         10, 
-        //         0, 
-        //         0, 
-        //         1, 
-        //         0, 
-        //         true
-        //     )
-        // ));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
-        PathPlannerPath path;
-        try{
-            path = PathPlannerPath.fromPathFile("PID Test");
-            if(autoChooser.getSelected().equals("PID Test")){
-            AutoBuilder.resetOdom(path.getStartingDifferentialPose());
-        }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
         return autoChooser.getSelected();
     }
 }

@@ -1,19 +1,12 @@
 package frc.robot.subsystems.Coral;
-
-import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.LED.LEDStateManager;
 import frc.robot.subsystems.LED.RGB;
 import frc.robot.subsystems.LED.SetLEDAnimationCommand;
 import frc.robot.subsystems.LED.CustomAnimations.Pulse;
-import frc.robot.subsystems.LED.CustomAnimations.ShootingLines;
-import frc.robot.subsystems.LED.CustomAnimations.SolidColor;
 
 public class IntakeCommand extends Command {
 

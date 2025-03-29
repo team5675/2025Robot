@@ -10,8 +10,6 @@ import frc.robot.subsystems.LED.LEDStateManager;
 import frc.robot.subsystems.LED.RGB;
 import frc.robot.subsystems.LED.SetLEDAnimationCommand;
 import frc.robot.subsystems.LED.CustomAnimations.Pulse;
-import frc.robot.subsystems.LED.CustomAnimations.ShootingLines;
-import frc.robot.subsystems.LED.CustomAnimations.SolidColor;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeOutCommand extends Command {

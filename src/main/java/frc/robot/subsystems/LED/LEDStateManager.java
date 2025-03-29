@@ -2,19 +2,13 @@ package frc.robot.subsystems.LED;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.LED.CustomAnimations.Blink;
 import frc.robot.subsystems.LED.CustomAnimations.CustomizableRainbow;
 import frc.robot.subsystems.LED.CustomAnimations.Pulse;
-import frc.robot.subsystems.LED.CustomAnimations.RainbowGlitch;
 import frc.robot.subsystems.LED.CustomAnimations.RainbowShootingLines;
-import frc.robot.subsystems.LED.CustomAnimations.ShootingLines;
 import frc.robot.subsystems.LED.CustomAnimations.SolidColor;
-import frc.robot.subsystems.LED.CustomAnimations.RainbowGlitch.ColorDistribution;
 
 public class LEDStateManager extends SubsystemBase {
   private final CustomizableRainbow BASIC_RAINBOW;
@@ -24,7 +18,7 @@ public class LEDStateManager extends SubsystemBase {
   private final SolidColor SOLID_PURPLE;
   private final Pulse PULSE_ALICEBLUE;
   private final Pulse PULSE_PURPLE;
-  private final Pulse PULSE_GREEN_LINEUPDONE;
+  public final Pulse PULSE_GREEN_LINEUPDONE;
   private final Pulse PULSE_RED_SYSTEM_HEALTH_BAD;
   private final RainbowShootingLines RAINBOW_SHOOTING_LINES_FORWARD;
 

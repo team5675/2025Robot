@@ -3,7 +3,6 @@ package frc.robot.subsystems.LED;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 
 public class LED extends SubsystemBase {
   private static final int port1 = 0;

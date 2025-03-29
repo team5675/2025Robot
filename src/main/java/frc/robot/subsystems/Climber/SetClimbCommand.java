@@ -2,9 +2,7 @@ package frc.robot.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LED.SetLEDAnimationCommand;
-import frc.robot.subsystems.LED.CustomAnimations.Pulse;
 import frc.robot.subsystems.LED.CustomAnimations.RainbowPulse;
-import frc.robot.subsystems.LED.CustomAnimations.CustomizableRainbow.RainbowType;
 
 public class SetClimbCommand extends Command {
     private final Climber climber;

@@ -2,8 +2,7 @@ package frc.robot.subsystems.LED;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.LED.LED;
-import frc.robot.subsystems.LED.LEDAnimation;
+import frc.robot.subsystems.Elevator.Elevator;
 
 public class SetLEDAnimationCommand extends Command {
     private final LED ledSubsystem;
@@ -17,7 +16,7 @@ public class SetLEDAnimationCommand extends Command {
     
     @Override
     public void initialize() {
-        if (DriverStation.isAutonomous()) return;
+        if (DriverStation.isAutonomous() && !Elevator.getInstance().hasReset) return;
         try {
             ledSubsystem.setAnimation(animation);
         } catch (Exception e) {
