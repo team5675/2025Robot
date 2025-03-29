@@ -21,5 +21,6 @@ public class OpenClawCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        climber.clawMotor.setVoltage(0);
     }
 }

@@ -22,6 +22,7 @@ public class CloseClawCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        climber.clawMotor.setVoltage(0);
         // System.out.println("Claw Closed.");
     }
 }

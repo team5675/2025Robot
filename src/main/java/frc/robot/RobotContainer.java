@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Algae.AlgaeInCommand;
 import frc.robot.subsystems.Algae.AlgaeOutCommand;
 import frc.robot.subsystems.Elevator.RunElevatorCommand;
+import frc.robot.subsystems.LED.LEDAnimation;
 import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.LEDStateManager.LineupState;
 import frc.robot.subsystems.LED.SetLEDAnimationCommand;
 import frc.robot.subsystems.LED.CustomAnimations.RainbowShootingLines;
 import frc.robot.subsystems.Climber.SetClimbCommand;
@@ -106,6 +108,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("AlgaeIn", new AlgaeInCommand());
         NamedCommands.registerCommand("AlgaeOut", new AlgaeOutCommand());
         NamedCommands.registerCommand("AlgaeHold", Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0.1)));
+        // NamedCommands.registerCommand("LEDCommand", new SetLEDAnimationCommand(LEDAnimation.));
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);

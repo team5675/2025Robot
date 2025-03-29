@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.274,
-        "y": 5.037
+        "x": 5.281,
+        "y": 5.034
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.170027850115741,
-        "y": 5.48709056712963
+        "x": 5.17702785011574,
+        "y": 5.48409056712963
       },
       "isLocked": false,
       "linkedName": "CORAL_I"
     },
     {
       "anchor": {
-        "x": 1.5991214554398139,
-        "y": 7.38347583912037
+        "x": 1.5755113636363638,
+        "y": 7.430298295454545
       },
       "prevControl": {
-        "x": 1.9700954096007948,
-        "y": 7.151508307830429
+        "x": 1.9464853177973447,
+        "y": 7.198330764164604
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CORALSTATION"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 4.6,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

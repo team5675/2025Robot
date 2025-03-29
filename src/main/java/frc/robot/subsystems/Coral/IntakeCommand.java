@@ -2,6 +2,7 @@ package frc.robot.subsystems.Coral;
 
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,16 +19,18 @@ public class IntakeCommand extends Command {
 
     private Coral coral;
     private boolean needsReverse;
+    public Timer timer;
 
     public IntakeCommand() {
         coral = Coral.getInstance();
+        timer = new Timer();
     }
 
     @Override
     public void initialize() {
         // System.out.println("I am in the command");
         Coral.intaking = true;
-
+        timer.reset();
         // Set the led pattern to shooting lines
         // new SetLEDAnimationCommand(
         //     new ShootingLines(
@@ -66,6 +69,13 @@ public class IntakeCommand extends Command {
             coral.motor.set(0.0);
         }
 
+        if(needsReverse){
+            timer.start();
+            if(timer.hasElapsed(0.3)){
+                Coral.intaking = false;
+            }
+        }
+
     }
 
     @Override
@@ -90,7 +100,6 @@ public class IntakeCommand extends Command {
         // This command runs continuously until interrupted
         if (coral.bb1Tripped && coral.bb2Tripped) {
             if (needsReverse) {
-                Coral.intaking = false;
                 return true;
             } else return false;
         } else {

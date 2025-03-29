@@ -51,17 +51,20 @@ public class Elevator extends SubsystemBase {
 
     ticksEncoder = motor.getEncoder();
 
-    motorConfig.smartCurrentLimit(30, 35)
+    motorConfig.smartCurrentLimit(39, 39)
         .voltageCompensation(12)
         .idleMode(IdleMode.kBrake)
         .closedLoopRampRate(0.15);
 
-    motorConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .p(ElevatorConstants.motorP).i(ElevatorConstants.motorI).d(ElevatorConstants.motorD).velocityFF(0).maxOutput(1).minOutput(-1)
-        .maxMotion.maxVelocity(5000.0)
-        .maxAcceleration(5000.0)
-        .allowedClosedLoopError(.5);
+    motorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(ElevatorConstants.motorP, 
+    ElevatorConstants.motorI, ElevatorConstants.motorD).velocityFF(ElevatorConstants.motorff);
+
+    // motorConfig.closedLoop
+    //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    //     .p(ElevatorConstants.motorP).i(ElevatorConstants.motorI).d(ElevatorConstants.motorD).velocityFF(0).maxOutput(1).minOutput(-1)
+    //     .maxMotion.maxVelocity(6000.0)
+    //     .maxAcceleration(6000.0)
+    //     .allowedClosedLoopError(.5);
     
         
     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
@@ -75,7 +78,7 @@ public class Elevator extends SubsystemBase {
 
   public void setTarget(ElevatorLevel level) {
     setPoint = level;
-    sparkPidController.setReference(level.getLevel(), ControlType.kMAXMotionPositionControl);
+    sparkPidController.setReference(level.getLevel(), ControlType.kPosition);
   }
 
   public void reset() {
