@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4706655770443158,
-        "y": 5.220644806632792
+        "x": 3.499529568813467,
+        "y": 5.199007406357629
       },
       "isLocked": false,
       "linkedName": "CORAL_L"
@@ -20,8 +20,8 @@
         "y": 7.460213068181818
       },
       "prevControl": {
-        "x": 1.9390467958844653,
-        "y": 7.135840607650684
+        "x": 1.7759141571511783,
+        "y": 7.2386318511365015
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,12 +29,33 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.9,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "LEDCommand",
+      "waypointRelativePos": 0.92,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.146355861688821,
-        "y": 5.605514914545095
+        "x": 6.134122125164239,
+        "y": 5.622032297418375
       },
       "isLocked": false,
       "linkedName": "LB_START"
@@ -20,8 +20,8 @@
         "y": 5.034
       },
       "prevControl": {
-        "x": 5.539556018692237,
-        "y": 5.096949910072531
+        "x": 5.702566167025899,
+        "y": 5.16830277003798
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 2.7,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -50,5 +50,5 @@
     "velocity": 0,
     "rotation": 180.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.939,
-        "y": 5.198
+        "x": 3.707,
+        "y": 5.01
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.777953226273147,
-        "y": 6.374310040509259
+        "x": 3.499529568813467,
+        "y": 5.199007406357629
       },
       "isLocked": false,
-      "linkedName": "CORAL_J"
+      "linkedName": "CORAL_L"
     },
     {
       "anchor": {
@@ -20,26 +20,28 @@
         "y": 7.460213068181818
       },
       "prevControl": {
-        "x": 1.8799928977272726,
-        "y": 7.256983178135521
+        "x": 1.7759141571511783,
+        "y": 7.2386318511365015
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "CORALSTATION"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.4286698190789475,
-      "rotationDegrees": -59.99999999999999
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "LEDCommand",
+      "waypointRelativePos": 0.92,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -53,7 +55,7 @@
   "folder": "LB",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -59.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
