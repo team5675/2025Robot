@@ -14,15 +14,12 @@ private Coral coral;
   public PlaceCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
     coral = Coral.getInstance();
+    addRequirements(coral);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+  public void initialize() {
     coral.motor.set(-1);
   }
     

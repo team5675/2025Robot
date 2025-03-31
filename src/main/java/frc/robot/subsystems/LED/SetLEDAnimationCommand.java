@@ -2,7 +2,6 @@ package frc.robot.subsystems.LED;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Elevator.Elevator;
 
 public class SetLEDAnimationCommand extends Command {
     private final LED ledSubsystem;
