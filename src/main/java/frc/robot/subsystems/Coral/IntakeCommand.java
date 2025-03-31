@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.LED.LEDStateManager;
+import frc.robot.subsystems.LED.LEDStateManager.LEDState;
 import frc.robot.subsystems.LED.RGB;
 import frc.robot.subsystems.LED.SetLEDAnimationCommand;
 import frc.robot.subsystems.LED.CustomAnimations.Pulse;
@@ -21,21 +22,8 @@ public class IntakeCommand extends Command {
 
     @Override
     public void initialize() {
-        // System.out.println("I am in the command");
         Coral.intaking = true;
         timer.reset();
-        // Set the led pattern to shooting lines
-        // new SetLEDAnimationCommand(
-        //     new ShootingLines(
-        //         new RGB(Color.kHotPink),
-        //         false,
-        //         20,
-        //         0,
-        //         0,
-        //         2,
-        //         true
-        //     )
-        // ).schedule();
     }
 
     @Override
@@ -76,16 +64,7 @@ public class IntakeCommand extends Command {
         // Stop the motor when the command ends
         coral.motor.set(0);
 
-        new SetLEDAnimationCommand(
-            new Pulse(
-                new RGB(Color.kHotPink),
-                0.0,
-                1.0,
-                0.4
-            )
-        ).schedule();
-
-        Commands.waitSeconds(1).andThen(Commands.runOnce(() -> LEDStateManager.getInstance().setDefault())).schedule();
+        LEDStateManager.getInstance().setLedStateWithTimeout(LEDState.INTAKED, 1);
     }
 
     @Override

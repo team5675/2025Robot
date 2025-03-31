@@ -1,7 +1,7 @@
 package frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LED.LEDStateManager;
-import frc.robot.subsystems.LED.SetLEDAnimationCommand;
+import frc.robot.subsystems.LED.LEDStateManager.LEDState;
 
 public class ClimbCommand extends Command {
     private final Climber climber;
@@ -34,9 +34,7 @@ public class ClimbCommand extends Command {
         climber.climberMotor.set(0);
         // System.out.println("Climb Complete.");
 
-        new SetLEDAnimationCommand(
-            LEDStateManager.getInstance().STARTING_SHOOTING_LINES
-        ).schedule();
+        LEDStateManager.getInstance().setLedState(LEDState.CLIMBED);
 
         //To Stay up in the air if needed
         //climber.climberMotor.set(0.1);

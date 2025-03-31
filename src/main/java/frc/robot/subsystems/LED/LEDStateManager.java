@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.LED.CustomAnimations.Blink;
 import frc.robot.subsystems.LED.CustomAnimations.CustomizableRainbow;
 import frc.robot.subsystems.LED.CustomAnimations.Pulse;
+import frc.robot.subsystems.LED.CustomAnimations.RainbowPulse;
 import frc.robot.subsystems.LED.CustomAnimations.RainbowShootingLines;
 import frc.robot.subsystems.LED.CustomAnimations.SolidColor;
 
@@ -16,11 +17,15 @@ public class LEDStateManager extends SubsystemBase {
   private final SolidColor SOLID_BLUE;
   private final SolidColor SOLID_ALICEBLUE;
   private final SolidColor SOLID_PURPLE;
+  private final SolidColor SOLID_SEAGREEN;
   private final Pulse PULSE_ALICEBLUE;
   private final Pulse PULSE_PURPLE;
   public final Pulse PULSE_GREEN_LINEUPDONE;
   private final Pulse PULSE_RED_SYSTEM_HEALTH_BAD;
   private final RainbowShootingLines RAINBOW_SHOOTING_LINES_FORWARD;
+  private final Pulse PULSE_ALGAE_IN;
+  private final RainbowPulse PULSE_CLIMBING;
+  private final Pulse PULSE_INTAKED;
 
   public final RainbowShootingLines STARTING_SHOOTING_LINES;
 
@@ -31,12 +36,11 @@ public class LEDStateManager extends SubsystemBase {
   private final LED ledSubsystem;
 
   // Timers to track how long we've been in certain states
-  private double linedUpStartTime = 0;
+  private double animationStartTime = 0;
   private double atTargetStartTime = 0;
 
 
-  // Time in seconds before reverting to NONE state
-  private static final double STATE_TIMEOUT_LINEUP = 1;
+  private double resetTimeout = 1;
 
   public LEDStateManager() {
     ledSubsystem = LED.getInstance();
@@ -54,6 +58,7 @@ public class LEDStateManager extends SubsystemBase {
     SOLID_BLUE = new SolidColor(new RGB(Color.kBlue));
     SOLID_ALICEBLUE = new SolidColor(new RGB(Color.kAliceBlue));
     SOLID_PURPLE = new SolidColor(new RGB(Color.kPurple));
+    SOLID_SEAGREEN = new SolidColor(new RGB(Color.kSeaGreen));
 
     PULSE_ALICEBLUE = new Pulse(
       new RGB(Color.kAliceBlue),
@@ -178,50 +183,75 @@ public class LEDStateManager extends SubsystemBase {
       0, 
       false
     );
+
+    PULSE_ALGAE_IN = new Pulse(
+      new RGB(Color.kSeaGreen), 
+      0.5, 
+      1, 
+      0.2
+    );
+
+    PULSE_CLIMBING = new RainbowPulse(
+      RainbowPulse.RainbowType.PASTEL_RAINBOW, 
+      0, 
+      1, 
+      1.3,
+      0
+    );
+
+    PULSE_INTAKED = new Pulse(
+      new RGB(Color.kHotPink),
+      0.0,
+      1.0,
+      0.4
+    );
   }
 
-  public enum LineupState {
+  public enum LEDState {
     NONE,
+    AUTO_AT_STATION, // auto only
     LINING_UP,
-    LINED_UP
+    LINED_UP,
+    ALGAEING,
+    ALGAED,
+    CLIMBING,
+    CLIMBED,
+    INTAKED,
+    ELEVATOR_RESET
   }
 
-  // Flag to track if we need to update the LED pattern
+  // if we need to update the LED pattern
   private boolean needsUpdate = true;
 
   // Current state for each system
-  private LineupState lineupState = LineupState.NONE;
-  private SystemState systemState = SystemState.GOOD;
+  private LEDState ledState = LEDState.NONE;
 
-  public void setLineupState(LineupState state) {
-    // Only update if the state is actually changing
-    if (state != lineupState) {
-      lineupState = state;
+  public void setLedState(LEDState state) {
+    if (state != ledState) {
 
-      // If we're entering LINED_UP state, record the start time
-      if (state == LineupState.LINED_UP) {
-        linedUpStartTime = Timer.getFPGATimestamp();
-      }
+      if (DriverStation.isAutonomous() && state != LEDState.AUTO_AT_STATION) return;
+
+      resetTimeout = 0;
+      ledState = state;
 
       // Flag that we need to update the pattern
       needsUpdate = true;
     }
   }
 
-  public enum SystemState {
-    GOOD,
-    BAD
-  }
-  
+  public void setLedStateWithTimeout(LEDState state, double timeout) {
+    if (state != ledState) {
 
-  public void setSystemState(SystemState state) {
-    if (state != systemState) {
-      systemState = state;
+      if (DriverStation.isAutonomous() && state != LEDState.AUTO_AT_STATION) return;
 
+      ledState = state;
+      animationStartTime = Timer.getFPGATimestamp();
+      resetTimeout = timeout;
+
+      // Flag that we need to update the pattern
       needsUpdate = true;
     }
   }
-
 
   @Override
   public void periodic() {
@@ -255,24 +285,21 @@ public class LEDStateManager extends SubsystemBase {
     //   return;
     // }
 
-    if (DriverStation.isAutonomous()) return;
-
     // if (!DriverStation.isTeleopEnabled()) {
     //   return;
     // }
 
     double currentTime = Timer.getFPGATimestamp();
-    boolean stateChanged = false;
 
     // Check if we need to automatically revert from LINED_UP to NONE
-    if (lineupState == LineupState.LINED_UP) {
-      if (currentTime - linedUpStartTime >= STATE_TIMEOUT_LINEUP) {
-        lineupState = LineupState.NONE;
-        stateChanged = true;
-      }
+  
+    if (resetTimeout != 0 && currentTime - animationStartTime >= resetTimeout) {
+      ledState = LEDState.NONE;
+      needsUpdate = true;
+      resetTimeout = 0;
     }
 
-    if (stateChanged || needsUpdate) {
+    if (needsUpdate) {
       try {
         updateLEDPatternPeriodic();
       } catch (Exception e) {
@@ -282,47 +309,45 @@ public class LEDStateManager extends SubsystemBase {
     }
   }
 
-  /**
-   * Updates the LED pattern based on the current lineup and elevator states.
-   * Elevator state determines the pattern, while lineup state determines the color.
-   */
   private void updateLEDPatternPeriodic() {
-    //System.out.println("Updating LED pattern");
-      if (lineupState == LineupState.NONE) {
-          // COMMENT: Set LEDs to rainbow pattern
-        setDefault();
-
-      } else if (lineupState == LineupState.LINING_UP) {
-          // COMMENT: Set LEDs to solid red pattern
-        new SetLEDAnimationCommand(SOLID_PURPLE).schedule();
-
-      } else if (lineupState == LineupState.LINED_UP) {
-          // COMMENT: Set LEDs to pulsing blue
-        new SetLEDAnimationCommand(PULSE_GREEN_LINEUPDONE).schedule();
+      switch (ledState) {
+        case NONE:
+          new SetLEDAnimationCommand(DEFAULT).schedule();
+          break;
+        case AUTO_AT_STATION:
+          new SetLEDAnimationCommand(PULSE_GREEN_LINEUPDONE).schedule();
+          break;
+        case LINING_UP:
+          new SetLEDAnimationCommand(SOLID_PURPLE).schedule();
+          break;
+        case LINED_UP:
+          new SetLEDAnimationCommand(PULSE_GREEN_LINEUPDONE).schedule();
+          break;
+        case ALGAEING:
+          new SetLEDAnimationCommand(PULSE_ALGAE_IN).schedule();
+          break;
+        case ALGAED:
+          new SetLEDAnimationCommand(SOLID_SEAGREEN).schedule();
+          break;
+        case CLIMBED:
+          new SetLEDAnimationCommand(STARTING_SHOOTING_LINES).schedule();
+          break;
+        case CLIMBING:
+          new SetLEDAnimationCommand(BASIC_RAINBOW).schedule();
+          break;
+        case INTAKED:
+          new SetLEDAnimationCommand(PULSE_INTAKED).schedule();
+          break;
+        case ELEVATOR_RESET:
+          new SetLEDAnimationCommand(BLINK_RESET).schedule();
+          break;
+        default:
+          break;
       }
   }
 
-  // private void updateSystemLEDPattern() {
-  //   switch (systemState) {
-  //     case GOOD:
-  //       new SetLEDAnimationCommand(STARTING_SHOOTING_LINES).schedule();
-  //       break;
-  //     case BAD:
-  //       new SetLEDAnimationCommand(PULSE_RED_SYSTEM_HEALTH_BAD).schedule();
-  //       break;
-  //   }
-  // }
-
-  public void setDefault() {
-    new SetLEDAnimationCommand(DEFAULT).schedule();
-  }
-
-  public void setDefaultDisabled() {
-    new SetLEDAnimationCommand(STARTING_SHOOTING_LINES).schedule();
-  }
-
-  public LineupState getLineupState() {
-    return lineupState;
+  public LEDState getLedState() {
+    return this.ledState;
   }
 
   private static LEDStateManager instance;

@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Coral.Coral;
 import frc.robot.subsystems.LED.LEDStateManager;
-import frc.robot.subsystems.LED.SetLEDAnimationCommand;
+import frc.robot.subsystems.LED.LEDStateManager.LEDState;
 
 public class RunElevatorCommand extends Command {
   Elevator elevator;
@@ -49,13 +49,8 @@ public class RunElevatorCommand extends Command {
       // Set at target leds
     } else {
       if (DriverStation.isAutonomous()) return; // temp 
-      new SetLEDAnimationCommand(
-        LEDStateManager.getInstance().BLINK_RESET
-      ).schedule();
 
-      Commands.waitSeconds(1).andThen(
-        Commands.runOnce(() -> LEDStateManager.getInstance().setDefault())
-      ).schedule();
+      LEDStateManager.getInstance().setLedState(LEDState.ELEVATOR_RESET);
     }
   }
 
