@@ -53,7 +53,7 @@ public class Elevator extends SubsystemBase {
     // motorConfig.closedLoop
     //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     //     .p(ElevatorConstants.motorP).i(ElevatorConstants.motorI).d(ElevatorConstants.motorD).velocityFF(0).maxOutput(1).minOutput(-1)
-    //     .maxMotion.maxVelocity(6000.0)
+    //     .maxMotion.maxVelocity(5000.0)
     //     .maxAcceleration(6000.0)
     //     .allowedClosedLoopError(.5);
     

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5655397727272726,
-        "y": 7.460213068181818
+        "x": 1.6153977272727271,
+        "y": 7.4402698863636365
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6553153935185174,
-        "y": 6.814665075231481
+        "x": 1.8946022727272729,
+        "y": 6.792116477272727
       },
       "isLocked": false,
       "linkedName": "CORALSTATION"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 3.213,
-        "y": 4.204
+        "y": 4.235
       },
       "prevControl": {
-        "x": 1.74103298611111,
-        "y": 4.201443142361111
+        "x": 2.6225284090909096,
+        "y": 4.21055965909091
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 6.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

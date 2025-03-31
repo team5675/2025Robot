@@ -57,14 +57,14 @@ public class IntakeCommand extends Command {
             coral.motor.set(0);
             needsReverse = true;
         } else if (needsReverse && !coral.bb1Tripped && coral.bb2Tripped) {
-            coral.motor.set(0.10);
+            coral.motor.set(0.15);
         } else if (needsReverse && coral.bb1Tripped && coral.bb2Tripped) {
             coral.motor.set(0.0);
         }
 
         if(needsReverse){
             timer.start();
-            if(timer.hasElapsed(0.3)){
+            if(timer.hasElapsed(0.2)){
                 Coral.intaking = false;
             }
         }
