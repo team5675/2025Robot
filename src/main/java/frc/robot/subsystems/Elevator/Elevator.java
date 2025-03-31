@@ -47,13 +47,26 @@ public class Elevator extends SubsystemBase {
         .idleMode(IdleMode.kBrake)
         .closedLoopRampRate(0.15);
 
-    motorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(ElevatorConstants.motorP, 
-    ElevatorConstants.motorI, ElevatorConstants.motorD).velocityFF(ElevatorConstants.motorff);
+    motorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+      .pidf(
+        ElevatorConstants.upMotorP, 
+        ElevatorConstants.upMotorI, 
+        ElevatorConstants.upMotorD, 
+        ElevatorConstants.upMotorff,
+        ElevatorConstants.upPidSlot
+      )
+      .pidf(
+        ElevatorConstants.downMotorP, 
+        ElevatorConstants.downMotorI, 
+        ElevatorConstants.downMotorD, 
+        ElevatorConstants.downMotorff,
+        ElevatorConstants.downPidSlot
+      );
 
     // motorConfig.closedLoop
     //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     //     .p(ElevatorConstants.motorP).i(ElevatorConstants.motorI).d(ElevatorConstants.motorD).velocityFF(0).maxOutput(1).minOutput(-1)
-    //     .maxMotion.maxVelocity(5000.0)
+    //     .maxMotion.maxVelocity(6000.0)
     //     .maxAcceleration(6000.0)
     //     .allowedClosedLoopError(.5);
     
@@ -61,15 +74,18 @@ public class Elevator extends SubsystemBase {
     motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
     bottomLimitSwitch = new DigitalInput(ElevatorConstants.bottomLimitSwitchChannel);
-    // topLimitSwitch = new DigitalInput(ElevatorConstants.topLimitSwitchChannel);
 
     bottomTrigger = new Trigger(bottomLimitSwitch::get);
-    // topTrigger = new Trigger(topLimitSwitch::get);
   }
 
   public void setTarget(ElevatorLevel level) {
     setPoint = level;
-    sparkPidController.setReference(level.getLevel(), ControlType.kPosition);
+
+    if (setPoint.getName() == "RESET_HEIGHT") {
+      sparkPidController.setReference(level.getLevel(), ControlType.kPosition, ElevatorConstants.downPidSlot);
+    } else {
+      sparkPidController.setReference(level.getLevel(), ControlType.kPosition, ElevatorConstants.upPidSlot);
+    }
   }
 
   public void reset() {
@@ -82,21 +98,18 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     bottomBool = bottomTrigger.getAsBoolean();
     // flip - so false = tripped
-    
-    // var topBool = topTrigger.getAsBoolean();
 
-    // If we are resetting and the limit switch is hit
-    // if (!bottomBool && (setPoint == ElevatorLevel.RESET_HEIGHT)) {
-    //   // motor.set(0);
-    //   ticksEncoder.setPosition(0);
-    // }
+    // Condition:
+    // if the limit switch is tripped
+    // and we are resetting the elevator
+    // and we haven't already run this block of code
     if (!bottomBool && setPoint.getLevel() == ElevatorLevel.RESET_HEIGHT.getLevel() && !hasReset) { 
       ticksEncoder.setPosition(0); // Reset encoder
-      motor.set(0); //Stop motor for safety
+      motor.set(0); // Stop motor for safety
       hasReset = true;
     }
     else if (bottomBool) {
-        hasReset = false; // Reset flag when limit switch is un-tripped
+      hasReset = false; // Reset flag when limit switch is un-tripped
     }
 
     SmartDashboard.putBoolean("Elevator: Bottom Tripped", bottomBool);
