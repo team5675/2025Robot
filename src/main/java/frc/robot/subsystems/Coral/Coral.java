@@ -38,8 +38,8 @@ public class Coral extends SubsystemBase {
     bbCANdi = new CANdi(CoralConstants.bbCANdi_ID);
 
     Coral.intaking = false;
-    bbCANdi.getS1Closed().setUpdateFrequency(200);
-    bbCANdi.getS2Closed().setUpdateFrequency(200);
+    // bbCANdi.getS1Closed().setUpdateFrequency(200);
+    // bbCANdi.getS2Closed().setUpdateFrequency(200);
   }
 
   @Override

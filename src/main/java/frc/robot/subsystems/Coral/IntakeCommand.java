@@ -45,7 +45,7 @@ public class IntakeCommand extends Command {
             coral.motor.set(0);
             needsReverse = true;
         } else if (needsReverse && !coral.bb1Tripped && coral.bb2Tripped) {
-            coral.motor.set(0.15);
+            coral.motor.set(0.14);
         } else if (needsReverse && coral.bb1Tripped && coral.bb2Tripped) {
             coral.motor.set(0.0);
         }
@@ -64,7 +64,7 @@ public class IntakeCommand extends Command {
         // Stop the motor when the command ends
         coral.motor.set(0);
 
-        LEDStateManager.getInstance().setLedStateWithTimeout(LEDState.INTAKED, 1);
+        // LEDStateManager.getInstance().setLedStateWithTimeout(LEDState.INTAKED, 1);
     }
 
     @Override

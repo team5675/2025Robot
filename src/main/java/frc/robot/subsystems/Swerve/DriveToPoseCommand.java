@@ -104,7 +104,7 @@ public class DriveToPoseCommand extends Command {
     
             if (distance < 0.05 && angleDifference < 0.7 && !isBarge) { // 5 cm and 0.7 degrees tolerance
                 // System.out.println("Already at target pose. No path needed.");
-                LEDStateManager.getInstance().setLedState(LEDState.LINED_UP);
+                LEDStateManager.getInstance().setLedStateWithTimeout(LEDState.LINED_UP, 1);
                 pathCommand = null;
                 return;
             }
