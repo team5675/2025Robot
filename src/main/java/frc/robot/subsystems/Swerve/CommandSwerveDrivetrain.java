@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.math.estimator.*;
 import frc.robot.*;
 import frc.robot.subsystems.Swerve.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.commands.RumbleCommand;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -350,7 +351,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         LimelightHelpers.PoseEstimate limelightEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
 
         //Cache the AprilTag ID
-        if(LimelightHelpers.getTV(limelightName) && limelightEstimate != null && limelightEstimate.tagCount > 0) {
+        if(DriverStation.isTeleopEnabled() && LimelightHelpers.getTV(limelightName) && limelightEstimate != null && limelightEstimate.tagCount > 0) {
+            //Rumble when a new tag is seen
+            if(LimelightHelpers.getFiducialID(limelightName) != -1 && LimelightHelpers.getFiducialID(limelightName) != aprilTagCache) {
+                new RumbleCommand().schedule();
+            }
             aprilTagCache = LimelightHelpers.getFiducialID(limelightName);
         }
 

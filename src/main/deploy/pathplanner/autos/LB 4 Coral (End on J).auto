@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LB to J 3"
+                  "pathName": "LB to I"
                 }
               },
               {
@@ -43,25 +43,32 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "J to LC 3"
+                  "pathName": "I to LC"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "ElevatorReset"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.3
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ElevatorReset"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -80,7 +87,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LC to K 3"
+                  "pathName": "LC to K"
                 }
               },
               {
@@ -112,25 +119,32 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "K to LC 3"
+                  "pathName": "K to LC"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "ElevatorReset"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.3
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ElevatorReset"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -149,7 +163,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LC to L 3"
+                  "pathName": "LC to L"
                 }
               },
               {
@@ -181,9 +195,41 @@
           }
         },
         {
-          "type": "wait",
+          "type": "parallel",
           "data": {
-            "waitTime": 0.25
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "L to LC"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.3
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ElevatorReset"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeCommand"
+                }
+              }
+            ]
           }
         },
         {
@@ -193,22 +239,35 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "L to Algae"
+                  "pathName": "LC to J"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "AlgaeLow"
+                  "name": "ElevatorL4"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.1
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "PlaceCommand"
+                      }
+                    }
+                  ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlgaeIn"
           }
         }
       ]

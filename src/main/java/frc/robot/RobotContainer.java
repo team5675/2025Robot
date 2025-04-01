@@ -35,6 +35,7 @@ import frc.robot.subsystems.Swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Swerve.DriveToPoseCommand;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
+import frc.robot.commands.BlinkLimelightCommand;
 
 public class RobotContainer {
 
@@ -98,7 +99,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("AlgaeIn", new AlgaeInCommand());
         NamedCommands.registerCommand("AlgaeOut", new AlgaeOutCommand());
         NamedCommands.registerCommand("AlgaeHold", Commands.runOnce(() -> Algae.getInstance().setFlywheelSpeed(0.1)));
-        NamedCommands.registerCommand("LEDCommand", new InstantCommand(() -> LEDStateManager.getInstance().setLedStateWithTimeout(LEDState.AUTO_AT_STATION, 2)));
+        NamedCommands.registerCommand("BlinkLimelightCommand", new BlinkLimelightCommand());
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
