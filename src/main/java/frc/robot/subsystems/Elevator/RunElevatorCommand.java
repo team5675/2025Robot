@@ -50,7 +50,7 @@ public class RunElevatorCommand extends Command {
     } else {
       if (DriverStation.isAutonomous()) return; // temp 
 
-      LEDStateManager.getInstance().setLedState(LEDState.ELEVATOR_RESET);
+      LEDStateManager.getInstance().setLedStateWithTimeout(LEDState.ELEVATOR_RESET, 1);
     }
   }
 

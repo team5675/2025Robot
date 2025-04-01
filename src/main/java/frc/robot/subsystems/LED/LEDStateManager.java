@@ -255,39 +255,7 @@ public class LEDStateManager extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // if (!RobotContainer.getLEDsEnabled()) {
-    //   return;
-    // }
-    // if (DriverStation.isDisabled()) {
-    //   setDefault();
-    // }
-
-    
-    // if (!DriverStation.isEnabled()) {
-    //   System.err.println();
-    //   // SYSTEM CHECK !!
-    //   // is bb1 tripped but not bb2
-    //   setSystemState(SystemState.GOOD);
-
-    //   // if a coral is not properly seated
-    //   if (!(Coral.getInstance().bb2Tripped && !Coral.getInstance().bb1Tripped)) {
-    //     setSystemState(SystemState.BAD);
-    //   }
-
-    //   if (needsUpdate || LED.getInstance().currentAnimation == null) {
-    //     try {
-    //       updateSystemLEDPattern();
-    //     } catch (Exception e) {
-    //       //System.out.println("Error Setting LED Pattern!");
-    //     }
-    //   }
-
-    //   return;
-    // }
-
-    // if (!DriverStation.isTeleopEnabled()) {
-    //   return;
-    // }
+    if (DriverStation.isAutonomous()) return;
 
     double currentTime = Timer.getFPGATimestamp();
 
@@ -333,7 +301,7 @@ public class LEDStateManager extends SubsystemBase {
           new SetLEDAnimationCommand(STARTING_SHOOTING_LINES).schedule();
           break;
         case CLIMBING:
-          new SetLEDAnimationCommand(BASIC_RAINBOW).schedule();
+          new SetLEDAnimationCommand(PULSE_CLIMBING).schedule();
           break;
         case INTAKED:
           new SetLEDAnimationCommand(PULSE_INTAKED).schedule();
