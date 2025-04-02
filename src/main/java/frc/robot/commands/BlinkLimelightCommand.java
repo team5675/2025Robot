@@ -26,11 +26,12 @@ public class BlinkLimelightCommand extends Command {
 
    @Override
    public boolean isFinished() {
-      return timer.hasElapsed(1);
+      return timer.hasElapsed(0.8);
    }
 
    @Override
    public void end(boolean interrupted) {
       led.setNumber(0);
+      timer.stop();
    }
 }

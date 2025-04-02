@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.021,
-        "y": 2.8778
+        "x": 4.005,
+        "y": 2.862
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.561652134164449,
-        "y": 1.960000553549921
+        "x": 2.855840485220903,
+        "y": 1.7392375570506053
       },
       "isLocked": false,
       "linkedName": "CORAL_D"
     },
     {
       "anchor": {
-        "x": 1.269,
-        "y": 0.944
+        "x": 1.6332051282051276,
+        "y": 0.6089102564102575
       },
       "prevControl": {
-        "x": 1.9693210743516292,
-        "y": 1.3798887704202987
+        "x": 2.2556694196588625,
+        "y": 1.203224059195386
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,12 +29,33 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.9,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "BlinkLimelightCommand",
+      "waypointRelativePos": 0.92,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 6.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -50,5 +71,5 @@
     "velocity": 0.0,
     "rotation": 59.99999999999999
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

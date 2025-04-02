@@ -12,17 +12,17 @@ import frc.robot.subsystems.LED.CustomAnimations.RainbowShootingLines;
 import frc.robot.subsystems.LED.CustomAnimations.SolidColor;
 
 public class LEDStateManager extends SubsystemBase {
-  private final CustomizableRainbow BASIC_RAINBOW;
-  private final SolidColor SOLID_RED;
-  private final SolidColor SOLID_BLUE;
-  private final SolidColor SOLID_ALICEBLUE;
+  // private final CustomizableRainbow BASIC_RAINBOW;
+  // private final SolidColor SOLID_RED;
+  // private final SolidColor SOLID_BLUE;
+  // private final SolidColor SOLID_ALICEBLUE;
   private final SolidColor SOLID_PURPLE;
   private final SolidColor SOLID_SEAGREEN;
-  private final Pulse PULSE_ALICEBLUE;
-  private final Pulse PULSE_PURPLE;
+  // private final Pulse PULSE_ALICEBLUE;
+  // private final Pulse PULSE_PURPLE;
   public final Pulse PULSE_GREEN_LINEUPDONE;
-  private final Pulse PULSE_RED_SYSTEM_HEALTH_BAD;
-  private final RainbowShootingLines RAINBOW_SHOOTING_LINES_FORWARD;
+  // private final Pulse PULSE_RED_SYSTEM_HEALTH_BAD;
+  // private final RainbowShootingLines RAINBOW_SHOOTING_LINES_FORWARD;
   private final Pulse PULSE_ALGAE_IN;
   private final RainbowPulse PULSE_CLIMBING;
   private final Pulse PULSE_INTAKED;
@@ -44,35 +44,27 @@ public class LEDStateManager extends SubsystemBase {
 
   public LEDStateManager() {
     ledSubsystem = LED.getInstance();
-    updateLEDPatternPeriodic();
+    //updateLEDPatternPeriodic();
 
-    BASIC_RAINBOW = new CustomizableRainbow(
-      CustomizableRainbow.RainbowType.COOL,
-      CustomizableRainbow.PatternType.CONTINUOUS,
-      CustomizableRainbow.Direction.FORWARD,
-      0.4,
-      1.0
-    );
-
-    SOLID_RED = new SolidColor(new RGB(Color.kRed));
-    SOLID_BLUE = new SolidColor(new RGB(Color.kBlue));
-    SOLID_ALICEBLUE = new SolidColor(new RGB(Color.kAliceBlue));
+    // SOLID_RED = new SolidColor(new RGB(Color.kRed));
+    // SOLID_BLUE = new SolidColor(new RGB(Color.kBlue));
+    // SOLID_ALICEBLUE = new SolidColor(new RGB(Color.kAliceBlue));
     SOLID_PURPLE = new SolidColor(new RGB(Color.kPurple));
     SOLID_SEAGREEN = new SolidColor(new RGB(Color.kSeaGreen));
 
-    PULSE_ALICEBLUE = new Pulse(
-      new RGB(Color.kAliceBlue),
-      0.5,
-      1.0,
-      0.4
-    );
+    // PULSE_ALICEBLUE = new Pulse(
+    //   new RGB(Color.kAliceBlue),
+    //   0.5,
+    //   1.0,
+    //   0.4
+    // );
 
-    PULSE_PURPLE = new Pulse(
-      new RGB(Color.kAliceBlue),
-      0.5,
-      1.0,
-      0.3
-    );
+    // PULSE_PURPLE = new Pulse(
+    //   new RGB(Color.kAliceBlue),
+    //   0.5,
+    //   1.0,
+    //   0.3
+    // );
 
     PULSE_GREEN_LINEUPDONE = new Pulse(
       new RGB(Color.kGreen),
@@ -81,24 +73,24 @@ public class LEDStateManager extends SubsystemBase {
       0.4
     );
 
-    PULSE_RED_SYSTEM_HEALTH_BAD = new Pulse(
-      new RGB(Color.kRed),
-      0.0,
-      1.0,
-      2
-    );
+    // PULSE_RED_SYSTEM_HEALTH_BAD = new Pulse(
+    //   new RGB(Color.kRed),
+    //   0.0,
+    //   1.0,
+    //   2
+    // );
 
-    RAINBOW_SHOOTING_LINES_FORWARD = new RainbowShootingLines(
-      RainbowShootingLines.RainbowType.PASTEL_RAINBOW,
-      RainbowShootingLines.ColorDistribution.PER_LINE,
-      15,
-      0.0,
-      0.0,
-      0.5,
-      0.0,
-      true,
-      true
-    );
+    // RAINBOW_SHOOTING_LINES_FORWARD = new RainbowShootingLines(
+    //   RainbowShootingLines.RainbowType.PASTEL_RAINBOW,
+    //   RainbowShootingLines.ColorDistribution.PER_LINE,
+    //   15,
+    //   0.0,
+    //   0.0,
+    //   0.5,
+    //   0.0,
+    //   true,
+    //   true
+    // );
 
 
     // SHOOTING_LINES_RED_FORWARD = new ShootingLines(
@@ -173,7 +165,7 @@ public class LEDStateManager extends SubsystemBase {
     BLINK_RESET = new Blink(new RGB(Color.kDeepSkyBlue), 0.1, 0.1);
 
     STARTING_SHOOTING_LINES = new RainbowShootingLines(
-      RainbowShootingLines.RainbowType.PASTEL_RAINBOW, 
+      RainbowShootingLines.RainbowType.RGB_RAINBOW, 
       RainbowShootingLines.ColorDistribution.PER_LINE, 
       RainbowShootingLines.DirectionType.RANDOM,
       30, 

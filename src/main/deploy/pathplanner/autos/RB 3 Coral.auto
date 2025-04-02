@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RB to F"
+                  "pathName": "RB to F 3"
                 }
               },
               {
@@ -43,13 +43,19 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "F to RC"
+                  "pathName": "F to RC 3"
                 }
               },
               {
@@ -74,7 +80,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RC to D"
+                  "pathName": "RC to D 3"
                 }
               },
               {
@@ -106,13 +112,19 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "D To RC"
+                  "pathName": "D To RC 3"
                 }
               },
               {
@@ -137,7 +149,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RC to C"
+                  "pathName": "RC to C 3"
                 }
               },
               {

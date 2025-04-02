@@ -32,6 +32,7 @@ public class RumbleCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
+    timer.stop();
   }
 
   // Returns true when the command should end.

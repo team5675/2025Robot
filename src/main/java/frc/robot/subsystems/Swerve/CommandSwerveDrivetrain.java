@@ -353,9 +353,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //Cache the AprilTag ID
         if(DriverStation.isTeleopEnabled() && LimelightHelpers.getTV(limelightName) && limelightEstimate != null && limelightEstimate.tagCount > 0) {
             //Rumble when a new tag is seen
-            if(LimelightHelpers.getFiducialID(limelightName) != -1 && LimelightHelpers.getFiducialID(limelightName) != aprilTagCache) {
-                new RumbleCommand().schedule();
-            }
+            // if(LimelightHelpers.getFiducialID(limelightName) != -1 && LimelightHelpers.getFiducialID(limelightName) != aprilTagCache) {
+            //     new RumbleCommand().schedule();
+            // }
             aprilTagCache = LimelightHelpers.getFiducialID(limelightName);
         }
 

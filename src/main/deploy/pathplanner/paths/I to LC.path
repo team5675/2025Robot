@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.5755113636363638,
-        "y": 7.430298295454545
+        "x": 1.5854829545454543,
+        "y": 7.400383522727273
       },
       "prevControl": {
-        "x": 1.7359880753112782,
-        "y": 7.23860263820064
+        "x": 1.7459596662203687,
+        "y": 7.208687865473368
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "BlinkLimelightCommand",
+      "waypointRelativePos": 0.92,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 6.5,

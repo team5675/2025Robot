@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.6153977272727271,
-        "y": 7.4402698863636365
+        "x": 1.625369318181818,
+        "y": 7.400383522727273
       },
       "prevControl": {
-        "x": 1.8257721116966328,
-        "y": 7.21868866931832
+        "x": 1.8357437026057237,
+        "y": 7.178802305681956
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "LEDCommand",
+      "name": "",
       "waypointRelativePos": 0.92,
       "endWaypointRelativePos": null,
       "command": null

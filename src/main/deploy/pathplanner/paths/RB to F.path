@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.159,
-        "y": 2.3589
+        "x": 7.218,
+        "y": 2.2592
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.947161839471873,
-        "y": 2.561949163439019
+        "x": 6.168603606343399,
+        "y": 2.353909737382123
       },
       "isLocked": false,
       "linkedName": "RB_START"
     },
     {
       "anchor": {
-        "x": 5.256,
-        "y": 3.0469
+        "x": 5.265,
+        "y": 3.037
       },
       "prevControl": {
-        "x": 6.357264856084423,
-        "y": 2.70161601173513
+        "x": 6.239148959488289,
+        "y": 2.6098071869803103
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 2.7,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

@@ -19,12 +19,6 @@
                 "data": {
                   "name": "ElevatorL4"
                 }
-              },
-              {
-                "type": "parallel",
-                "data": {
-                  "commands": []
-                }
               }
             ]
           }
@@ -214,24 +208,24 @@
                 "data": {
                   "name": "ElevatorL4"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "PlaceCommand"
-                }
               },
               {
-                "type": "wait",
+                "type": "sequential",
                 "data": {
-                  "waitTime": 3.0
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.97
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "PlaceCommand"
+                      }
+                    }
+                  ]
                 }
               }
             ]

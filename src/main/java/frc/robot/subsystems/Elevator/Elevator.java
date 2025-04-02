@@ -42,7 +42,7 @@ public class Elevator extends SubsystemBase {
 
     ticksEncoder = motor.getEncoder();
 
-    motorConfig.smartCurrentLimit(39, 39)
+    motorConfig.smartCurrentLimit(30, 39)
         .voltageCompensation(12)
         .idleMode(IdleMode.kBrake)
         .closedLoopRampRate(0.15);
