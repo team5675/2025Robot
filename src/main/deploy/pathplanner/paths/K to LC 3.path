@@ -3,42 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.989,
-        "y": 5.1913
+        "x": 4.00304,
+        "y": 5.201
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2412418361347486,
-        "y": 5.869810154695847
+        "x": 3.255281836134749,
+        "y": 5.879510154695847
       },
       "isLocked": false,
       "linkedName": "CORAL_K"
     },
     {
       "anchor": {
-        "x": 1.625369318181818,
-        "y": 7.400383522727273
+        "x": 1.5356249999999998,
+        "y": 7.360497159090909
       },
       "prevControl": {
-        "x": 1.987296453886892,
-        "y": 7.0710495520397965
+        "x": 1.8975521357050738,
+        "y": 7.031163188403433
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CORALSTATION"
+      "linkedName": "CORALSTATION_I"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "",
-      "waypointRelativePos": 0.92,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 2.5,

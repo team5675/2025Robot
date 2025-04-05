@@ -12,7 +12,7 @@ public final class ElevatorConstants {
 	public static final double upMotorP = 0.112; //0.112
 	public static final double upMotorI = 0.00;
 	public static final double upMotorD = 0.00;
-	public static final double upMotorff = 0.0006;
+	public static final double upMotorff = 0.00;
 
 	public static final ClosedLoopSlot upPidSlot = ClosedLoopSlot.kSlot0;
 	

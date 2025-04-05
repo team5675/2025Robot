@@ -17,6 +17,7 @@ public class CustomizableRainbow implements LEDAnimation {
         PASTEL,      // Softer, more pastel colors (mixed with white)
         NEON,        // Vivid, high-contrast colors
         COOL,        // Blues and greens
+        COOL_PURPLE, 
         WARM         // Reds, oranges, and yellows
     }
     
@@ -158,7 +159,12 @@ public class CustomizableRainbow implements LEDAnimation {
         switch (rainbowType) {
             case COOL:
                 // Limit to blues and greens (0.3 - 0.7 in hue space)
-                hue = 0.3 + (hue * 0.4);
+                hue = 0.3 + (hue * 0.3);
+                break;
+
+            case COOL_PURPLE:
+                // Limit to blues and greens (0.3 - 0.7 in hue space)
+                hue = 0.3 + (hue * 0.5);
                 break;
                 
             case WARM:

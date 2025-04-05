@@ -120,6 +120,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator: Position Error", setPoint.getLevel() - ticksEncoder.getPosition());
     SmartDashboard.putNumber("Elevator: Motor Velocity", ticksEncoder.getVelocity());
     SmartDashboard.putNumber("Elevator Setpoint", setPoint.getLevel());
+    SmartDashboard.putBoolean("Elevator HasReset", hasReset);
   }
 
   private static Elevator instance;

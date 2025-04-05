@@ -1,4 +1,5 @@
 package frc.robot.subsystems.Coral;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +15,7 @@ public class IntakeCommand extends Command {
     private Coral coral;
     private boolean needsReverse;
     public Timer timer;
+    private double motorSpeed;
 
     public IntakeCommand() {
         coral = Coral.getInstance();
@@ -24,6 +26,11 @@ public class IntakeCommand extends Command {
     public void initialize() {
         Coral.intaking = true;
         timer.reset();
+        if(DriverStation.isAutonomous()){
+            motorSpeed = -0.9;
+        } else{
+            motorSpeed = -1.0;
+        }
     }
 
     @Override
@@ -31,7 +38,7 @@ public class IntakeCommand extends Command {
         if (!coral.bb1Tripped && !coral.bb2Tripped) {
             needsReverse = false;
             // Both beam breaks are tripped: full speed
-            coral.motor.set(-1);
+            coral.motor.set(motorSpeed);
         } else if (coral.bb1Tripped && !coral.bb2Tripped) {
             needsReverse = false;
             // bb1 is not tripped, bb2 is tripped: 0.75 speed

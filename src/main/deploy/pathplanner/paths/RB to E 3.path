@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.15,
-        "y": 5.7817
+        "x": 7.2,
+        "y": 2.329
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.11208186928363,
-        "y": 5.680438787998388
+        "x": 6.114155623644353,
+        "y": 2.3686844805111993
       },
       "isLocked": false,
-      "linkedName": "LB_START"
+      "linkedName": "RB_START"
     },
     {
       "anchor": {
-        "x": 5.2662,
-        "y": 5.0143
+        "x": 4.9572,
+        "y": 2.849
       },
       "prevControl": {
-        "x": 5.983631542500179,
-        "y": 5.312741628193959
+        "x": 5.237528335762043,
+        "y": 2.8007459740530973
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CORAL_I"
+      "linkedName": "CORAL_E"
     }
   ],
   "rotationTargets": [],
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.7,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": "LB",
+  "folder": "RB",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

@@ -155,7 +155,7 @@ public class LEDStateManager extends SubsystemBase {
         // );
         
     DEFAULT = new CustomizableRainbow(
-      CustomizableRainbow.RainbowType.COOL,
+      CustomizableRainbow.RainbowType.COOL_PURPLE,
       CustomizableRainbow.PatternType.CONTINUOUS,
       CustomizableRainbow.Direction.FORWARD,
       0.5,

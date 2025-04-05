@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.989,
-        "y": 5.1913
+        "x": 4.00304,
+        "y": 5.201
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2412418361347486,
-        "y": 5.869810154695847
+        "x": 3.255281836134749,
+        "y": 5.879510154695847
       },
       "isLocked": false,
       "linkedName": "CORAL_K"
     },
     {
       "anchor": {
-        "x": 1.625369318181818,
-        "y": 7.400383522727273
+        "x": 1.7450284090909092,
+        "y": 7.350525568181817
       },
       "prevControl": {
-        "x": 1.987296453886892,
-        "y": 7.0710495520397965
+        "x": 2.1069555447959836,
+        "y": 7.021191597494341
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CORALSTATION"
+      "linkedName": "CORALSTATION_4"
     }
   ],
   "rotationTargets": [],
@@ -45,14 +45,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "BlinkLimelightCommand",
-      "waypointRelativePos": 0.93,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 6.5,
